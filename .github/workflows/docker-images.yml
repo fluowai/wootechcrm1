@@ -1,0 +1,102 @@
+name: Build Docker Images
+
+on:
+  push:
+    branches:
+      - main
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  packages: write
+
+env:
+  REGISTRY: ghcr.io
+  IMAGE_OWNER: fluowai
+  API_IMAGE: nexus360-api
+  FRONTEND_IMAGE: nexus360-frontend
+  GOOGLE_MAPS_SCRAPER_IMAGE: nexus360-google-maps-scraper
+  WHATSAPP_BRIDGE_IMAGE: nexus360-whatsapp-bridge
+
+jobs:
+  build:
+    name: Build and push GHCR images
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v3
+
+      - name: Login to GHCR
+        uses: docker/login-action@v3
+        with:
+          registry: ${{ env.REGISTRY }}
+          username: ${{ github.actor }}
+          password: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Build and push API
+        uses: docker/build-push-action@v6
+        with:
+          context: ./backend
+          file: ./backend/Dockerfile
+          platforms: linux/amd64
+          push: true
+          provenance: false
+          sbom: false
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
+          tags: |
+            ${{ env.REGISTRY }}/${{ env.IMAGE_OWNER }}/${{ env.API_IMAGE }}:latest
+            ${{ env.REGISTRY }}/${{ env.IMAGE_OWNER }}/${{ env.API_IMAGE }}:${{ github.sha }}
+
+      - name: Build and push frontend
+        uses: docker/build-push-action@v6
+        with:
+          context: ./frontend
+          file: ./frontend/Dockerfile
+          platforms: linux/amd64
+          push: true
+          provenance: false
+          sbom: false
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
+          build-args: |
+            VITE_API_URL=same-origin
+            VITE_LIVEKIT_URL=
+            VITE_PANEL_URL=https://nexus360.consultio.com.br
+          tags: |
+            ${{ env.REGISTRY }}/${{ env.IMAGE_OWNER }}/${{ env.FRONTEND_IMAGE }}:latest
+            ${{ env.REGISTRY }}/${{ env.IMAGE_OWNER }}/${{ env.FRONTEND_IMAGE }}:${{ github.sha }}
+
+      - name: Build and push Google Maps scraper
+        uses: docker/build-push-action@v6
+        with:
+          context: ./integrations/google-maps-scraper
+          file: ./integrations/google-maps-scraper/Dockerfile
+          platforms: linux/amd64
+          push: true
+          provenance: false
+          sbom: false
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
+          tags: |
+            ${{ env.REGISTRY }}/${{ env.IMAGE_OWNER }}/${{ env.GOOGLE_MAPS_SCRAPER_IMAGE }}:latest
+            ${{ env.REGISTRY }}/${{ env.IMAGE_OWNER }}/${{ env.GOOGLE_MAPS_SCRAPER_IMAGE }}:${{ github.sha }}
+
+      - name: Build and push WhatsApp bridge
+        uses: docker/build-push-action@v6
+        with:
+          context: ./whatsapp-bridge
+          file: ./whatsapp-bridge/Dockerfile
+          platforms: linux/amd64
+          push: true
+          provenance: false
+          sbom: false
+          cache-from: type=gha
+          cache-to: type=gha,mode=max
+          tags: |
+            ${{ env.REGISTRY }}/${{ env.IMAGE_OWNER }}/${{ env.WHATSAPP_BRIDGE_IMAGE }}:latest
+            ${{ env.REGISTRY }}/${{ env.IMAGE_OWNER }}/${{ env.WHATSAPP_BRIDGE_IMAGE }}:${{ github.sha }}

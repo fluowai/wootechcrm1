@@ -14,7 +14,15 @@ export const resolveTenant = (req: AuthRequest, res: Response, next: NextFunctio
   }
 
   // Resolve orgId — obrigatório para todas rotas protegidas
-  const orgId = user.orgId;
+  let orgId = user.orgId;
+
+  // Se for Super Admin, permitir trocar orgId via header (X-Org-Id)
+  const impersonatedOrgId = req.headers["x-org-id"];
+  if (user.role === 'SUPER_ADMIN' && impersonatedOrgId && typeof impersonatedOrgId === "string") {
+    orgId = impersonatedOrgId;
+    user.orgId = impersonatedOrgId; // Atualiza no objeto user para os handlers
+  }
+
   if (!orgId) {
     return res.status(403).json({
       error: "TENANT_MISSING",
@@ -22,7 +30,7 @@ export const resolveTenant = (req: AuthRequest, res: Response, next: NextFunctio
     });
   }
 
-  // Se for Super Admin, permitir trocar workspace via header
+  // Se for Super Admin, permitir trocar workspace via header (X-Workspace-Id)
   const impersonatedWorkspaceId = req.headers["x-workspace-id"];
   if (impersonatedWorkspaceId && typeof impersonatedWorkspaceId === "string") {
     user.workspaceId = impersonatedWorkspaceId;

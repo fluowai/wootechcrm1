@@ -18,7 +18,7 @@ async function runTests() {
 
   try {
     console.log('Navigating to Dashboard...');
-    await page.goto('http://localhost:3000', { waitUntil: 'networkidle0' });
+    await page.goto('http://localhost:5173', { waitUntil: 'networkidle0' });
     await page.waitForSelector('.glass-card', { timeout: 5000 });
     console.log('Dashboard loaded successfully.');
 

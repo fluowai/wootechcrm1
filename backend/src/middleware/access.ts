@@ -23,11 +23,12 @@ export function requireAccess(config: AccessConfig) {
         return res.status(403).json({ error: "TENANT_SUSPENDED", message: "Esta conta está suspensa. Entre em contato com o suporte." });
       }
 
-      // Admins têm acesso total — sem checar plano ou features
-      const isAdmin = req.user?.role === 'SUPER_ADMIN' || req.user?.role === 'ORG_ADMIN' || req.user?.role === 'AGENCY_ADMIN';
+      // Super Admin opera a plataforma; admins da organizacao ainda respeitam plano e assinatura.
+      const isSuperAdmin = req.user?.role === 'SUPER_ADMIN';
+      const isOrgAdmin = req.user?.role === 'ORG_ADMIN' || req.user?.role === 'AGENCY_ADMIN';
 
-      // 2. Verificar Assinatura (se exigido) — skip para admins
-      if (config.requireActiveSubscription && !isAdmin) {
+      // 2. Verificar Assinatura (se exigido)
+      if (config.requireActiveSubscription && !isSuperAdmin) {
         if (!access.subscription || (access.subscription.status !== 'ACTIVE' && access.subscription.status !== 'TRIAL')) {
           return res.status(402).json({ 
             error: "PAYMENT_REQUIRED", 
@@ -37,8 +38,8 @@ export function requireAccess(config: AccessConfig) {
         }
       }
 
-      // 3. Verificar Feature no Plano — skip para admins
-      if (config.feature && !isAdmin) {
+      // 3. Verificar Feature no Plano
+      if (config.feature && !isSuperAdmin) {
         if (!access.hasFeature(config.feature)) {
           return res.status(402).json({ 
             error: "FEATURE_NOT_IN_PLAN", 
@@ -63,9 +64,8 @@ export function requireAccess(config: AccessConfig) {
       // 5. Verificar Permissão do Usuário (RBAC)
       // Por enquanto validamos apenas o role básico se não houver permissão granular definida
       if (config.permission) {
-        const userPermissions = (access.user?.permissions as any) || {};
         // Simplificação: se for ADMIN da org, tem acesso a tudo da org (exceto limites do plano)
-        if (access.user?.role !== 'ORG_ADMIN' && access.user?.role !== 'SUPER_ADMIN') {
+        if (!isOrgAdmin && !isSuperAdmin) {
            // Lógica de check de permissão granular aqui
            // Ex: userPermissions['crm']?.includes('view')
         }

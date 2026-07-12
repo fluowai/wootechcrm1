@@ -1,0 +1,126 @@
+services:
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    container_name: nexus360-backend
+    restart: unless-stopped
+    env_file:
+      - ./backend/.env
+    environment:
+      NODE_ENV: production
+      PORT: 10000
+      FRONTEND_URL: ${FRONTEND_URL:-http://localhost:8080}
+      CORS_ORIGINS: ${CORS_ORIGINS:-http://localhost:8080}
+      WHITELABEL_DOCKER_IP: ${WHITELABEL_DOCKER_IP:-}
+      WHITELABEL_CNAME_TARGET: ${WHITELABEL_CNAME_TARGET:-localhost}
+      SEED_ADMIN_EMAIL: ${SEED_ADMIN_EMAIL:-admin@nexus360.com}
+      SEED_ADMIN_PASSWORD: ${SEED_ADMIN_PASSWORD:-Admin@2024!}
+      WHATSAPP_BRIDGE_URL: ${WHATSAPP_BRIDGE_URL:-http://whatsapp-bridge:8091}
+      WHATSAPP_BRIDGE_SECRET: ${WHATSAPP_BRIDGE_SECRET:-dev-whatsapp-bridge-secret}
+      GOOGLE_MAPS_SCRAPER_URL: ${GOOGLE_MAPS_SCRAPER_URL:-http://google-maps-scraper:8080}
+      GOOGLE_MAPS_SCRAPER_CONCURRENCY: ${GOOGLE_MAPS_SCRAPER_CONCURRENCY:-2}
+      GOOGLE_MAPS_SCRAPER_JOB_TIMEOUT_MS: ${GOOGLE_MAPS_SCRAPER_JOB_TIMEOUT_MS:-240000}
+    command: sh -c "if [ \"$${RUN_DB_PUSH:-false}\" = \"true\" ]; then npx prisma db push; fi; if [ \"$${RUN_SEED:-false}\" = \"true\" ]; then npm run seed; fi; npm run start"
+    expose:
+      - "10000"
+    ports:
+      - "${BACKEND_PORT:-10000}:10000"
+    healthcheck:
+      test: ["CMD", "wget", "--no-verbose", "--tries=1", "--spider", "http://localhost:10000/api/health"]
+      interval: 20s
+      timeout: 10s
+      retries: 5
+      start_period: 30s
+    networks:
+      - nexus360
+
+  google-maps-scraper:
+    build:
+      context: ./integrations/google-maps-scraper
+      dockerfile: Dockerfile
+    container_name: nexus360-google-maps-scraper
+    restart: unless-stopped
+    command:
+      - "-web"
+      - "-addr"
+      - ":8080"
+      - "-data-folder"
+      - "/gmapsdata"
+      - "-c"
+      - "${GOOGLE_MAPS_SCRAPER_WORKERS:-2}"
+      - "-browser-pool-size"
+      - "${GOOGLE_MAPS_SCRAPER_BROWSER_POOL:-1}"
+    volumes:
+      - google_maps_scraper_data:/gmapsdata
+    ports:
+      - "8081:8080"
+    expose:
+      - "8080"
+    shm_size: "1gb"
+    networks:
+      - nexus360
+
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+      args:
+        VITE_API_URL: ${VITE_API_URL:-}
+        VITE_LIVEKIT_URL: ${VITE_LIVEKIT_URL:-}
+    container_name: nexus360-frontend
+    restart: unless-stopped
+    depends_on:
+      backend:
+        condition: service_healthy
+    ports:
+      - "${FRONTEND_PORT:-8080}:80"
+    networks:
+      - nexus360
+
+  whatsapp-bridge:
+    build:
+      context: ./whatsapp-bridge
+      dockerfile: Dockerfile
+    container_name: nexus360-whatsapp-bridge
+    restart: unless-stopped
+    environment:
+      WHATSAPP_BRIDGE_ADDR: ":8091"
+      WHATSAPP_BRIDGE_SECRET: ${WHATSAPP_BRIDGE_SECRET:-}
+      WHATSAPP_BRIDGE_PUBLIC_URL: ${WHATSAPP_BRIDGE_PUBLIC_URL:-http://localhost:8091}
+      NEXUS_BACKEND_URL: ${NEXUS_BACKEND_URL:-http://backend:10000}
+    volumes:
+      - whatsapp_bridge_data:/app/data
+    ports:
+      - "${WHATSAPP_BRIDGE_PORT:-8091}:8091"
+    depends_on:
+      backend:
+        condition: service_healthy
+    networks:
+      - nexus360
+
+  redis:
+    image: redis:7-alpine
+    container_name: nexus360-redis
+    restart: unless-stopped
+    command: redis-server --appendonly yes --maxmemory 256mb --maxmemory-policy allkeys-lru
+    volumes:
+      - redis_data:/data
+    expose:
+      - "6379"
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 10s
+      timeout: 3s
+      retries: 3
+    networks:
+      - nexus360
+
+networks:
+  nexus360:
+    driver: bridge
+
+volumes:
+  whatsapp_bridge_data:
+  google_maps_scraper_data:
+  redis_data:

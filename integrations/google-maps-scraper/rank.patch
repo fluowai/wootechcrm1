@@ -1,0 +1,86 @@
+diff --git a/gmaps/entry.go b/gmaps/entry.go
+index 7a614eb..2abd953 100644
+--- a/gmaps/entry.go
++++ b/gmaps/entry.go
+@@ -3,13 +3,11 @@ package gmaps
+ import (
+ 	"encoding/json"
+ 	"fmt"
+-	"iter"
+ 	"log"
+ 	"math"
+ 	"net/url"
+ 	"regexp"
+ 	"runtime/debug"
+-	"slices"
+ 	"strconv"
+ 	"strings"
+ 	"time"
+@@ -88,6 +86,7 @@ var earliestReviewPublishedAt = time.Date(2007, time.January, 1, 0, 0, 0, 0, tim
+ 
+ type Entry struct {
+ 	ID         string              `json:"input_id"`
++	Rank       int                 `json:"rank"`
+ 	Link       string              `json:"link"`
+ 	Cid        string              `json:"cid"`
+ 	Title      string              `json:"title"`
+@@ -233,6 +232,7 @@ func (e *Entry) Validate() error {
+ func (e *Entry) CsvHeaders() []string {
+ 	return []string{
+ 		"input_id",
++		"rank",
+ 		"link",
+ 		"title",
+ 		"category",
+@@ -273,6 +273,7 @@ func (e *Entry) CsvHeaders() []string {
+ func (e *Entry) CsvRow() []string {
+ 	return []string{
+ 		e.ID,
++		stringify(e.Rank),
+ 		e.Link,
+ 		e.Title,
+ 		e.Category,
+@@ -959,37 +960,13 @@ type EntryWithDistance struct {
+ }
+ 
+ func filterAndSortEntriesWithinRadius(entries []*Entry, lat, lon, radius float64) []*Entry {
+-	withinRadiusIterator := func(yield func(EntryWithDistance) bool) {
+-		for _, entry := range entries {
+-			distance := entry.haversineDistance(lat, lon)
+-			if distance <= radius {
+-				if !yield(EntryWithDistance{Entry: entry, Distance: distance}) {
+-					return
+-				}
+-			}
++	result := make([]*Entry, 0, len(entries))
++	for index, entry := range entries {
++		entry.Rank = index + 1
++		if entry.haversineDistance(lat, lon) <= radius {
++			result = append(result, entry)
+ 		}
+ 	}
+ 
+-	entriesWithDistance := slices.Collect(iter.Seq[EntryWithDistance](withinRadiusIterator))
+-
+-	slices.SortFunc(entriesWithDistance, func(a, b EntryWithDistance) int {
+-		switch {
+-		case a.Distance < b.Distance:
+-			return -1
+-		case a.Distance > b.Distance:
+-			return 1
+-		default:
+-			return 0
+-		}
+-	})
+-
+-	resultIterator := func(yield func(*Entry) bool) {
+-		for _, e := range entriesWithDistance {
+-			if !yield(e.Entry) {
+-				return
+-			}
+-		}
+-	}
+-
+-	return slices.Collect(iter.Seq[*Entry](resultIterator))
++	return result
+ }

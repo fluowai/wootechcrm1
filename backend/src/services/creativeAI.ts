@@ -1,9 +1,8 @@
-import { Groq } from "groq-sdk";
+import { PrismaClient } from "@prisma/client";
+import { runGovernedAiText } from "./aiExecution.js";
 
 export const creativeAI = {
-  generateScript: async (theme: string, type: 'carousel' | 'single', apiKey: string) => {
-    const groq = new Groq({ apiKey });
-
+  generateScript: async (prisma: PrismaClient, theme: string, type: 'carousel' | 'single', orgId: string, userId?: string) => {
     const prompt = `
       Você é o codinome "Mano", o Diretor de Criação e Copywriter mais bem pago do mercado jurídico e de infoprodutos.
       Seu objetivo é criar um carrossel de 5 a 7 slides (ou um post único de impacto) sobre: "${theme}".
@@ -31,14 +30,17 @@ export const creativeAI = {
     `;
 
     try {
-      const completion = await groq.chat.completions.create({
-        messages: [{ role: "user", content: prompt }],
-        model: "llama-3-70b-8192",
-        response_format: { type: "json_object" },
-        temperature: 0.8 // Mais criatividade
+      const result = await runGovernedAiText(prisma, {
+        system: "creative-director",
+        organizationId: orgId,
+        userId,
+        agentKey: "creative-director",
+        message: prompt,
+        temperature: 0.8,
+        maxTokens: 4096,
       });
 
-      return JSON.parse(completion.choices[0].message.content || "{}");
+      return JSON.parse(result.result.response || "{}");
     } catch (error) {
       console.error("[CREATIVE_AI_ERROR]", error);
       throw new Error("Erro na geração criativa.");

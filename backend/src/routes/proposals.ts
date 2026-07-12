@@ -26,8 +26,11 @@ export function proposalRoutes(prisma: PrismaClient) {
   // Criar proposta a partir de oportunidade
   router.post("/from-opportunity", authenticateToken, resolveTenant, async (req: AuthRequest, res) => {
     const { opportunityId, title, notes } = req.body;
+    const orgId = req.user?.orgId;
+    if (!orgId) return res.status(403).json({ error: "TENANT_MISSING" });
+    if (!opportunityId || !title) return res.status(400).json({ error: "opportunityId e title sÃ£o obrigatÃ³rios" });
     try {
-      const proposal = await service.createFromOpportunity(opportunityId, { title, notes });
+      const proposal = await service.createFromOpportunity(orgId, opportunityId, { title, notes });
       res.json(proposal);
     } catch (error: any) {
       res.status(400).json({ error: error.message });
@@ -36,8 +39,10 @@ export function proposalRoutes(prisma: PrismaClient) {
 
   // Buscar detalhes e renderizar (com variáveis)
   router.get("/:id/render", authenticateToken, resolveTenant, async (req: AuthRequest, res) => {
+    const orgId = req.user?.orgId;
+    if (!orgId) return res.status(403).json({ error: "TENANT_MISSING" });
     try {
-      const rendered = await service.renderProposal(req.params.id);
+      const rendered = await service.renderProposal(orgId, req.params.id);
       res.json(rendered);
     } catch (error: any) {
       res.status(404).json({ error: error.message });

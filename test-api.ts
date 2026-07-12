@@ -1,6 +1,6 @@
 
 async function test() {
-  const baseUrl = 'http://localhost:3000';
+  const baseUrl = 'http://localhost:10000';
   
   console.log('--- Testing API ---');
 

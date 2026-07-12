@@ -10,7 +10,7 @@ import time
 from xml.etree.ElementTree import fromstring
 
 # ====================== CONFIGURAÇÃO ======================
-share_token = "YggdBLfdninEJX9"
+share_token = os.environ.get("CNPJ_WEBDAV_TOKEN", "YggdBLfdninEJX9")
 webdav_base = "https://arquivos.receitafederal.gov.br/public.php/webdav/"
 db_name = "cnpj_filtrado.db"
 pasta_temp = "temp_zip"

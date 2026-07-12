@@ -4,8 +4,14 @@ import bcrypt from 'bcryptjs';
 const prisma = new PrismaClient();
 
 async function main() {
-  const email = 'contato@consultio.com.br';
-  const password = 'Argo@15077399brsc';
+  const email = process.env.ADMIN_EMAIL;
+  const password = process.env.ADMIN_PASSWORD;
+  if (!email || !password) {
+    throw new Error("Defina ADMIN_EMAIL e ADMIN_PASSWORD para executar este script.");
+  }
+  if (password.length < 10 || !/[a-z]/.test(password) || !/[A-Z]/.test(password) || !/\d/.test(password)) {
+    throw new Error("ADMIN_PASSWORD deve ter no minimo 10 caracteres, com maiuscula, minuscula e numero.");
+  }
   const hashedPassword = await bcrypt.hash(password, 12);
 
   // Verifica se usuário existe

@@ -30,6 +30,12 @@ export async function seedSaaSCore() {
     { moduleKey: "crm", key: "crm.create_lead", name: "Criar Leads" },
     { moduleKey: "crm", key: "crm.export", name: "Exportar Leads (Excel/CSV)" },
     { moduleKey: "crm", key: "crm.manage_boards", name: "Gerenciar Funis" },
+
+    { moduleKey: "prospecting", key: "prospecting.view", name: "Visualizar Captacao" },
+    { moduleKey: "prospecting", key: "prospecting.capture", name: "Captar Leads" },
+    { moduleKey: "prospecting", key: "prospecting.enrich", name: "Enriquecer Leads" },
+    { moduleKey: "prospecting", key: "prospecting.schedule", name: "Agendar Captacao" },
+    { moduleKey: "prospecting", key: "prospecting.funnels", name: "Funis IA WhatsApp" },
     
     { moduleKey: "ai", key: "ai.agents", name: "Central de Agentes" },
     { moduleKey: "ai", key: "ai.prompt_architect", name: "Arquiteto de Prompts" },

@@ -1,6 +1,7 @@
 import { Router } from "express";
 import { PrismaClient } from "@prisma/client";
 import { authenticateToken } from "../middleware/auth.js";
+import { refreshOrganizationSubscriptionState } from "../services/subscriptionState.js";
 
 export function usageRoutes(prisma: PrismaClient) {
   const router = Router();
@@ -9,14 +10,15 @@ export function usageRoutes(prisma: PrismaClient) {
     const orgId = req.user.orgId;
 
     try {
-      const org = await prisma.organization.findUnique({
+      const rawOrg = await prisma.organization.findUnique({
         where: { id: orgId },
         include: { planObj: true }
       });
 
-      if (!org) return res.status(404).json({ error: "Organization not found" });
+      if (!rawOrg) return res.status(404).json({ error: "Organization not found" });
+      const org = await refreshOrganizationSubscriptionState(prisma, rawOrg);
 
-      const plan = org.planObj;
+      const plan = org?.planObj || await prisma.plan.findFirst({ where: { name: org?.plan } });
 
       // Calcular uso atual
       const [users, clients, leads, automations] = await Promise.all([
@@ -42,8 +44,9 @@ export function usageRoutes(prisma: PrismaClient) {
           leads,
           automations
         },
-        status: org.subscriptionStatus,
-        trialEndsAt: org.trialEndsAt
+        status: org?.subscriptionStatus,
+        trialEndsAt: org?.trialEndsAt,
+        currentPeriodEnd: org?.currentPeriodEnd,
       });
     } catch (error) {
       res.status(500).json({ error: "Failed to fetch usage metrics" });

@@ -17,6 +17,7 @@ const LEAD_FIELDS = [
   "birthDate", "status", "value", "tags", "source", "channel",
   "notes", "temperature", "score", "lgpdConsent", "lgpdDate",
   "assignedToId", "clientId", "pipelineId", "stageId", "workspaceId",
+  "cnpj", "owners", "managementTeam", "aiDiagnosis",
 ];
 
 const CLIENT_FIELDS = [

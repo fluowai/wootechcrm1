@@ -1,14 +1,18 @@
 import { Router } from "express";
 import { PrismaClient } from "@prisma/client";
-import { authenticateToken } from "../middleware/auth.js";
+import { AuthRequest, authenticateToken } from "../middleware/auth.js";
 import { requireAccess } from "../middleware/access.js";
+
+interface SnapshotData {
+  boards: { name: string }[];
+  stages: { name: string; order: number; boardName?: string }[];
+}
 
 export function snapshotRoutes(prisma: PrismaClient) {
   const router = Router();
 
-  // Listar Snapshots (da org ou públicos)
-  router.get("/", authenticateToken, async (req: any, res) => {
-    const orgId = req.user.orgId;
+  router.get("/", authenticateToken, async (req: AuthRequest, res) => {
+    const orgId = req.user!.orgId;
     const snapshots = await prisma.snapshot.findMany({
       where: {
         OR: [
@@ -20,9 +24,8 @@ export function snapshotRoutes(prisma: PrismaClient) {
     res.json(snapshots);
   });
 
-  // Criar Snapshot da configuração atual da agência
-  router.post("/", authenticateToken, requireAccess({ feature: "snapshots.create" }), async (req: any, res) => {
-    const orgId = req.user.orgId;
+  router.post("/", authenticateToken, requireAccess({ feature: "snapshots.create" }), async (req: AuthRequest, res) => {
+    const orgId = req.user!.orgId;
     const { name, description, isPublic } = req.body;
 
     try {
@@ -43,7 +46,7 @@ export function snapshotRoutes(prisma: PrismaClient) {
           description,
           isPublic: isPublic || false,
           organizationId: orgId,
-          createdBy: req.user.id,
+          createdBy: req.user!.id,
           data: snapshotData
         }
       });
@@ -54,9 +57,8 @@ export function snapshotRoutes(prisma: PrismaClient) {
     }
   });
 
-  // Aplicar Snapshot em uma agência
-  router.post("/:id/apply", authenticateToken, requireAccess({ feature: "snapshots.apply" }), async (req: any, res) => {
-    const orgId = req.user.orgId;
+  router.post("/:id/apply", authenticateToken, requireAccess({ feature: "snapshots.apply" }), async (req: AuthRequest, res) => {
+    const orgId = req.user!.orgId;
     
     try {
       const snapshot = await prisma.snapshot.findUnique({
@@ -65,7 +67,7 @@ export function snapshotRoutes(prisma: PrismaClient) {
 
       if (!snapshot) return res.status(404).json({ error: "Snapshot não encontrado" });
 
-      const data: any = snapshot.data;
+      const data = snapshot.data as unknown as SnapshotData;
 
       await prisma.$transaction(async (tx) => {
         for (const boardData of data.boards) {
@@ -73,7 +75,7 @@ export function snapshotRoutes(prisma: PrismaClient) {
             data: { name: boardData.name, organizationId: orgId }
           });
 
-          const boardStages = data.stages.filter((s: any) => s.boardName === boardData.name);
+          const boardStages = data.stages.filter((s) => s.boardName === boardData.name);
           for (const stageData of boardStages) {
             await tx.pipelineStage.create({
               data: { name: stageData.name, order: stageData.order, pipelineId: board.id }

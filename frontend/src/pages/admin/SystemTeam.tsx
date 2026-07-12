@@ -6,6 +6,7 @@ import {
   Trash2, 
   Edit3,
   Mail,
+  Phone,
   Calendar,
   CheckCircle2,
   X,
@@ -37,6 +38,7 @@ export default function SystemTeam() {
     id: '', 
     name: '', 
     email: '', 
+    phone: '',
     role: 'USER', 
     password: '',
     organizationId: '',
@@ -70,10 +72,36 @@ export default function SystemTeam() {
     try {
       const method = formData.id ? 'PATCH' : 'POST';
       const url = formData.id ? `/api/admin/users/${formData.id}` : '/api/admin/users';
+      const password = formData.password.trim();
+      if (!formData.id && !password) {
+        alert("Informe uma senha para o novo usuario");
+        return;
+      }
+      if (password) {
+        if (password.length < 10) {
+          alert("A senha deve ter no minimo 10 caracteres.");
+          return;
+        }
+        if (!/[a-z]/.test(password) || !/[A-Z]/.test(password) || !/\d/.test(password)) {
+          alert("A senha deve conter letras maiusculas, minusculas e numeros.");
+          return;
+        }
+      }
+
+      const payload: Record<string, any> = {
+        name: formData.name,
+        email: formData.email,
+        phone: formData.phone,
+        role: formData.role,
+        status: formData.status,
+        permissions: formData.permissions,
+        organizationId: formData.organizationId || null,
+      };
+      if (password) payload.password = password;
       
       const res = await apiFetch(url, {
         method,
-        body: JSON.stringify(formData)
+        body: JSON.stringify(payload)
       });
 
       if (res.ok) {
@@ -119,7 +147,7 @@ export default function SystemTeam() {
         </div>
         <button 
           onClick={() => {
-            setFormData({ id: '', name: '', email: '', role: 'USER', password: '', organizationId: '', status: 'ACTIVE', permissions: {} });
+            setFormData({ id: '', name: '', email: '', phone: '', role: 'USER', password: '', organizationId: '', status: 'ACTIVE', permissions: {} });
             setIsModalOpen(true);
           }}
           className="flex items-center gap-2 bg-gray-900 text-white px-4 py-2.5 rounded-xl hover:bg-black transition-all shadow-lg"
@@ -154,6 +182,7 @@ export default function SystemTeam() {
                       <div>
                         <p className="font-bold text-gray-900">{u.name}</p>
                         <p className="text-[11px] text-gray-500">{u.email}</p>
+                        {u.phone && <p className="text-[11px] text-gray-400">{u.phone}</p>}
                       </div>
                     </div>
                   </td>
@@ -182,6 +211,7 @@ export default function SystemTeam() {
                           setFormData({ 
                             ...u, 
                             password: '', 
+                            phone: u.phone || '',
                             permissions: u.permissions || {},
                             organizationId: u.organizationId || ''
                           });
@@ -241,6 +271,20 @@ export default function SystemTeam() {
                       onChange={e => setFormData({...formData, email: e.target.value})}
                       placeholder="usuario@email.com"
                     />
+                 </div>
+                 <div>
+                    <label className="text-xs font-bold text-gray-700 mb-1 block pl-1">Telefone</label>
+                    <div className="relative">
+                      <Phone className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400" size={16} />
+                      <input
+                        required
+                        type="tel"
+                        className="w-full pl-12 pr-4 py-3 bg-gray-50 rounded-xl outline-none border-none focus:ring-2 focus:ring-primary"
+                        value={formData.phone}
+                        onChange={e => setFormData({...formData, phone: e.target.value})}
+                        placeholder="(11) 99999-9999"
+                      />
+                    </div>
                  </div>
                  <div>
                     <label className="text-xs font-bold text-gray-700 mb-1 block pl-1">Organização</label>

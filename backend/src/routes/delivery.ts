@@ -80,7 +80,13 @@ export function deliveryRoutes(prisma: PrismaClient) {
     try {
       const orgId = req.user!.orgId;
       const { status } = req.query;
-      const where: any = { status: status || "pending" };
+      const orgDeliverableIds = await prisma.deliverable.findMany({
+        where: { organizationId: orgId },
+        select: { id: true }
+      });
+      const ids = orgDeliverableIds.map(d => d.id);
+      const where: any = { deliverableId: { in: ids } };
+      if (status) where.status = status;
       const approvals = await prisma.approval.findMany({ where, orderBy: { createdAt: "desc" } });
       res.json(approvals);
     } catch (error) {

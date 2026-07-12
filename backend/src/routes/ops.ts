@@ -13,20 +13,11 @@ export function opsRoutes(prisma: PrismaClient) {
   router.post("/generate-creative", async (req: AuthRequest, res) => {
     const { theme, type } = req.body;
     const orgId = req.user?.orgId;
+    if (!orgId) return res.status(401).json({ error: "Unauthorized" });
 
     try {
-      // Busca as configurações de IA da organização
-      const config = await prisma.organization.findUnique({
-        where: { id: orgId },
-        select: { groqKey: true }
-      });
-  
-      if (!config?.groqKey) {
-        return res.status(400).json({ error: "Configure sua chave do Groq para usar a IA." });
-      }
-
-      // 1. Gera o roteiro com a IA Mano usando a chave da organização
-      const script = await creativeAI.generateScript(theme, type, config.groqKey);
+      // 1. Gera o roteiro com a IA Mano
+      const script = await creativeAI.generateScript(prisma, theme, type, orgId, req.user?.id);
       
       // 2. Tenta gerar uma imagem (opcional, se falhar não trava o texto)
       let imageUrl = "";

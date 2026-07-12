@@ -1,21 +1,23 @@
+@import "tailwindcss";
+
 :root {
-  --nexus-primary: #6054F8;
-  --nexus-primary-hover: #5146E8;
-  --nexus-primary-light: #9B97FC;
+  --nexus-primary: #5B5CF0;
+  --nexus-primary-hover: #4F46E5;
+  --nexus-primary-light: #7C6CFF;
 
   --nexus-nav-dark: #212040;
   --nexus-nav-dark-2: #1B1A38;
 
-  --nexus-background: #F0F0F7;
-  --nexus-background-soft: #F6F7F8;
-  --nexus-background-light: #FAFAFB;
+  --nexus-background: #F8FAFC;
+  --nexus-background-soft: #F4F5FF;
+  --nexus-background-light: #FFFFFF;
 
   --nexus-card-bg: #FFFFFF;
-  --nexus-card-border: #EDECF0;
+  --nexus-card-border: #E2E8F0;
 
-  --nexus-text-primary: #212040;
-  --nexus-text-secondary: #657098;
-  --nexus-text-muted: #9F90B8;
+  --nexus-text-primary: #0F172A;
+  --nexus-text-secondary: #64748B;
+  --nexus-text-muted: #94A3B8;
 
   --nexus-success: #5AE7AC;
   --nexus-success-soft: #DFF5EA;
@@ -29,11 +31,11 @@
   --nexus-danger-soft: #F8DEDC;
   --nexus-danger-dark: #B43B36;
 
-  --nexus-radius-card: 10px;
+  --nexus-radius-card: 12px;
   --nexus-radius-button: 8px;
 
-  --nexus-shadow-card: 0 4px 14px rgba(33, 32, 64, 0.08);
-  --nexus-shadow-floating: 0 10px 30px rgba(33, 32, 64, 0.16);
+  --nexus-shadow-card: 0 8px 24px rgba(15, 23, 42, 0.06);
+  --nexus-shadow-floating: 0 18px 42px rgba(15, 23, 42, 0.14);
 }
 
 @theme {
@@ -151,6 +153,19 @@
   background: #fff;
   border-color: var(--color-primary);
   box-shadow: 0 0 0 2px color-mix(in srgb, var(--color-primary) 25%, transparent);
+}
+
+.google-local-rank-label {
+  background: transparent !important;
+  border: 0 !important;
+  box-shadow: none !important;
+  color: white !important;
+  font-size: 12px !important;
+  font-weight: 900 !important;
+}
+
+.google-local-rank-label::before {
+  display: none !important;
 }
 
 /* Custom transitions */

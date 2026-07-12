@@ -1,50 +1,27 @@
 import React, { useState, useEffect } from 'react';
-import { NavLink, useLocation, useParams } from 'react-router-dom';
+import { NavLink, useLocation } from 'react-router-dom';
 import { motion, AnimatePresence } from 'motion/react';
-import { 
-  LayoutDashboard, 
-  CalendarDays, 
-  Wallet, 
-  Users, 
-  FileText, 
-  Zap, 
-  Megaphone, 
-  Globe, 
-  ClipboardList, 
-  FolderKanban, 
-  KanbanSquare, 
-  UsersRound, 
-  BarChart3, 
-  Search,
-  ListFilter,
-  CheckSquare, 
-  Sparkles, 
-  Settings,
-  Layout,
+import {
   Shield,
   ChevronDown,
   X,
   LogOut,
   ChevronRight,
-  Monitor,
-  Ticket,
-  CreditCard,
-  Building2,
-  Rocket,
-  Bell,
-  Truck,
-  Package,
-  Clock,
-  BookOpen,
-  Activity,
-  GitBranch
+  Monitor
 } from 'lucide-react';
 import { ClientSelector } from './ClientSelector';
-import { useAccess } from '../../lib/access';
+import type {
+  AdminMenuCluster,
+  AdminMenuItem,
+  AppNavigationModel,
+  IconComponent,
+  VisibleMenuGroup
+} from '../../lib/appNavigation';
+import type { User } from '../../types';
 import './Sidebar.css';
 
 interface SidebarItemProps {
-  icon: any;
+  icon: IconComponent;
   label: string;
   path?: string;
   isActive?: boolean;
@@ -54,21 +31,21 @@ interface SidebarItemProps {
   collapsed?: boolean;
 }
 
-const SidebarItem: React.FC<SidebarItemProps> = ({ 
-  icon: Icon, 
-  label, 
-  path, 
-  isActive, 
-  isAi, 
-  badge, 
+const SidebarItem: React.FC<SidebarItemProps> = ({
+  icon: Icon,
+  label,
+  path,
+  isActive,
+  isAi,
+  badge,
   children,
-  collapsed 
+  collapsed
 }) => {
   const [isOpen, setIsOpen] = useState(false);
   const location = useLocation();
 
-  const isChildActive = React.Children.toArray(children).some((child) => 
-    React.isValidElement(child) && (child.props as any)?.path === location.pathname
+  const isChildActive = React.Children.toArray(children).some((child) =>
+    React.isValidElement<SidebarItemProps>(child) && child.props.path === location.pathname
   );
 
   useEffect(() => {
@@ -76,17 +53,17 @@ const SidebarItem: React.FC<SidebarItemProps> = ({
   }, [isChildActive]);
 
   const content = (
-    <div className={`sidebar-item ${isActive || isChildActive ? 'active' : ''} ${isAi ? 'sidebar-item-ai' : ''}`}>
-      <Icon size={20} className="sidebar-item-icon" />
+    <div
+      className={`sidebar-item ${isActive || isChildActive ? 'active' : ''} ${isAi ? 'sidebar-item-ai' : ''}`}
+      title={collapsed ? label : undefined}
+    >
+      <Icon size={21} className="sidebar-item-icon" />
       {!collapsed && (
         <>
           <span className="sidebar-item-label">{label}</span>
           {badge && <span className="ai-badge">{badge}</span>}
           {children && (
-            <motion.div
-              animate={{ rotate: isOpen ? 180 : 0 }}
-              transition={{ duration: 0.2 }}
-            >
+            <motion.div animate={{ rotate: isOpen ? 180 : 0 }} transition={{ duration: 0.2 }}>
               <ChevronDown size={14} className="ml-auto opacity-50" />
             </motion.div>
           )}
@@ -124,61 +101,117 @@ const SidebarItem: React.FC<SidebarItemProps> = ({
   );
 };
 
-const SidebarGroup: React.FC<{ label: string; children: React.ReactNode; collapsed?: boolean }> = ({ label, children, collapsed }) => (
-  <div className="sidebar-group">
-    {!collapsed && <div className="sidebar-group-label">{label}</div>}
-    {children}
-  </div>
-);
+const SidebarGroup: React.FC<{
+  label: string;
+  icon?: IconComponent;
+  count?: number;
+  children: React.ReactNode;
+  collapsed?: boolean;
+  collapsible?: boolean;
+  defaultOpen?: boolean;
+}> = ({ label, icon: Icon, count, children, collapsed, collapsible, defaultOpen = true }) => {
+  const [isOpen, setIsOpen] = useState(defaultOpen);
 
-export const Sidebar: React.FC<{ 
-  onLogout: () => void; 
-  user: any;
+  useEffect(() => {
+    setIsOpen(defaultOpen);
+  }, [defaultOpen]);
+
+  const visibleChildren = !collapsible || collapsed || isOpen;
+
+  return (
+    <div className="sidebar-group">
+      {!collapsed && (
+        <button
+          type="button"
+          className={`sidebar-group-label ${collapsible ? 'sidebar-group-trigger' : ''}`}
+          onClick={() => collapsible && setIsOpen((open) => !open)}
+        >
+          <span className="sidebar-group-title">
+            {Icon && <Icon size={16} />}
+            <span>{label}</span>
+          </span>
+          <span className="sidebar-group-meta">
+            {typeof count === 'number' && <span className="sidebar-group-count">{count}</span>}
+            {collapsible && (
+              <ChevronDown size={15} className={`sidebar-group-chevron ${isOpen ? 'open' : ''}`} />
+            )}
+          </span>
+        </button>
+      )}
+      {visibleChildren && children}
+    </div>
+  );
+};
+
+export const Sidebar: React.FC<{
+  onLogout: () => void;
+  user: User | null;
   isMobileOpen?: boolean;
   setIsMobileOpen?: (open: boolean) => void;
   collapsed: boolean;
   setCollapsed: (collapsed: boolean) => void;
   selectedClientId: string | null;
   onSelectClient: (clientId: string | null) => void;
- }> = ({ 
-  onLogout, 
-  user, 
-  isMobileOpen, 
-  setIsMobileOpen, 
-  collapsed, 
+  navigation: AppNavigationModel;
+  whiteLabel?: { logoUrl?: string; name?: string };
+}> = ({
+  onLogout,
+  user,
+  isMobileOpen,
+  setIsMobileOpen,
+  collapsed,
   setCollapsed,
   selectedClientId,
-  onSelectClient
+  onSelectClient,
+  navigation,
+  whiteLabel
 }) => {
-  const location = useLocation();
+  const renderAdminItem = (item: AdminMenuItem) => (
+    <SidebarItem
+      key={item.path}
+      icon={item.icon}
+      label={item.label}
+      path={item.path}
+      isActive={navigation.isAdminItemActive(item)}
+      collapsed={collapsed}
+      badge={item.badge}
+      isAi={item.isAi}
+    />
+  );
 
-  // Pegar o slug da URL manualmente (useParams não funciona aqui pois Sidebar está fora do Routes)
-  const getSlugFromPath = () => {
-    const parts = location.pathname.split('/').filter(Boolean);
-    const firstPart = parts[0] || '';
-    const reserved = ['admin', 'site', 'login', 'onboarding', 'meet', 'dashboard', 'crm', 'finance', 'settings', 'team', 'projects', 'reports'];
-    if (firstPart && !reserved.includes(firstPart)) return firstPart;
-    // Fallback: pegar do localStorage (salvo durante o login)
-    return localStorage.getItem('nexus_org_slug') || '';
+  const renderAdminCluster = (cluster: AdminMenuCluster) => (
+    <SidebarItem
+      key={cluster.label}
+      icon={cluster.icon}
+      label={cluster.label}
+      collapsed={collapsed}
+    >
+      {cluster.items.map(renderAdminItem)}
+    </SidebarItem>
+  );
+
+  const renderClientGroupShortcut = (group: VisibleMenuGroup) => {
+    const firstItem = group.visibleItems[0];
+    const firstChildItem = group.visibleChildren[0]?.items[0];
+    const targetPath = firstItem?.path || firstChildItem?.path;
+    if (!targetPath) return null;
+
+    return (
+      <SidebarItem
+        key={group.label}
+        icon={group.icon}
+        label={group.label}
+        path={navigation.getPath(targetPath)}
+        isActive={group.isActive}
+        collapsed={collapsed}
+      />
+    );
   };
-
-  const currentSlug = getSlugFromPath();
-  const access = useAccess(user);
-
-  // Função auxiliar para construir caminhos com slug
-  const getPath = (basePath: string) => {
-    if (basePath.startsWith('/admin')) return basePath;
-    if (currentSlug) return `/${currentSlug}${basePath}`;
-    return basePath;
-  };
-
-  const isSuper = user?.role === 'SUPER_ADMIN';
 
   return (
     <>
-      {/* Mobile Overlay */}
       {isMobileOpen && (
-        <div 
+        <div
           className="fixed inset-0 bg-black/20 backdrop-blur-sm z-[999] md:hidden"
           onClick={() => setIsMobileOpen?.(false)}
         />
@@ -187,18 +220,22 @@ export const Sidebar: React.FC<{
       <aside className={`sidebar-container ${collapsed ? 'collapsed' : ''} ${isMobileOpen ? 'mobile-open' : ''}`}>
         <div className="sidebar-header">
           <div className="logo-wrapper">
-            <div className="logo-icon">
-              <Monitor size={20} />
-            </div>
-            <span className="logo-text">Nexus360</span>
+            {whiteLabel?.logoUrl ? (
+              <img src={whiteLabel.logoUrl} alt={whiteLabel?.name || "Logo"} className="logo-icon object-contain" />
+            ) : (
+              <div className="logo-icon">
+                <Monitor size={20} />
+              </div>
+            )}
+            <span className="logo-text">{whiteLabel?.name || "Nexus360"}</span>
           </div>
-          <button 
+          <button
             className="hidden md:flex p-1.5 hover:bg-gray-100 rounded-lg text-gray-400 transition-colors"
             onClick={() => setCollapsed(!collapsed)}
           >
             <ChevronRight size={18} style={{ transform: collapsed ? '' : 'rotate(180deg)', transition: '0.3s' }} />
           </button>
-          <button 
+          <button
             className="md:hidden p-1.5 hover:bg-gray-100 rounded-lg text-gray-400"
             onClick={() => setIsMobileOpen?.(false)}
           >
@@ -207,348 +244,43 @@ export const Sidebar: React.FC<{
         </div>
 
         <div className="sidebar-scroll custom-scrollbar">
-          <ClientSelector 
+          <ClientSelector
             user={user}
-            selectedClientId={selectedClientId} 
-            onSelectClient={onSelectClient} 
+            selectedClientId={selectedClientId}
+            onSelectClient={onSelectClient}
             collapsed={collapsed}
           />
 
           {user?.role === 'SUPER_ADMIN' && selectedClientId && (
-            <div className="px-4 mb-4">
-              <button 
+            <div className={collapsed ? "mb-4 flex justify-center" : "px-4 mb-4"}>
+              <button
                 onClick={() => onSelectClient(null)}
-                className="w-full flex items-center justify-center gap-2 p-3 bg-amber-50 text-amber-700 rounded-2xl text-xs font-bold border border-amber-100 hover:bg-amber-100 transition-all shadow-sm"
+                title={collapsed ? "Voltar ao Modo Admin" : undefined}
+                className={collapsed
+                  ? "flex h-12 w-12 items-center justify-center rounded-xl border border-amber-100 bg-amber-50 text-amber-700 shadow-sm transition-all hover:bg-amber-100"
+                  : "w-full flex items-center justify-center gap-2.5 p-3.5 bg-amber-50 text-amber-700 rounded-2xl text-[13px] font-bold border border-amber-100 hover:bg-amber-100 transition-all shadow-sm"
+                }
               >
-                <Shield size={16} />
-                {!collapsed && "Voltar ao Modo Admin"}
+                <Shield size={collapsed ? 20 : 17} />
+                {!collapsed && 'Voltar ao Modo Admin'}
               </button>
             </div>
           )}
 
           {user?.role === 'SUPER_ADMIN' && !selectedClientId ? (
-            <>
-              <SidebarGroup label="Menu Super Admin" collapsed={collapsed}>
-                <SidebarItem 
-                  icon={LayoutDashboard} 
-                  label="Dashboard" 
-                  path="/admin" 
-                  isActive={location.pathname === '/admin'}
-                  collapsed={collapsed}
-                />
-                <SidebarItem 
-                  icon={Zap} 
-                  label="Monitoramento" 
-                  path="/admin/monitor" 
-                  isActive={location.pathname === '/admin/monitor'}
-                  collapsed={collapsed}
-                />
-                <SidebarItem 
-                  icon={Building2} 
-                  label="Clientes" 
-                  path="/admin/agencies" 
-                  isActive={location.pathname === '/admin/agencies'}
-                  collapsed={collapsed}
-                />
-                <SidebarItem 
-                  icon={Users} 
-                  label="Equipe Sistema" 
-                  path="/admin/team" 
-                  isActive={location.pathname === '/admin/team'}
-                  collapsed={collapsed}
-                />
-                <SidebarItem 
-                  icon={Ticket} 
-                  label="Planos SaaS" 
-                  path="/admin/plans" 
-                  isActive={location.pathname === '/admin/plans'}
-                  collapsed={collapsed}
-                />
-                <SidebarItem 
-                  icon={FileText} 
-                  label="Log de Auditoria" 
-                  path="/admin/audit" 
-                  isActive={location.pathname === '/admin/audit'}
-                  collapsed={collapsed}
-                />
-                <SidebarItem 
-                  icon={CreditCard} 
-                  label="Faturas SaaS" 
-                  path="/admin/billing" 
-                  isActive={location.pathname === '/admin/billing'}
-                  collapsed={collapsed}
-                />
-                <SidebarItem 
-                  icon={Ticket} 
-                  label="Chamados Globais" 
-                  path="/admin/tickets" 
-                  isActive={location.pathname === '/admin/tickets'}
-                  collapsed={collapsed}
-                />
-                <SidebarItem 
-                  icon={Globe} 
-                  label="Domínios" 
-                  path="/admin/domains" 
-                  isActive={location.pathname === '/admin/domains'}
-                  collapsed={collapsed}
-                />
-                <SidebarItem 
-                  icon={Rocket} 
-                  label="Controle de Lançamento" 
-                  path="/admin/releases" 
-                  isActive={location.pathname === '/admin/releases'}
-                  collapsed={collapsed}
-                />
-              </SidebarGroup>
-            </>
+            <SidebarGroup label="Menu Super Admin" collapsed={collapsed}>
+              {navigation.adminClusters.map(renderAdminCluster)}
+            </SidebarGroup>
           ) : (
-            <>
-              {/* Menu da Agência (Mostrado para ORG_ADMIN ou para SUPER_ADMIN em modo impersonificação) */}
-              <SidebarGroup label="Workspace" collapsed={collapsed}>
-                <SidebarItem 
-                  icon={LayoutDashboard} 
-                  label="Dashboard" 
-                  path={user?.role === 'SUPER_ADMIN' && !selectedClientId ? "/admin" : getPath("/dashboard")} 
-                  isActive={location.pathname === '/admin' || location.pathname === getPath('/dashboard') || location.pathname === '/'}
-                  collapsed={collapsed}
-                />
-                <SidebarItem 
-                  icon={BarChart3} 
-                  label="Relatórios" 
-                  path={getPath("/reports")} 
-                  isActive={location.pathname === getPath('/reports')}
-                  collapsed={collapsed}
-                />
-              </SidebarGroup>
-
-              {(isSuper || access.hasModule('crm') || access.hasModule('prospecting')) && (
-                <SidebarGroup label="🚀 Growth Hub" collapsed={collapsed}>
-                  {(isSuper || access.hasModule('prospecting')) && (
-                    <SidebarItem 
-                      icon={Search} 
-                      label="Captação de Leads" 
-                      path={getPath("/prospecting/capture")} 
-                      isActive={location.pathname === getPath('/prospecting/capture')}
-                      collapsed={collapsed}
-                    />
-                  )}
-                  {(isSuper || access.hasModule('crm')) && (
-                    <SidebarItem 
-                      icon={Users} 
-                      label="CRM & Pipelines" 
-                      path={getPath("/crm")} 
-                      isActive={location.pathname === getPath('/crm')}
-                      collapsed={collapsed}
-                    />
-                  )}
-                  {(isSuper || access.hasModule('sales')) && (
-                    <SidebarItem 
-                      icon={Zap} 
-                      label="Sales Machine" 
-                      path={getPath("/sales-machine")} 
-                      isActive={location.pathname === getPath('/sales-machine')}
-                      collapsed={collapsed}
-                    />
-                  )}
-                  {(isSuper || access.hasModule('proposals')) && (
-                    <SidebarItem 
-                      icon={FileText} 
-                      label="Propostas" 
-                      path={getPath("/proposals")} 
-                      isActive={location.pathname === getPath('/proposals')}
-                      collapsed={collapsed}
-                    />
-                  )}
-                </SidebarGroup>
-              )}
-
-              <SidebarGroup label="⚙️ Delivery Hub" collapsed={collapsed}>
-                <SidebarItem 
-                  icon={Monitor} 
-                  label="Tráfego (Ads)" 
-                  path={getPath("/ad-accounts")} 
-                  isActive={location.pathname === getPath('/ad-accounts')}
-                  collapsed={collapsed}
-                />
-                <SidebarItem 
-                  icon={KanbanSquare} 
-                  label="Projetos & Demandas" 
-                  path={getPath("/projects")} 
-                  isActive={location.pathname === getPath('/projects')}
-                  collapsed={collapsed}
-                />
-                <SidebarItem 
-                  icon={Globe} 
-                  label="Landing Pages" 
-                  path={getPath("/landing-pages")} 
-                  isActive={location.pathname === getPath('/landing-pages')}
-                  collapsed={collapsed}
-                />
-                <SidebarItem 
-                  icon={FolderKanban} 
-                  label="Criativos & Assets" 
-                  path={getPath("/assets")} 
-                  isActive={location.pathname === getPath('/assets')}
-                  collapsed={collapsed}
-                />
-              </SidebarGroup>
-
-              <SidebarGroup label="🏢 Agency Hub" collapsed={collapsed}>
-                <SidebarItem 
-                  icon={UsersRound} 
-                  label="Meus Clientes" 
-                  path={getPath("/clients")} 
-                  isActive={location.pathname.startsWith(getPath('/clients'))}
-                  collapsed={collapsed}
-                />
-                <SidebarItem 
-                  icon={UsersRound} 
-                  label="Equipe e Acessos" 
-                  path={getPath("/team")} 
-                  isActive={location.pathname === getPath('/team')}
-                  collapsed={collapsed}
-                />
-                <SidebarItem 
-                  icon={CreditCard} 
-                  label="Assinatura e Uso" 
-                  path={getPath("/billing")} 
-                  isActive={location.pathname === getPath('/billing')}
-                  collapsed={collapsed}
-                />
-                <SidebarItem 
-                  icon={Wallet} 
-                  label="Financeiro" 
-                  path={getPath("/finance")} 
-                  isActive={location.pathname === getPath('/finance')}
-                  collapsed={collapsed}
-                />
-                <SidebarItem 
-                  icon={CalendarDays} 
-                  label="Agenda" 
-                  collapsed={collapsed}
-                >
-                  <SidebarItem 
-                    icon={ChevronRight} 
-                    label="Calendário" 
-                    path={getPath("/calendar")} 
-                    isActive={location.pathname === getPath('/calendar')}
-                  />
-                  <SidebarItem 
-                    icon={ChevronRight} 
-                    label="Tarefas" 
-                    path={getPath("/tasks")} 
-                    isActive={location.pathname === getPath('/tasks')}
-                  />
-                </SidebarItem>
-              </SidebarGroup>
-
-              <SidebarGroup label="🤖 Automation Hub" collapsed={collapsed}>
-                <SidebarItem 
-                  icon={GitBranch} 
-                  label="Automações" 
-                  path={getPath("/automations")} 
-                  isActive={location.pathname === getPath('/automations')}
-                  collapsed={collapsed}
-                />
-                <SidebarItem 
-                  icon={Bell} 
-                  label="Notificações" 
-                  path={getPath("/notifications")} 
-                  isActive={location.pathname === getPath('/notifications')}
-                  collapsed={collapsed}
-                />
-                <SidebarItem 
-                  icon={Truck} 
-                  label="Entregas & Aprovações" 
-                  path={getPath("/delivery")} 
-                  isActive={location.pathname === getPath('/delivery')}
-                  collapsed={collapsed}
-                />
-                <SidebarItem 
-                  icon={Package} 
-                  label="Catálogo de Serviços" 
-                  path={getPath("/service-catalog")} 
-                  isActive={location.pathname === getPath('/service-catalog')}
-                  collapsed={collapsed}
-                />
-                <SidebarItem 
-                  icon={Clock} 
-                  label="Apontamento de Horas" 
-                  path={getPath("/time-tracking")} 
-                  isActive={location.pathname === getPath('/time-tracking')}
-                  collapsed={collapsed}
-                />
-                <SidebarItem 
-                  icon={Activity} 
-                  label="Health Score" 
-                  path={getPath("/client-health")} 
-                  isActive={location.pathname === getPath('/client-health')}
-                  collapsed={collapsed}
-                />
-                <SidebarItem 
-                  icon={BookOpen} 
-                  label="Base de Conhecimento" 
-                  path={getPath("/knowledge-base")} 
-                  isActive={location.pathname === getPath('/knowledge-base')}
-                  collapsed={collapsed}
-                />
-              </SidebarGroup>
-
-              {(isSuper || access.hasModule('ai')) && (
-                <SidebarGroup label="🧠 Nexus AI" collapsed={collapsed}>
-                  <SidebarItem 
-                    icon={Sparkles} 
-                    label="Central de Agentes" 
-                    path={getPath("/agents-hub")} 
-                    isActive={location.pathname === getPath('/agents-hub')}
-                    isAi
-                    badge="AI"
-                    collapsed={collapsed}
-                  />
-                  {(isSuper || access.hasFeature('ai.prompt_architect')) && (
-                    <SidebarItem 
-                      icon={Zap} 
-                      label="Arquiteto de Prompts" 
-                      path={getPath("/prompt-architect")} 
-                      isActive={location.pathname === getPath('/prompt-architect')}
-                      isAi
-                      collapsed={collapsed}
-                    />
-                  )}
-                </SidebarGroup>
-              )}
-
-              <SidebarGroup label="Configurações" collapsed={collapsed}>
-                <SidebarItem 
-                  icon={Settings} 
-                  label="Configurações" 
-                  path={getPath("/settings")} 
-                  isActive={location.pathname === getPath('/settings') || location.pathname === getPath('/ai-settings')}
-                  collapsed={collapsed}
-                >
-                  <SidebarItem 
-                    icon={ChevronRight} 
-                    label="Dados Gerais" 
-                    path={getPath("/settings")} 
-                    isActive={location.pathname === getPath('/settings')}
-                  />
-                  <SidebarItem 
-                    icon={Sparkles} 
-                    label="Configurações de IA" 
-                    path={getPath("/ai-settings")} 
-                    isActive={location.pathname === getPath('/ai-settings')}
-                  />
-                </SidebarItem>
-              </SidebarGroup>
-            </>
+            <SidebarGroup label="Menu" collapsed={collapsed}>
+              {navigation.visibleMenuGroups.map(renderClientGroupShortcut)}
+            </SidebarGroup>
           )}
         </div>
 
         <div className="sidebar-footer">
           <div className="user-profile-mini">
-            <div className="user-avatar">
-              {user?.name?.substring(0, 1) || 'U'}
-            </div>
+            <div className="user-avatar">{user?.name?.substring(0, 1) || 'U'}</div>
             {!collapsed && (
               <div className="user-info">
                 <div className="user-name">{user?.name}</div>
@@ -557,11 +289,11 @@ export const Sidebar: React.FC<{
             )}
           </div>
           {!collapsed && (
-            <button 
+            <button
               onClick={onLogout}
-              className="w-full mt-4 flex items-center justify-center gap-2 p-2.5 rounded-xl text-red-500 hover:bg-red-50 transition-colors text-sm font-semibold"
+              className="w-full mt-4 flex items-center justify-center gap-2 p-3 rounded-xl text-red-500 hover:bg-red-50 transition-colors text-[15px] font-semibold"
             >
-              <LogOut size={16} />
+              <LogOut size={17} />
               Sair do Sistema
             </button>
           )}

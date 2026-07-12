@@ -37,7 +37,7 @@ export default function AdminMonitor() {
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
         {[
           { label: 'API Gateway', status: 'Online', icon: Zap, color: 'text-emerald-500', bg: 'bg-emerald-50', sub: 'Latência: ' + latency + 'ms' },
-          { label: 'Database (Supabase)', status: 'Saudável', icon: Database, color: 'text-blue-500', bg: 'bg-blue-50', sub: 'Conexões: 12/100' },
+          { label: 'Database (PostgreSQL)', status: 'Saudável', icon: Database, color: 'text-blue-500', bg: 'bg-blue-50', sub: 'Docker: nexus360-postgres' },
           { label: 'Storage', status: '92% Livre', icon: Server, color: 'text-purple-500', bg: 'bg-purple-50', sub: 'Uso: 4.2 GB' },
           { label: 'Uptime (30d)', status: '99.98%', icon: Globe, color: 'text-orange-500', bg: 'bg-orange-50', sub: 'Última queda: Nunca' },
         ].map((s, i) => (

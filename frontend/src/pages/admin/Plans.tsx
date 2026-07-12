@@ -6,7 +6,9 @@ import {
   Zap, 
   Shield, 
   Crown,
-  Trash2,
+  Archive,
+  Copy,
+  Power,
   Users,
   Target,
   Layers,
@@ -61,19 +63,41 @@ export default function AdminPlans() {
   const handleSave = async (e: React.FormEvent) => {
     e.preventDefault();
     const data = new FormData(e.currentTarget as HTMLFormElement);
-    
-    const planData = {
-      name: data.get('name') as string,
-      slug: data.get('slug') as string,
-      description: data.get('description') as string,
-      priceMonthly: parseInt(data.get('priceMonthly') as string) || 0,
-      priceYearly: parseInt(data.get('priceYearly') as string) || 0,
-      maxUsers: parseInt(data.get('maxUsers') as string) || 0,
-      maxClients: parseInt(data.get('maxClients') as string) || 0,
-      maxLeads: parseInt(data.get('maxLeads') as string) || 0,
-      maxAutomations: parseInt(data.get('maxAutomations') as string) || 0,
-      maxMessages: parseInt(data.get('maxMessages') as string) || 0,
+    const textValue = (key: string) => {
+      const value = data.get(key);
+      return typeof value === 'string' && value.trim() ? value.trim() : undefined;
     };
+    const numberValue = (key: string) => {
+      const raw = data.get(key);
+      if (raw === null || raw === '') return undefined;
+      const parsed = Number(raw);
+      return Number.isFinite(parsed) ? parsed : undefined;
+    };
+    
+    const planData = Object.fromEntries(
+      Object.entries({
+        name: textValue('name'),
+        slug: textValue('slug'),
+        description: textValue('description'),
+        priceMonthly: numberValue('priceMonthly'),
+        priceYearly: numberValue('priceYearly'),
+        maxUsers: numberValue('maxUsers'),
+        maxClients: numberValue('maxClients'),
+        maxLeads: numberValue('maxLeads'),
+        maxContacts: numberValue('maxContacts'),
+        maxDeals: numberValue('maxDeals'),
+        maxPipelines: numberValue('maxPipelines'),
+        maxAutomations: numberValue('maxAutomations'),
+        maxLandingPages: numberValue('maxLandingPages'),
+        maxInboxes: numberValue('maxInboxes'),
+        maxAIRequests: numberValue('maxAIRequests'),
+        maxReports: numberValue('maxReports'),
+        maxIntegrations: numberValue('maxIntegrations'),
+        maxMessages: numberValue('maxMessages'),
+        isActive: textValue('isActive'),
+        isPublic: textValue('isPublic'),
+      }).filter(([, value]) => value !== undefined)
+    );
 
     try {
       const method = editingPlan ? 'PATCH' : 'POST';
@@ -103,6 +127,15 @@ export default function AdminPlans() {
         body: JSON.stringify({ featureKey, isEnabled })
       });
       fetchPlans(); // Refresh to show changes
+    } catch (err) {
+      console.error(err);
+    }
+  };
+
+  const runPlanAction = async (planId: string, action: 'duplicate' | 'archive' | 'activate') => {
+    try {
+      const res = await apiFetch(`/api/admin/plans/${planId}/${action}`, { method: 'POST' });
+      if (res.ok) fetchPlans();
     } catch (err) {
       console.error(err);
     }
@@ -151,6 +184,9 @@ export default function AdminPlans() {
                 </div>
                 <div className="flex flex-col items-end">
                    <span className="text-2xl font-black text-gray-900">R$ {plan.priceMonthly || 0}</span>
+                   <span className={`mt-2 text-[10px] font-black px-2 py-1 rounded-full ${plan.isActive ? 'bg-emerald-50 text-emerald-700' : 'bg-gray-100 text-gray-500'}`}>
+                     {plan.isActive ? 'ATIVO' : 'INATIVO'}
+                   </span>
                    <span className="text-[10px] font-bold text-gray-400 uppercase tracking-widest">por mês</span>
                 </div>
               </div>
@@ -190,6 +226,20 @@ export default function AdminPlans() {
                 >
                   <Settings2 size={18} />
                   <span>Configurar</span>
+                </button>
+                <button
+                  onClick={() => runPlanAction(plan.id, 'duplicate')}
+                  title="Duplicar plano"
+                  className="w-12 flex items-center justify-center py-3 bg-gray-50 text-gray-500 rounded-2xl font-bold text-sm hover:bg-gray-100 transition-all"
+                >
+                  <Copy size={18} />
+                </button>
+                <button
+                  onClick={() => runPlanAction(plan.id, plan.isActive ? 'archive' : 'activate')}
+                  title={plan.isActive ? 'Arquivar plano' : 'Ativar plano'}
+                  className={`w-12 flex items-center justify-center py-3 rounded-2xl font-bold text-sm transition-all ${plan.isActive ? 'bg-amber-50 text-amber-600 hover:bg-amber-100' : 'bg-emerald-50 text-emerald-600 hover:bg-emerald-100'}`}
+                >
+                  {plan.isActive ? <Archive size={18} /> : <Power size={18} />}
                 </button>
               </div>
             </div>
@@ -262,9 +312,16 @@ export default function AdminPlans() {
                       </div>
                       <div>
                          <label className="text-xs font-black text-gray-400 uppercase tracking-widest mb-2 block">Status</label>
-                         <select name="isActive" className="w-full px-6 py-4 bg-gray-50 rounded-2xl outline-none border-none font-bold">
+                         <select name="isActive" defaultValue={editingPlan?.isActive === false ? 'false' : 'true'} className="w-full px-6 py-4 bg-gray-50 rounded-2xl outline-none border-none font-bold">
                             <option value="true">Ativo</option>
                             <option value="false">Inativo</option>
+                         </select>
+                      </div>
+                      <div>
+                         <label className="text-xs font-black text-gray-400 uppercase tracking-widest mb-2 block">Visibilidade</label>
+                         <select name="isPublic" defaultValue={editingPlan?.isPublic === false ? 'false' : 'true'} className="w-full px-6 py-4 bg-gray-50 rounded-2xl outline-none border-none font-bold">
+                            <option value="true">Publico</option>
+                            <option value="false">Privado</option>
                          </select>
                       </div>
                       <div>
@@ -302,8 +359,20 @@ export default function AdminPlans() {
                         <input name="maxClients" type="number" defaultValue={editingPlan?.maxClients} required className="w-full px-6 py-4 bg-gray-50 rounded-2xl outline-none font-bold" />
                       </div>
                       <div>
+                        <label className="text-xs font-black text-gray-400 uppercase tracking-widest mb-2 block">Maximo de Contatos</label>
+                        <input name="maxContacts" type="number" defaultValue={editingPlan?.maxContacts} className="w-full px-6 py-4 bg-gray-50 rounded-2xl outline-none font-bold" />
+                      </div>
+                      <div>
                         <label className="text-xs font-black text-gray-400 uppercase tracking-widest mb-2 block">Máximo de Leads</label>
                         <input name="maxLeads" type="number" defaultValue={editingPlan?.maxLeads} required className="w-full px-6 py-4 bg-gray-50 rounded-2xl outline-none font-bold" />
+                      </div>
+                      <div>
+                        <label className="text-xs font-black text-gray-400 uppercase tracking-widest mb-2 block">Maximo de Pipelines</label>
+                        <input name="maxPipelines" type="number" defaultValue={editingPlan?.maxPipelines} className="w-full px-6 py-4 bg-gray-50 rounded-2xl outline-none font-bold" />
+                      </div>
+                      <div>
+                        <label className="text-xs font-black text-gray-400 uppercase tracking-widest mb-2 block">Maximo de Oportunidades</label>
+                        <input name="maxDeals" type="number" defaultValue={editingPlan?.maxDeals} className="w-full px-6 py-4 bg-gray-50 rounded-2xl outline-none font-bold" />
                       </div>
                       <div>
                         <label className="text-xs font-black text-gray-400 uppercase tracking-widest mb-2 block">Máximo de Automações</label>
@@ -312,6 +381,22 @@ export default function AdminPlans() {
                       <div>
                         <label className="text-xs font-black text-gray-400 uppercase tracking-widest mb-2 block">Mensagens/Mês</label>
                         <input name="maxMessages" type="number" defaultValue={editingPlan?.maxMessages} required className="w-full px-6 py-4 bg-gray-50 rounded-2xl outline-none font-bold" />
+                      </div>
+                      <div>
+                        <label className="text-xs font-black text-gray-400 uppercase tracking-widest mb-2 block">Agentes IA / Requests</label>
+                        <input name="maxAIRequests" type="number" defaultValue={editingPlan?.maxAIRequests} className="w-full px-6 py-4 bg-gray-50 rounded-2xl outline-none font-bold" />
+                      </div>
+                      <div>
+                        <label className="text-xs font-black text-gray-400 uppercase tracking-widest mb-2 block">Paginas</label>
+                        <input name="maxLandingPages" type="number" defaultValue={editingPlan?.maxLandingPages} className="w-full px-6 py-4 bg-gray-50 rounded-2xl outline-none font-bold" />
+                      </div>
+                      <div>
+                        <label className="text-xs font-black text-gray-400 uppercase tracking-widest mb-2 block">Caixas / Instancias</label>
+                        <input name="maxInboxes" type="number" defaultValue={editingPlan?.maxInboxes} className="w-full px-6 py-4 bg-gray-50 rounded-2xl outline-none font-bold" />
+                      </div>
+                      <div>
+                        <label className="text-xs font-black text-gray-400 uppercase tracking-widest mb-2 block">Relatorios</label>
+                        <input name="maxReports" type="number" defaultValue={editingPlan?.maxReports} className="w-full px-6 py-4 bg-gray-50 rounded-2xl outline-none font-bold" />
                       </div>
                     </div>
                   )}

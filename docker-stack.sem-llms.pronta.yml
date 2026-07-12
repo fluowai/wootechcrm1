@@ -1,0 +1,179 @@
+version: "3.8"
+
+services:
+  frontend:
+    image: ghcr.io/fluowai/nexus360-frontend:latest
+    environment:
+      VITE_API_URL: "same-origin"
+      VITE_LIVEKIT_URL: "${VITE_LIVEKIT_URL:-}"
+      VITE_PANEL_URL: "${VITE_PANEL_URL:-https://nexus360.consultio.com.br}"
+      VITE_SUPABASE_URL: "${SUPABASE_URL:-}"
+      VITE_SUPABASE_ANON_KEY: "${SUPABASE_ANON_KEY:-}"
+    networks:
+      - woopanel1
+      - nexus360_internal
+    deploy:
+      replicas: 1
+      restart_policy:
+        condition: any
+      labels:
+        - "traefik.enable=true"
+        - "traefik.docker.network=woopanel1"
+        - "traefik.http.routers.nexus360_frontend.rule=Host(`nexus360.consultio.com.br`)"
+        - "traefik.http.routers.nexus360_frontend.entrypoints=websecure"
+        - "traefik.http.routers.nexus360_frontend.tls.certresolver=letsencryptresolver"
+        - "traefik.http.routers.nexus360_frontend.priority=10"
+        - "traefik.http.routers.nexus360_frontend.service=nexus360_frontend"
+        - "traefik.http.routers.nexus360_custom_static.rule=Host(`crm.consultio.com.br`) || Host(`crm.tgamkt.com`)"
+        - "traefik.http.routers.nexus360_custom_static.entrypoints=websecure"
+        - "traefik.http.routers.nexus360_custom_static.tls.certresolver=letsencryptresolver"
+        - "traefik.http.routers.nexus360_custom_static.priority=200"
+        - "traefik.http.routers.nexus360_custom_static.service=nexus360_frontend"
+        - "traefik.http.services.nexus360_frontend.loadbalancer.server.port=80"
+
+  api:
+    image: ghcr.io/fluowai/nexus360-api:latest
+    environment:
+      NODE_ENV: "production"
+      PORT: "10000"
+      FRONTEND_URL: "${FRONTEND_URL:-https://nexus360.consultio.com.br}"
+      CORS_ORIGINS: "${CORS_ORIGINS:-https://nexus360.consultio.com.br,https://www.nexus360.consultio.com.br,https://crm.consultio.com.br,https://crm.tgamkt.com}"
+
+      WHITELABEL_DOCKER_IP: "${WHITELABEL_DOCKER_IP:-207.58.153.219}"
+      WHITELABEL_CNAME_TARGET: "${WHITELABEL_CNAME_TARGET:-nexus360.consultio.com.br}"
+      TRAEFIK_SYNC_MODE: "${TRAEFIK_SYNC_MODE:-docker-service}"
+      TRAEFIK_FRONTEND_URL: "${TRAEFIK_FRONTEND_URL:-http://nexus360_frontend:80}"
+      TRAEFIK_API_URL: "${TRAEFIK_API_URL:-http://nexus360_api:10000}"
+      TRAEFIK_CERT_RESOLVER: "${TRAEFIK_CERT_RESOLVER:-letsencryptresolver}"
+      TRAEFIK_ROUTER_SERVICE: "${TRAEFIK_ROUTER_SERVICE:-nexus360_frontend}"
+      TRAEFIK_ROUTER_LABEL_PREFIX: "${TRAEFIK_ROUTER_LABEL_PREFIX:-nexus360_custom}"
+      TRAEFIK_DOCKER_NETWORK: "${TRAEFIK_DOCKER_NETWORK:-woopanel1}"
+      DOCKER_SOCKET_PATH: "/var/run/docker.sock"
+
+      DATABASE_URL: "${DATABASE_URL:?DATABASE_URL obrigatoria}"
+      DIRECT_URL: "${DIRECT_URL:?DIRECT_URL obrigatoria}"
+      SUPABASE_DB_URL: "${SUPABASE_DB_URL:-${DATABASE_URL}}"
+      PGSSLMODE: "require"
+      JWT_SECRET: "${JWT_SECRET:?JWT_SECRET obrigatorio}"
+      SUPABASE_URL: "${SUPABASE_URL:?SUPABASE_URL obrigatoria}"
+      SUPABASE_REST_URL: "${SUPABASE_URL}/rest/v1"
+      SUPABASE_ANON_KEY: "${SUPABASE_ANON_KEY:?SUPABASE_ANON_KEY obrigatoria}"
+      SUPABASE_SERVICE_ROLE_KEY: "${SUPABASE_SERVICE_ROLE_KEY:?SUPABASE_SERVICE_ROLE_KEY obrigatoria}"
+      SUPABASE_JWT_SECRET: "${JWT_SECRET:?JWT_SECRET obrigatorio}"
+
+      AI_CORE_DEFAULT_MODEL: "${AI_CORE_DEFAULT_MODEL:-gpt-4o-mini}"
+      OPENAI_API_KEY: "${OPENAI_API_KEY:-}"
+      CHATGPT_API_KEY: "${CHATGPT_API_KEY:-${OPENAI_API_KEY:-}}"
+      GEMINI_API_KEY: "${GEMINI_API_KEY:-}"
+      GROQ_API_KEY: "${GROQ_API_KEY:-}"
+      TOGETHER_API_KEY: "${TOGETHER_API_KEY:-}"
+      SERPER_API_KEY: "${SERPER_API_KEY:-}"
+      SERPAPI_API_KEY: "${SERPAPI_API_KEY:-}"
+      SERP_API_KEY: "${SERP_API_KEY:-}"
+      OUTSCRAPER_API_KEY: "${OUTSCRAPER_API_KEY:-}"
+      OUTSCRAPER_KEY: "${OUTSCRAPER_KEY:-}"
+      MUAC_API_KEY: "${MUAC_API_KEY:-}"
+
+      LIVEKIT_API_KEY: "${LIVEKIT_API_KEY:-}"
+      LIVEKIT_API_SECRET: "${LIVEKIT_API_SECRET:-}"
+      LIVEKIT_URL: "${LIVEKIT_URL:-}"
+      BILLING_WEBHOOK_SECRET: "${BILLING_WEBHOOK_SECRET:-}"
+      ASAAS_WEBHOOK_SECRET: "${ASAAS_WEBHOOK_SECRET:-}"
+      STRIPE_WEBHOOK_SECRET: "${STRIPE_WEBHOOK_SECRET:-}"
+
+      WHATSAPP_BRIDGE_URL: "${WHATSAPP_BRIDGE_URL:-http://whatsapp-bridge:8091}"
+      WHATSAPP_BRIDGE_SECRET: "${WHATSAPP_BRIDGE_SECRET:-}"
+      GOOGLE_MAPS_SCRAPER_URL: "http://google-maps-scraper:8080"
+      GOOGLE_MAPS_SCRAPER_CONCURRENCY: "${GOOGLE_MAPS_SCRAPER_CONCURRENCY:-2}"
+      GOOGLE_MAPS_SCRAPER_JOB_TIMEOUT_MS: "${GOOGLE_MAPS_SCRAPER_JOB_TIMEOUT_MS:-240000}"
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+    networks:
+      woopanel1:
+      nexus360_internal:
+        aliases:
+          - backend
+          - nexus360_api
+    deploy:
+      replicas: 1
+      placement:
+        constraints:
+          - node.role == manager
+      restart_policy:
+        condition: any
+      update_config:
+        order: stop-first
+        failure_action: rollback
+      rollback_config:
+        order: stop-first
+      labels:
+        - "traefik.enable=true"
+        - "traefik.docker.network=woopanel1"
+        - "traefik.http.routers.nexus360_api.rule=Host(`nexus360.consultio.com.br`) && (PathPrefix(`/api`) || PathPrefix(`/lp`))"
+        - "traefik.http.routers.nexus360_api.entrypoints=websecure"
+        - "traefik.http.routers.nexus360_api.tls.certresolver=letsencryptresolver"
+        - "traefik.http.routers.nexus360_api.priority=20"
+        - "traefik.http.routers.nexus360_api.service=nexus360_api"
+        - "traefik.http.routers.nexus360_custom_static_api.rule=(Host(`crm.consultio.com.br`) || Host(`crm.tgamkt.com`)) && (PathPrefix(`/api`) || PathPrefix(`/lp`))"
+        - "traefik.http.routers.nexus360_custom_static_api.entrypoints=websecure"
+        - "traefik.http.routers.nexus360_custom_static_api.tls.certresolver=letsencryptresolver"
+        - "traefik.http.routers.nexus360_custom_static_api.priority=210"
+        - "traefik.http.routers.nexus360_custom_static_api.service=nexus360_api"
+        - "traefik.http.services.nexus360_api.loadbalancer.server.port=10000"
+
+  google-maps-scraper:
+    image: ghcr.io/fluowai/nexus360-google-maps-scraper:latest
+    command:
+      - "-web"
+      - "-addr"
+      - ":8080"
+      - "-data-folder"
+      - "/gmapsdata"
+      - "-c"
+      - "${GOOGLE_MAPS_SCRAPER_WORKERS:-2}"
+      - "-browser-pool-size"
+      - "${GOOGLE_MAPS_SCRAPER_BROWSER_POOL:-1}"
+    volumes:
+      - google_maps_scraper_data:/gmapsdata
+    networks:
+      - nexus360_internal
+    deploy:
+      replicas: 1
+      restart_policy:
+        condition: any
+      resources:
+        limits:
+          memory: 2G
+    stop_grace_period: 30s
+
+  whatsapp-bridge:
+    image: ghcr.io/fluowai/nexus360-whatsapp-bridge:latest
+    environment:
+      WHATSAPP_BRIDGE_ADDR: ":8091"
+      WHATSAPP_BRIDGE_SECRET: "${WHATSAPP_BRIDGE_SECRET:-dev-whatsapp-bridge-secret}"
+      WHATSAPP_BRIDGE_PUBLIC_URL: "${WHATSAPP_BRIDGE_PUBLIC_URL:-https://nexus360.consultio.com.br}"
+      NEXUS_BACKEND_URL: "${NEXUS_BACKEND_URL:-http://backend:10000}"
+    volumes:
+      - whatsapp_bridge_data:/app/data
+    networks:
+      nexus360_internal:
+        aliases:
+          - whatsapp-bridge
+    deploy:
+      replicas: 1
+      restart_policy:
+        condition: any
+
+volumes:
+  google_maps_scraper_data:
+    name: nexus360_google_maps_scraper_data
+  whatsapp_bridge_data:
+    name: nexus360_whatsapp_bridge_data
+
+networks:
+  woopanel1:
+    external: true
+    name: woopanel1
+  nexus360_internal:
+    driver: overlay
+    attachable: true

@@ -1,0 +1,131 @@
+.section-nav-shell {
+  position: sticky;
+  top: 80px;
+  z-index: 35;
+  border-bottom: 1px solid #E2E8F0;
+  background: rgba(248, 250, 252, 0.94);
+  backdrop-filter: blur(18px);
+}
+
+.section-nav-inner {
+  max-width: 1800px;
+  margin: 0 auto;
+  padding: 0.78rem 2rem;
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  min-width: 0;
+}
+
+.section-nav-context {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.55rem;
+  color: #0F172A;
+  font-size: 0.82rem;
+  font-weight: 800;
+  letter-spacing: 0;
+  white-space: nowrap;
+  flex: 0 0 auto;
+}
+
+.section-nav-context-icon {
+  width: 30px;
+  height: 30px;
+  border-radius: 8px;
+  background: #EEF2FF;
+  color: #5B5CF0;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.section-nav-list {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  min-width: 0;
+  overflow-x: auto;
+  scrollbar-width: none;
+}
+
+.section-nav-list::-webkit-scrollbar {
+  display: none;
+}
+
+.section-nav-link {
+  min-height: 38px;
+  max-width: 230px;
+  padding: 0.55rem 0.78rem;
+  border: 1px solid #E2E8F0;
+  border-radius: 8px;
+  background: #FFFFFF;
+  color: #64748B;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  flex: 0 0 auto;
+  font-size: 0.84rem;
+  font-weight: 750;
+  line-height: 1.1;
+  text-decoration: none;
+  transition: color 0.18s ease, background 0.18s ease, border-color 0.18s ease, box-shadow 0.18s ease;
+}
+
+.section-nav-link span {
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.section-nav-link:hover {
+  border-color: #C7D2FE;
+  color: #5B5CF0;
+  background: #F8FAFF;
+}
+
+.section-nav-link.active {
+  border-color: #5B5CF0;
+  background: #5B5CF0;
+  color: #FFFFFF;
+  box-shadow: 0 8px 18px rgba(91, 92, 240, 0.18);
+}
+
+.section-nav-link.ai:not(.active) {
+  border-color: #DDD6FE;
+  color: #5B5CF0;
+  background: #FBFAFF;
+}
+
+.section-nav-badge {
+  padding: 0.1rem 0.42rem;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.22);
+  color: inherit;
+  font-size: 0.68rem;
+  font-weight: 900;
+  text-transform: uppercase;
+}
+
+@media (max-width: 768px) {
+  .section-nav-shell {
+    top: 65px;
+  }
+
+  .section-nav-inner {
+    padding: 0.7rem 1rem;
+    align-items: flex-start;
+    flex-direction: column;
+    gap: 0.55rem;
+  }
+
+  .section-nav-list {
+    width: 100%;
+  }
+
+  .section-nav-link {
+    max-width: 190px;
+  }
+}

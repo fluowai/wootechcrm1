@@ -1,9 +1,31 @@
 import { Router } from "express";
 import { PrismaClient } from "@prisma/client";
 import { authenticateToken } from "../middleware/auth.js";
+import { verifyHmacSignature, isProduction } from "../utils/security.js";
 
 export function billingRoutes(prisma: PrismaClient) {
   const router = Router();
+
+  // Catálogo público. A página de vendas reflete exatamente os planos
+  // publicados pelo Super Admin, sem manter preços duplicados no frontend.
+  router.get("/plans", async (_req, res) => {
+    try {
+      const plans = await prisma.plan.findMany({
+        where: { isActive: true, isPublic: true },
+        include: {
+          planFeatures: {
+            where: { isEnabled: true },
+            select: { featureKey: true, isEnabled: true, limit: true },
+          },
+        },
+        orderBy: { priceMonthly: "asc" },
+      });
+      res.json(plans);
+    } catch (error) {
+      console.error("[PUBLIC_PLANS_ERROR]", error);
+      res.status(500).json({ error: "Não foi possível carregar os planos." });
+    }
+  });
 
   // Listar faturas da organização
   router.get("/invoices", authenticateToken, async (req: any, res) => {
@@ -32,6 +54,13 @@ export function billingRoutes(prisma: PrismaClient) {
     const orgId = req.user.orgId;
 
     try {
+      if (isProduction()) {
+        return res.status(403).json({
+          error: "CHECKOUT_PROVIDER_REQUIRED",
+          message: "Assinaturas em produção devem ser ativadas pelo provedor de pagamento.",
+        });
+      }
+
       const plan = await prisma.plan.findUnique({ where: { id: planId } });
       if (!plan) return res.status(404).json({ error: "Plano não encontrado" });
 
@@ -71,6 +100,19 @@ export function billingRoutes(prisma: PrismaClient) {
   router.post("/webhook/:provider", async (req, res) => {
     const { provider } = req.params;
     const event = req.body;
+    const secret =
+      process.env[`${provider.toUpperCase()}_WEBHOOK_SECRET`] ||
+      process.env.BILLING_WEBHOOK_SECRET;
+
+    if (!secret) {
+      return res.status(503).json({ error: "Webhook secret not configured" });
+    }
+
+    const signature = req.headers["x-signature"] || req.headers["asaas-signature"];
+    const payload = JSON.stringify(event);
+    if (!verifyHmacSignature(payload, Array.isArray(signature) ? signature[0] : signature, secret)) {
+      return res.status(401).json({ error: "Invalid webhook signature" });
+    }
 
     console.log(`[Billing Webhook] Received ${provider} event:`, event.event || event.type);
 

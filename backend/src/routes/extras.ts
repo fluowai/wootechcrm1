@@ -27,8 +27,11 @@ export function extraRoutes(prisma: PrismaClient) {
       const orgId = req.user!.orgId;
       const { name, description } = req.body;
       if (!name) return res.status(400).json({ error: "Nome do quiz é obrigatório" });
+      let slug = name.toLowerCase().normalize("NFD").replace(/[\u0300-\u036f]/g, "").replace(/[^a-z0-9]+/g, "-").replace(/^-+|-+$/g, "").slice(0, 80);
+      const existing = await prisma.quiz.findUnique({ where: { slug } });
+      if (existing) slug = slug + "-" + Date.now().toString(36);
       const quiz = await prisma.quiz.create({
-        data: { name, description, organizationId: orgId },
+        data: { name, slug, description, organizationId: orgId },
       });
       res.json(quiz);
     } catch (error) {

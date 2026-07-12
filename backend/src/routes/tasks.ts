@@ -1,6 +1,7 @@
 import { Router } from "express";
 import { PrismaClient } from "@prisma/client";
 import { AuthRequest } from "../middleware/auth.js";
+import { auditFromRequest } from "../utils/auditLogger.js";
 
 export function taskRoutes(prisma: PrismaClient) {
   const router = Router();
@@ -76,11 +77,11 @@ export function taskRoutes(prisma: PrismaClient) {
     const { status, priority, title, description, dueDate, assignedToId, activityLog } = req.body;
     
     try {
-      const existingTask = await prisma.task.findUnique({
-        where: { id: req.params.id }
+      const existingTask = await prisma.task.findFirst({
+        where: { id: req.params.id, organizationId: req.user?.orgId }
       });
 
-      if (!existingTask || existingTask.organizationId !== req.user?.orgId) {
+      if (!existingTask) {
         return res.status(404).json({ error: "Tarefa não encontrada" });
       }
 
@@ -108,11 +109,11 @@ export function taskRoutes(prisma: PrismaClient) {
   // Deletar tarefa
   router.delete("/:id", async (req: AuthRequest, res) => {
     try {
-      const task = await prisma.task.findUnique({
-        where: { id: req.params.id }
+      const task = await prisma.task.findFirst({
+        where: { id: req.params.id, organizationId: req.user?.orgId }
       });
 
-      if (!task || task.organizationId !== req.user?.orgId) {
+      if (!task) {
         return res.status(404).json({ error: "Tarefa não encontrada" });
       }
 
@@ -120,6 +121,7 @@ export function taskRoutes(prisma: PrismaClient) {
         where: { id: req.params.id }
       });
 
+      auditFromRequest(req, "DELETE", "Task", req.params.id);
       res.json({ success: true });
     } catch (error) {
       console.error("[TASKS_DELETE]", error);

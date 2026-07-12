@@ -18,3 +18,9 @@ View your app in AI Studio: https://ai.studio/apps/b5aa1d1b-141a-4afe-9794-832dc
 2. Set the `GEMINI_API_KEY` in [.env.local](.env.local) to your Gemini API key
 3. Run the app:
    `npm run dev`
+
+## Docker / Portainer
+
+Para rodar como Stack no Portainer, use o `docker-compose.yml` da raiz. Ele sobe frontend, backend e PostgreSQL com volume persistente.
+
+Guia completo: [docs/PORTAINER_DEPLOY.md](docs/PORTAINER_DEPLOY.md). Use `.env.portainer.example` como base para as variaveis da Stack.

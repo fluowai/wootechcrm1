@@ -1,0 +1,379 @@
+<!DOCTYPE html><html lang="pt-BR"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>V5 Company | Estrategia, execucao e resultado</title><link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&display=swap" rel="stylesheet"></head><body>
+<style>
+  :root {
+    --v5-blue: #135dff;
+    --v5-purple: #7428ff;
+    --v5-lime: #9cff00;
+    --ink: #070913;
+    --muted: #6b7280;
+    --line: rgba(255,255,255,.12);
+  }
+  * { box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+  body { margin: 0; overflow-x: hidden; font-family: Inter, Arial, sans-serif; -webkit-font-smoothing: antialiased; }
+  a { color: inherit; text-decoration: none; }
+  button, input { font: inherit; }
+  .v5-page { min-height: 100vh; overflow: hidden; }
+  .container { width: min(1500px, calc(100% - 64px)); margin-inline: auto; }
+  .nav { min-height: 96px; display: flex; align-items: center; justify-content: space-between; gap: 22px; }
+  .menu { display: flex; align-items: center; gap: clamp(16px, 2vw, 30px); font-size: 11px; font-weight: 900; text-transform: uppercase; letter-spacing: .04em; }
+  .logo { display: inline-flex; align-items: center; min-width: 190px; height: 50px; }
+  .logo svg { width: 176px; max-width: 42vw; height: auto; display: block; overflow: visible; }
+  .btn { min-height: 46px; display: inline-flex; align-items: center; justify-content: center; gap: 9px; border: 0; border-radius: 8px; padding: 14px 22px; color: #fff; font-size: 11px; font-weight: 950; text-transform: uppercase; letter-spacing: .02em; cursor: pointer; white-space: nowrap; }
+  .hero { position: relative; min-height: calc(100vh - 96px); display: flex; align-items: center; padding: clamp(42px, 6vw, 84px) 0 clamp(42px, 5vw, 76px); }
+  .grid { width: 100%; display: grid; grid-template-columns: minmax(0, 1.02fr) minmax(0, .98fr); gap: clamp(44px, 6vw, 86px); align-items: center; }
+  .eyebrow { font-size: 11px; font-weight: 950; letter-spacing: .16em; text-transform: uppercase; margin-bottom: 20px; }
+  h1 { margin: 0 0 22px; max-width: 760px; font-size: clamp(42px, 6.1vw, 72px); line-height: .98; letter-spacing: 0; font-weight: 950; }
+  h2 { margin: 0; font-size: clamp(28px, 4vw, 39px); line-height: 1.08; letter-spacing: 0; font-weight: 950; }
+  h3 { margin: 0; font-size: 16px; line-height: 1.25; }
+  p { margin: 0; }
+  .lead { max-width: 590px; font-size: clamp(15px, 1.6vw, 18px); line-height: 1.75; font-weight: 520; }
+  .lead-form { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; width: min(100%, 760px); margin-top: 29px; }
+  .lead-form input { min-width: 0; min-height: 50px; border-radius: 8px; padding: 0 16px; outline: none; font-size: 13px; font-weight: 700; }
+  .diagnosis-card { display: none; width: min(100%, 860px); margin-top: 18px; padding: 22px; border-radius: 8px; }
+  .diagnosis-card.is-open { display: grid; gap: 17px; }
+  .diagnosis-card h3 { font-size: 22px; }
+  .diagnosis-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 12px; }
+  .diagnosis-field { display: grid; gap: 8px; min-width: 0; }
+  .diagnosis-field label { font-size: 12px; font-weight: 900; line-height: 1.35; }
+  .diagnosis-field select { min-width: 0; min-height: 46px; border-radius: 8px; padding: 0 12px; border: 1px solid currentColor; font-weight: 800; outline: none; }
+  .slot-grid { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 10px; }
+  .slot-btn { min-height: 44px; border-radius: 8px; border: 1px solid currentColor; background: transparent; color: inherit; font-size: 12px; font-weight: 900; cursor: pointer; }
+  .slot-btn.active { background: currentColor; }
+  .slot-btn.active span { color: #fff; }
+  .section { padding: clamp(70px, 9vw, 122px) 0; }
+  .section-head { text-align: center; max-width: 840px; margin: 0 auto 54px; }
+  .cards { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 16px; }
+  .card { min-width: 0; border-radius: 8px; padding: 24px; min-height: 180px; }
+  .icon { width: 45px; height: 45px; border-radius: 999px; display: grid; place-items: center; margin-bottom: 20px; }
+  .icon svg, .circle svg { width: 21px; height: 21px; stroke: currentColor; fill: none; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+  .card p, .step p, .service p, .metric p { margin-top: 10px; font-size: 13px; line-height: 1.58; }
+  .cta { position: relative; overflow: hidden; border-radius: 0; padding: clamp(30px, 5vw, 46px); display: flex; align-items: center; justify-content: space-between; gap: 26px; }
+  .cta::after { content: "V5"; position: absolute; right: 34px; bottom: -54px; font-size: clamp(130px, 16vw, 190px); line-height: .8; font-weight: 950; letter-spacing: -.12em; opacity: .13; pointer-events: none; }
+  .cta-content { position: relative; z-index: 1; max-width: 680px; }
+  .cta .btn { position: relative; z-index: 1; }
+  .success { display: none; margin-top: 14px; border-radius: 10px; padding: 14px 16px; font-size: 13px; font-weight: 800; }
+  @media (max-width: 920px) {
+    .container { width: min(100% - 28px, 820px); }
+    .menu a:not(.btn) { display: none; }
+    .grid { grid-template-columns: 1fr; }
+    .cards { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    .lead-form, .diagnosis-grid, .slot-grid { grid-template-columns: 1fr; }
+    .hero { padding-top: 26px; }
+  }
+  @media (max-width: 620px) {
+    .container { width: min(100% - 22px, 430px); }
+    .nav { min-height: 74px; }
+    .logo { min-width: auto; height: 42px; }
+    .logo svg { width: 126px; max-width: 46vw; }
+    .menu .btn { min-height: 40px; padding: 11px 12px; font-size: 10px; }
+    h1 { font-size: clamp(38px, 12vw, 48px); }
+    .cards { grid-template-columns: 1fr; }
+    .cta { flex-direction: column; align-items: stretch; }
+    .cta .btn { width: 100%; }
+    .cta::after { display: none; }
+  }
+</style>
+<main class="v5-page v5-purple-page">
+  <style>
+    .v5-purple-page { color: #101322; background: #fbfbff; }
+    .v5-purple-page .accent, .v5-purple-page .eyebrow { color: var(--v5-purple); }
+    .v5-purple-page .menu { color: #34394a; }
+    .v5-purple-page .btn { background: linear-gradient(135deg, #7b2cff, #4e1df1); box-shadow: 0 16px 34px rgba(105,45,255,.23); }
+    .v5-purple-page .lead { color: #565d72; }
+    .v5-purple-page .lead-form input { border: 1px solid #e2e4ee; background: #fff; box-shadow: 0 8px 30px rgba(18,22,45,.05); color: #101322; }
+    .v5-purple-page .diagnosis-card { color: #101322; border: 1px solid #ded8ff; background: #fff; box-shadow: 0 18px 48px rgba(31,28,79,.1); }
+    .v5-purple-page .diagnosis-card p { margin-top: 8px; color: #657084; line-height: 1.5; }
+    .v5-purple-page .diagnosis-field select { color: #101322; background: #fff; border-color: #ded8ff; }
+    .v5-purple-page [data-v5-result] strong { display: block; color: var(--v5-purple); font-size: 24px; }
+    .v5-purple-page .media { position: relative; min-height: 480px; }
+    .v5-purple-page .photo { position: relative; height: 410px; border-radius: 8px; overflow: hidden; background: linear-gradient(135deg, #d9ddea, #858ea4); box-shadow: 0 32px 90px rgba(31,28,79,.18); }
+    .v5-purple-page .photo::before { content: ""; position: absolute; inset: 0; background: radial-gradient(circle at 68% 27%, rgba(255,255,255,.7), transparent 17%), linear-gradient(135deg, transparent, rgba(93,56,255,.35)); }
+    .v5-purple-page .photo::after { content: ""; position: absolute; inset: 34px 36px; border-radius: 8px; background: linear-gradient(90deg, rgba(255,255,255,.76), rgba(255,255,255,.28) 28%, transparent 29%), linear-gradient(0deg, rgba(16,19,34,.16) 1px, transparent 1px); background-size: 100% 100%, 100% 34px; opacity: .7; }
+    .v5-purple-page .play { position: absolute; z-index: 2; left: 50%; top: 50%; transform: translate(-50%, -50%); width: 74px; height: 74px; border-radius: 999px; background: #7b2cff; color: #fff; display: grid; place-items: center; box-shadow: 0 18px 40px rgba(124,44,255,.35); }
+    .v5-purple-page .play svg { width: 31px; height: 31px; margin-left: 4px; fill: currentColor; }
+    .v5-purple-page .result-card { position: absolute; z-index: 3; left: 28px; right: 28px; bottom: 16px; display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 12px; background: #fff; border-radius: 8px; padding: 20px; box-shadow: 0 22px 60px rgba(25,27,55,.15); text-align: center; }
+    .v5-purple-page .result-card strong { display: block; color: var(--v5-purple); font-size: 21px; }
+    .v5-purple-page .result-card span { display: block; margin-top: 5px; color: #6b7280; font-size: 11px; font-weight: 800; }
+    .v5-purple-page .steps { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 26px; }
+    .v5-purple-page .step { text-align: center; }
+    .v5-purple-page .step .circle { width: 70px; height: 70px; margin: 0 auto 18px; border: 1px solid #ded8ff; border-radius: 999px; display: grid; place-items: center; color: var(--v5-purple); background: #fff; }
+    .v5-purple-page .step small { color: var(--v5-purple); font-weight: 950; }
+    .v5-purple-page .step p { color: #657084; }
+    .v5-purple-page .logos { border-radius: 0; background: linear-gradient(135deg, #f0e7ff, #efe7ff); padding: 38px 24px; text-align: center; }
+    .v5-purple-page .logos-grid { display: flex; flex-wrap: wrap; justify-content: center; gap: 24px 42px; margin-top: 20px; color: #666b78; font-weight: 950; }
+    .v5-purple-page .cta { display: grid; grid-template-columns: .82fr 1.18fr; align-items: center; background: linear-gradient(135deg, #7b2cff, #5317e8); color: #fff; }
+    .v5-purple-page .cta-form { position: relative; z-index: 2; display: grid; grid-template-columns: minmax(150px, 1fr) minmax(190px, 1fr) minmax(140px, .7fr) minmax(230px, auto); gap: 12px; width: 100%; }
+    .v5-purple-page .cta-form input { min-width: 0; min-height: 50px; border: 0; border-radius: 8px; padding: 0 16px; font-weight: 800; }
+    .v5-purple-page .cta-form .btn { background: #080912; box-shadow: none; }
+    .v5-purple-page .success { background: #f1ebff; color: #4217ad; border: 1px solid #d7c9ff; }
+    @media (max-width: 920px) {
+      .v5-purple-page .media { min-height: auto; }
+      .v5-purple-page .result-card { position: relative; left: auto; right: auto; bottom: auto; margin-top: 16px; }
+      .v5-purple-page .steps, .v5-purple-page .cta { grid-template-columns: 1fr; }
+      .v5-purple-page .cta-form { grid-template-columns: 1fr; }
+    }
+    @media (max-width: 560px) {
+      .v5-purple-page .photo { height: 310px; }
+      .v5-purple-page .result-card { grid-template-columns: 1fr; }
+    }
+  </style>
+  <header class="container nav">
+    <div class="logo logo-purple" aria-label="V5 Company">
+    <svg viewBox="0 0 230 56" role="img" aria-label="V5 Company">
+      <defs>
+        <linearGradient id="v5Fivepurple" x1="38" x2="98" y1="8" y2="56" gradientUnits="userSpaceOnUse">
+          <stop stop-color="#111322"/>
+          <stop offset="1" stop-color="#111322"/>
+        </linearGradient>
+        <linearGradient id="v5Vpurple" x1="0" x2="58" y1="0" y2="56" gradientUnits="userSpaceOnUse">
+          <stop stop-color="#7428ff"/>
+          <stop offset="1" stop-color="#7428ff"/>
+        </linearGradient>
+      </defs>
+      <g transform="translate(0 8) scale(.82)">
+        
+        <path d="M3 0h20l17 36L60 0h20L48 50H31L3 0Z" fill="url(#v5Vpurple)"/>
+        <path d="M75 0h49l-8 14H89l-3 8h20c16 0 24 7 21 20-3 13-14 18-31 18H58l9-15h32c6 0 9-2 10-6 1-4-2-6-8-6H65L75 0Z" fill="url(#v5Fivepurple)"/>
+      </g>
+      <text x="108" y="34" fill="#111322" font-family="Inter, Arial, sans-serif" font-size="13" font-weight="900" letter-spacing="4">COMPANY</text>
+    </svg>
+  </div>
+    <nav class="menu"><a href="#sobre">Sobre</a><a href="#servicos">Servicos</a><a href="#cases">Cases</a><a href="#depoimentos">Depoimentos</a><a class="btn" href="#contato">Fale conosco</a></nav>
+  </header>
+  <section class="hero container" id="sobre">
+    <div class="grid">
+      <div>
+        <div class="eyebrow">Assessoria de marketing</div>
+        <h1>Estrategia.<br>Execucao.<br><span class="accent">Resultado.</span></h1>
+        <p class="lead">Somos especialistas em transformar negocios atraves do marketing digital com metodo, performance e acompanhamento proximo.</p>
+        
+    <form class="lead-form light" data-v5-form data-slug="v5-company-estrategia-execucao">
+      <input name="name" placeholder="Seu nome" required>
+      <input name="email" type="email" placeholder="Seu melhor e-mail" required>
+      <input name="phone" placeholder="WhatsApp">
+      <input name="message" type="hidden" value="Lead capturado pela landing v5-company-estrategia-execucao">
+      <button class="btn" type="submit">Quero uma analise gratuita</button>
+    </form>
+    <div class="diagnosis-card" data-v5-diagnosis>
+      <div>
+        <h3>Pre-diagnostico V5</h3>
+        <p>Responda 3 perguntas rapidas. Se fizer sentido, escolha um horario e a call entra direto na agenda do closer.</p>
+      </div>
+      <div class="diagnosis-grid">
+        <div class="diagnosis-field">
+          <label>Qual e o principal objetivo agora?</label>
+          <select name="objective">
+            <option value="18">Gerar mais leads qualificados</option>
+            <option value="15">Melhorar posicionamento da marca</option>
+            <option value="22">Aumentar vendas rapidamente</option>
+          </select>
+        </div>
+        <div class="diagnosis-field">
+          <label>Como esta o marketing hoje?</label>
+          <select name="maturity">
+            <option value="10">Ainda sem processo claro</option>
+            <option value="18">Tem campanhas, mas sem previsibilidade</option>
+            <option value="24">Ja vende e quer escalar</option>
+          </select>
+        </div>
+        <div class="diagnosis-field">
+          <label>Investimento mensal aproximado?</label>
+          <select name="budget">
+            <option value="10">Ainda vou definir</option>
+            <option value="18">Ate R$ 3 mil</option>
+            <option value="28">Acima de R$ 3 mil</option>
+          </select>
+        </div>
+      </div>
+      <button class="btn" type="button" data-v5-score>Gerar pre-diagnostico</button>
+      <div data-v5-result hidden></div>
+      <div class="slot-grid" data-v5-slots hidden></div>
+      <button class="btn" type="button" data-v5-submit hidden disabled>Agendar call com closer</button>
+    </div>
+    <div class="success" data-v5-success>Contato recebido. A equipe V5 vai falar com voce.</div>
+      </div>
+      <div class="media" aria-label="Reuniao estrategica">
+        <div class="photo"><div class="play"><svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg></div></div>
+        <div class="result-card"><div><strong>+150</strong><span>Clientes atendidos</span></div><div><strong>+R$50M</strong><span>Gerados em vendas</span></div><div><strong>98%</strong><span>Satisfacao</span></div></div>
+      </div>
+    </div>
+  </section>
+  <section class="section container" id="servicos">
+    <div class="section-head"><div class="eyebrow">Como fazemos</div><h2>Um metodo comprovado que gera resultados</h2></div>
+    <div class="steps">
+      <article class="step"><div class="circle"><svg viewBox="0 0 24 24"><path d="M16 21v-2a4 4 0 0 0-8 0v2"/><circle cx="12" cy="7" r="4"/><path d="M22 21v-2a4 4 0 0 0-3-3.87"/><path d="M16 3.13a4 4 0 0 1 0 7.75"/></svg></div><small>01</small><h3>Diagnostico</h3><p>Entendemos seu negocio e identificamos oportunidades.</p></article>
+      <article class="step"><div class="circle"><svg viewBox="0 0 24 24"><path d="M5 15c-1 1-2 4-2 4s3-1 4-2l11-11a4 4 0 0 0-5.7-5.7L1 11v4h4Z"/><path d="M15 9l-5-5"/></svg></div><small>02</small><h3>Estrategia</h3><p>Criamos um plano personalizado focado em resultado.</p></article>
+      <article class="step"><div class="circle"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><circle cx="12" cy="12" r="4"/><path d="M12 3v3M21 12h-3M12 21v-3M3 12h3"/></svg></div><small>03</small><h3>Execucao</h3><p>Colocamos tudo em pratica com excelencia.</p></article>
+      <article class="step"><div class="circle"><svg viewBox="0 0 24 24"><path d="M4 19V5"/><path d="M4 19h16"/><path d="m7 15 4-4 3 3 5-7"/></svg></div><small>04</small><h3>Escala</h3><p>Otimizamos campanhas e aumentamos o retorno.</p></article>
+    </div>
+  </section>
+  <section class="container section" id="cases"><div class="logos"><div class="eyebrow">Nossos clientes tiveram resultados reais</div><div class="logos-grid"><span>CONEXA</span><span>LEVEL UP</span><span>INOVA</span><span>TRACKER</span><span>AGENCIA X</span></div></div></section>
+  <section class="container section" id="contato"><div class="cta"><div class="cta-content"><h2>Vamos transformar seu marketing?</h2><p style="margin-top:10px;color:#e6dcff">Preencha os dados e faca o pre-diagnostico para falar com um closer.</p></div><div style="position:relative;z-index:2">
+    <form class="lead-form light" data-v5-form data-slug="v5-company-estrategia-execucao">
+      <input name="name" placeholder="Seu nome" required>
+      <input name="email" type="email" placeholder="Seu melhor e-mail" required>
+      <input name="phone" placeholder="WhatsApp">
+      <input name="message" type="hidden" value="Lead capturado pela landing v5-company-estrategia-execucao">
+      <button class="btn" type="submit">Quero falar com um especialista</button>
+    </form>
+    <div class="diagnosis-card" data-v5-diagnosis>
+      <div>
+        <h3>Pre-diagnostico V5</h3>
+        <p>Responda 3 perguntas rapidas. Se fizer sentido, escolha um horario e a call entra direto na agenda do closer.</p>
+      </div>
+      <div class="diagnosis-grid">
+        <div class="diagnosis-field">
+          <label>Qual e o principal objetivo agora?</label>
+          <select name="objective">
+            <option value="18">Gerar mais leads qualificados</option>
+            <option value="15">Melhorar posicionamento da marca</option>
+            <option value="22">Aumentar vendas rapidamente</option>
+          </select>
+        </div>
+        <div class="diagnosis-field">
+          <label>Como esta o marketing hoje?</label>
+          <select name="maturity">
+            <option value="10">Ainda sem processo claro</option>
+            <option value="18">Tem campanhas, mas sem previsibilidade</option>
+            <option value="24">Ja vende e quer escalar</option>
+          </select>
+        </div>
+        <div class="diagnosis-field">
+          <label>Investimento mensal aproximado?</label>
+          <select name="budget">
+            <option value="10">Ainda vou definir</option>
+            <option value="18">Ate R$ 3 mil</option>
+            <option value="28">Acima de R$ 3 mil</option>
+          </select>
+        </div>
+      </div>
+      <button class="btn" type="button" data-v5-score>Gerar pre-diagnostico</button>
+      <div data-v5-result hidden></div>
+      <div class="slot-grid" data-v5-slots hidden></div>
+      <button class="btn" type="button" data-v5-submit hidden disabled>Agendar call com closer</button>
+    </div>
+    <div class="success" data-v5-success>Contato recebido. A equipe V5 vai falar com voce.</div></div></div></section>
+  
+<script>
+(() => {
+  document.querySelectorAll("[data-v5-form]").forEach((form) => {
+    const wrap = form.parentElement;
+    const diagnosis = wrap.querySelector("[data-v5-diagnosis]");
+    const success = form.parentElement.querySelector("[data-v5-success]");
+    const scoreButton = wrap.querySelector("[data-v5-score]");
+    const result = wrap.querySelector("[data-v5-result]");
+    const slots = wrap.querySelector("[data-v5-slots]");
+    const submit = wrap.querySelector("[data-v5-submit]");
+    let lead = null;
+    let quiz = {};
+    let score = 0;
+    let selectedSlot = "";
+
+    function nextSlots() {
+      const output = [];
+      const now = new Date();
+      const hours = [9, 11, 14, 16];
+      for (let day = 1; output.length < 8 && day <= 12; day += 1) {
+        const date = new Date(now);
+        date.setDate(now.getDate() + day);
+        if (date.getDay() === 0 || date.getDay() === 6) continue;
+        for (const hour of hours) {
+          const slot = new Date(date);
+          slot.setHours(hour, 0, 0, 0);
+          if (slot > now) output.push(slot);
+          if (output.length >= 8) break;
+        }
+      }
+      return output;
+    }
+
+    function formatSlot(date) {
+      return date.toLocaleString("pt-BR", {
+        weekday: "short",
+        day: "2-digit",
+        month: "2-digit",
+        hour: "2-digit",
+        minute: "2-digit"
+      }).replace(".", "");
+    }
+
+    function renderSlots() {
+      slots.innerHTML = "";
+      nextSlots().forEach((slot) => {
+        const button = document.createElement("button");
+        button.type = "button";
+        button.className = "slot-btn";
+        button.innerHTML = "<span>" + formatSlot(slot) + "</span>";
+        button.addEventListener("click", () => {
+          selectedSlot = slot.toISOString();
+          slots.querySelectorAll(".slot-btn").forEach((item) => item.classList.remove("active"));
+          button.classList.add("active");
+          submit.disabled = false;
+        });
+        slots.appendChild(button);
+      });
+      slots.hidden = false;
+    }
+
+    form.addEventListener("submit", async (event) => {
+      event.preventDefault();
+      const button = form.querySelector("button");
+      lead = Object.fromEntries(new FormData(form).entries());
+      button.disabled = true;
+      form.style.display = "none";
+      diagnosis.classList.add("is-open");
+      diagnosis.scrollIntoView({ behavior: "smooth", block: "center" });
+    });
+
+    scoreButton.addEventListener("click", () => {
+      quiz = {};
+      diagnosis.querySelectorAll("select").forEach((select) => {
+        quiz[select.name] = select.options[select.selectedIndex].textContent;
+      });
+      score = [...diagnosis.querySelectorAll("select")].reduce((total, select) => total + Number(select.value || 0), 20);
+      score = Math.min(100, score);
+      result.hidden = false;
+      result.innerHTML = "<strong>Score " + score + "/100</strong><p>" + (score >= 70
+        ? "Existe bom fit para uma conversa comercial. Escolha um horario para falar com o closer."
+        : "Existe oportunidade, mas o closer vai avaliar o melhor proximo passo com base no seu contexto.") + "</p>";
+      renderSlots();
+      submit.hidden = false;
+      submit.textContent = "Agendar call com closer";
+      submit.disabled = true;
+    });
+
+    submit.addEventListener("click", async () => {
+      const original = submit.textContent;
+      submit.disabled = true;
+      submit.textContent = "Enviando...";
+      const body = {
+        ...lead,
+        message: (lead.message || "") + " | Pre-diagnostico V5",
+        quiz,
+        score,
+        qualified: score >= 70,
+        scheduledAt: selectedSlot
+      };
+      try {
+        const response = await fetch("/api/landing-pages/" + form.dataset.slug + "/lead", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(body),
+        });
+        if (!response.ok) throw new Error("lead");
+        diagnosis.style.display = "none";
+        if (success) success.style.display = "block";
+        if (success && selectedSlot) {
+          success.textContent = "Call agendada na agenda do closer. A equipe V5 recebeu o pre-diagnostico.";
+        }
+      } catch (error) {
+        submit.disabled = false;
+        submit.textContent = original;
+        alert("Nao foi possivel enviar agora. Tente novamente em instantes.");
+      }
+    });
+  });
+})();
+</script>
+</main></body></html>

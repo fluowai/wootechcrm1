@@ -10,7 +10,7 @@ export function calendarRoutes(prisma: PrismaClient) {
   router.get("/", async (req: AuthRequest, res) => {
     try {
       const { department, userId } = req.query;
-      let where: any = {
+      const where: any = {
         organizationId: req.user?.orgId
       };
 

@@ -1,0 +1,180 @@
+version: "3.8"
+
+services:
+  frontend:
+    image: ghcr.io/fluowai/nexus360-frontend:latest
+    environment:
+      VITE_API_URL: "same-origin"
+      VITE_LIVEKIT_URL: ""
+      VITE_PANEL_URL: "https://nexus360.consultio.com.br"
+      VITE_SUPABASE_URL: "https://ywvhfgvlnbigfmerilcq.supabase.co"
+      VITE_SUPABASE_ANON_KEY: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Inl3dmhmZ3ZsbmJpZ2ZtZXJpbGNxIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzc1MDYyOTEsImV4cCI6MjA5MzA4MjI5MX0.2FezfFHWhx7aXYKCTORnvDXeEDfshzHvzyiA9DMP5vs"
+    networks:
+      - woopanel1
+      - nexus360_internal
+    deploy:
+      replicas: 1
+      restart_policy:
+        condition: any
+      labels:
+        - "traefik.enable=true"
+        - "traefik.docker.network=woopanel1"
+        - "traefik.http.routers.nexus360_frontend.rule=Host(`nexus360.consultio.com.br`)"
+        - "traefik.http.routers.nexus360_frontend.entrypoints=websecure"
+        - "traefik.http.routers.nexus360_frontend.tls.certresolver=letsencryptresolver"
+        - "traefik.http.routers.nexus360_frontend.priority=10"
+        - "traefik.http.routers.nexus360_frontend.service=nexus360_frontend"
+        - "traefik.http.routers.nexus360_custom_static.rule=Host(`crm.consultio.com.br`) || Host(`crm.tgamkt.com`) || Host(`wootech.com.br`) || Host(`crm.wootech.com.br`)"
+        - "traefik.http.routers.nexus360_custom_static.entrypoints=websecure"
+        - "traefik.http.routers.nexus360_custom_static.tls.certresolver=letsencryptresolver"
+        - "traefik.http.routers.nexus360_custom_static.priority=200"
+        - "traefik.http.routers.nexus360_custom_static.service=nexus360_frontend"
+        - "traefik.http.routers.nexus360_wootech_crm.rule=Host(`crm.wootech.com.br`)"
+        - "traefik.http.routers.nexus360_wootech_crm.entrypoints=websecure"
+        - "traefik.http.routers.nexus360_wootech_crm.tls.certresolver=letsencryptresolver"
+        - "traefik.http.routers.nexus360_wootech_crm.tls.domains[0].main=crm.wootech.com.br"
+        - "traefik.http.routers.nexus360_wootech_crm.priority=300"
+        - "traefik.http.routers.nexus360_wootech_crm.service=nexus360_frontend"
+        - "traefik.http.services.nexus360_frontend.loadbalancer.server.port=80"
+
+  api:
+    image: ghcr.io/fluowai/nexus360-api:latest
+    environment:
+      NODE_ENV: "production"
+      PORT: "10000"
+      FRONTEND_URL: "https://nexus360.consultio.com.br"
+      CORS_ORIGINS: "https://nexus360.consultio.com.br,https://www.nexus360.consultio.com.br,https://crm.consultio.com.br,https://crm.tgamkt.com,https://wootech.com.br,https://crm.wootech.com.br"
+      WHITELABEL_DOCKER_IP: "207.58.153.219"
+      WHITELABEL_CNAME_TARGET: "nexus360.consultio.com.br"
+      TRAEFIK_SYNC_MODE: "docker-service"
+      TRAEFIK_FRONTEND_URL: "http://nexus360_frontend:80"
+      TRAEFIK_API_URL: "http://nexus360_api:10000"
+      TRAEFIK_CERT_RESOLVER: "letsencryptresolver"
+      TRAEFIK_ROUTER_SERVICE: "nexus360_frontend"
+      TRAEFIK_ROUTER_LABEL_PREFIX: "nexus360_custom"
+      TRAEFIK_DOCKER_NETWORK: "woopanel1"
+      DOCKER_SOCKET_PATH: "/var/run/docker.sock"
+
+      GOOGLE_MAPS_SCRAPER_URL: "http://google-maps-scraper:8080"
+      GOOGLE_MAPS_SCRAPER_CONCURRENCY: "2"
+      GOOGLE_MAPS_SCRAPER_JOB_TIMEOUT_MS: "240000"
+
+      DATABASE_URL: "postgresql://postgres.ywvhfgvlnbigfmerilcq:Q8YvwfX28WWhW3dz@aws-1-sa-east-1.pooler.supabase.com:6543/postgres?pgbouncer=true&sslmode=require&statement_cache_size=0"
+      DIRECT_URL: "postgresql://postgres:Q8YvwfX28WWhW3dz@db.ywvhfgvlnbigfmerilcq.supabase.co:5432/postgres?sslmode=require&schema=public"
+      SUPABASE_DB_URL: "postgresql://postgres.ywvhfgvlnbigfmerilcq:Q8YvwfX28WWhW3dz@aws-1-sa-east-1.pooler.supabase.com:6543/postgres?pgbouncer=true&sslmode=require&statement_cache_size=0"
+      PGSSLMODE: "require"
+
+      JWT_SECRET: "MTluDh9gIwUTonk9op8kRc3B/cYihNKj2RYPL8+0D1F6iCykx2shnfvPJLmJsJ/cn0z81JFY52G5os0hFjokuQ=="
+
+      SUPABASE_URL: "https://ywvhfgvlnbigfmerilcq.supabase.co"
+      SUPABASE_REST_URL: "https://ywvhfgvlnbigfmerilcq.supabase.co/rest/v1"
+      SUPABASE_ANON_KEY: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Inl3dmhmZ3ZsbmJpZ2ZtZXJpbGNxIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzc1MDYyOTEsImV4cCI6MjA5MzA4MjI5MX0.2FezfFHWhx7aXYKCTORnvDXeEDfshzHvzyiA9DMP5vs"
+      SUPABASE_SERVICE_ROLE_KEY: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Inl3dmhmZ3ZsbmJpZ2ZtZXJpbGNxIiwicm9sZSI6InNlcnZpY2Vfcm9sZSIsImlhdCI6MTc3NzUwNjI5MSwiZXhwIjoyMDkzMDgyMjkxfQ.wIihcD0zm4rqQwvur7Smzy3-5sc0YJgTWwSQR5u47AE"
+      SUPABASE_JWT_SECRET: "MTluDh9gIwUTonk9op8kRc3B/cYihNKj2RYPL8+0D1F6iCykx2shnfvPJLmJsJ/cn0z81JFY52G5os0hFjokuQ=="
+
+      WHATSAPP_BRIDGE_URL: "http://whatsapp-bridge:8091"
+      WHATSAPP_BRIDGE_SECRET: "${WHATSAPP_BRIDGE_SECRET:-dev-whatsapp-bridge-secret}"
+
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+    networks:
+      woopanel1:
+      nexus360_internal:
+        aliases:
+          - backend
+          - nexus360_api
+    deploy:
+      replicas: 1
+      placement:
+        constraints:
+          - node.role == manager
+      restart_policy:
+        condition: any
+      update_config:
+        order: stop-first
+        failure_action: rollback
+      rollback_config:
+        order: stop-first
+      labels:
+        - "traefik.enable=true"
+        - "traefik.docker.network=woopanel1"
+        - "traefik.http.routers.nexus360_api.rule=Host(`nexus360.consultio.com.br`) && (PathPrefix(`/api`) || PathPrefix(`/lp`))"
+        - "traefik.http.routers.nexus360_api.entrypoints=websecure"
+        - "traefik.http.routers.nexus360_api.tls.certresolver=letsencryptresolver"
+        - "traefik.http.routers.nexus360_api.priority=20"
+        - "traefik.http.routers.nexus360_api.service=nexus360_api"
+        - "traefik.http.routers.nexus360_custom_static_api.rule=(Host(`crm.consultio.com.br`) || Host(`crm.tgamkt.com`) || Host(`wootech.com.br`) || Host(`crm.wootech.com.br`)) && (PathPrefix(`/api`) || PathPrefix(`/lp`))"
+        - "traefik.http.routers.nexus360_custom_static_api.entrypoints=websecure"
+        - "traefik.http.routers.nexus360_custom_static_api.tls.certresolver=letsencryptresolver"
+        - "traefik.http.routers.nexus360_custom_static_api.priority=210"
+        - "traefik.http.routers.nexus360_custom_static_api.service=nexus360_api"
+        - "traefik.http.routers.nexus360_wootech_landing.rule=Host(`wootech.com.br`)"
+        - "traefik.http.routers.nexus360_wootech_landing.entrypoints=websecure"
+        - "traefik.http.routers.nexus360_wootech_landing.tls.certresolver=letsencryptresolver"
+        - "traefik.http.routers.nexus360_wootech_landing.tls.domains[0].main=wootech.com.br"
+        - "traefik.http.routers.nexus360_wootech_landing.priority=300"
+        - "traefik.http.routers.nexus360_wootech_landing.service=nexus360_api"
+        - "traefik.http.routers.nexus360_wootech_crm_api.rule=Host(`crm.wootech.com.br`) && (PathPrefix(`/api`) || PathPrefix(`/lp`))"
+        - "traefik.http.routers.nexus360_wootech_crm_api.entrypoints=websecure"
+        - "traefik.http.routers.nexus360_wootech_crm_api.tls.certresolver=letsencryptresolver"
+        - "traefik.http.routers.nexus360_wootech_crm_api.tls.domains[0].main=crm.wootech.com.br"
+        - "traefik.http.routers.nexus360_wootech_crm_api.priority=310"
+        - "traefik.http.routers.nexus360_wootech_crm_api.service=nexus360_api"
+        - "traefik.http.services.nexus360_api.loadbalancer.server.port=10000"
+
+  google-maps-scraper:
+    image: ghcr.io/fluowai/nexus360-google-maps-scraper:b9065f7f57a2445c2b9e2130450491a4294102e6
+    command:
+      - "-web"
+      - "-addr"
+      - ":8080"
+      - "-data-folder"
+      - "/gmapsdata"
+      - "-c"
+      - "2"
+      - "-browser-pool-size"
+      - "1"
+    volumes:
+      - google_maps_scraper_data:/gmapsdata
+    networks:
+      - nexus360_internal
+    deploy:
+      replicas: 1
+      restart_policy:
+        condition: any
+      resources:
+        limits:
+          memory: 2G
+    stop_grace_period: 30s
+
+  whatsapp-bridge:
+    image: ghcr.io/fluowai/nexus360-whatsapp-bridge:latest
+    environment:
+      WHATSAPP_BRIDGE_ADDR: ":8091"
+      WHATSAPP_BRIDGE_SECRET: "${WHATSAPP_BRIDGE_SECRET:-dev-whatsapp-bridge-secret}"
+      WHATSAPP_BRIDGE_PUBLIC_URL: "https://nexus360.consultio.com.br"
+      NEXUS_BACKEND_URL: "http://backend:10000"
+    volumes:
+      - whatsapp_bridge_data:/app/data
+    networks:
+      nexus360_internal:
+        aliases:
+          - whatsapp-bridge
+    deploy:
+      replicas: 1
+      restart_policy:
+        condition: any
+
+volumes:
+  google_maps_scraper_data:
+    name: nexus360_google_maps_scraper_data
+  whatsapp_bridge_data:
+    name: nexus360_whatsapp_bridge_data
+
+networks:
+  woopanel1:
+    external: true
+    name: woopanel1
+  nexus360_internal:
+    driver: overlay
+    attachable: true

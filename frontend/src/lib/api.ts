@@ -1,34 +1,108 @@
 /// <reference types="vite/client" />
-const API_URL = import.meta.env.VITE_API_URL || 'http://localhost:10000';
+
+import { redirectToLogin } from "./navigation";
+
+const rawApiUrl = import.meta.env.VITE_API_URL || '';
+const normalizedApiUrl = rawApiUrl === 'same-origin' ? '' : rawApiUrl;
+const API_URL = normalizedApiUrl;
+const ACCESS_TOKEN_KEY = 'nexus_access_token';
 
 let isRefreshing = false;
 let refreshPromise: Promise<string | null> | null = null;
+let accessTokenMemory: string | null = sessionStorage.getItem(ACCESS_TOKEN_KEY);
+let refreshFailed = false;
 
-/**
- * Tenta renovar o access token usando o refresh token.
- */
-async function refreshAccessToken(): Promise<string | null> {
-  const refreshToken = localStorage.getItem('nexus_refresh_token');
-  if (!refreshToken) return null;
+export function getApiBaseUrl() {
+  return API_URL?.replace(/\/$/, '') || '';
+}
+
+export async function readJsonResponse<T = any>(response: Response, fallbackMessage = 'Resposta invalida da API.'): Promise<T> {
+  const contentType = (response.headers.get('content-type') || '').toLowerCase();
+  if (!contentType.includes('application/json')) {
+    throw new Error(fallbackMessage);
+  }
+  return response.json();
+}
+
+export async function publicApiFetch(path: string, options: RequestInit = {}) {
+  const normalizedBase = getApiBaseUrl();
+  const normalizedPath = path.startsWith('/') ? path : `/${path}`;
+  return fetch(`${normalizedBase}${normalizedPath}`, {
+    ...options,
+    headers: {
+      'Content-Type': 'application/json',
+      ...(options.headers as Record<string, string> || {}),
+    },
+    credentials: 'include',
+  });
+}
+
+function isAuthPath(path: string) {
+  return path.includes('/api/auth/login') || path.includes('/api/auth/register') || path.includes('/api/auth/refresh') || path.includes('/api/auth/logout');
+}
+
+function isTokenExpiring(token: string | null): boolean {
+  if (!token) return true;
 
   try {
-    const normalizedBase = API_URL?.replace(/\/$/, '') || '';
+    const payload = JSON.parse(atob(token.split('.')[1] || ''));
+    if (!payload?.exp) return false;
+    return payload.exp * 1000 <= Date.now() + 60_000;
+  } catch {
+    return true;
+  }
+}
+
+export function setAccessToken(token: string | null) {
+  accessTokenMemory = token;
+  if (token) {
+    refreshFailed = false;
+    sessionStorage.setItem(ACCESS_TOKEN_KEY, token);
+  } else {
+    sessionStorage.removeItem(ACCESS_TOKEN_KEY);
+  }
+}
+
+export function hasAccessToken(): boolean {
+  return Boolean(accessTokenMemory || sessionStorage.getItem(ACCESS_TOKEN_KEY));
+}
+
+export function clearAuthSession() {
+  setAccessToken(null);
+}
+
+function unauthorizedResponse(message = 'Sessao expirada. Faca login novamente.') {
+  return new Response(JSON.stringify({ error: 'UNAUTHORIZED', message }), {
+    status: 401,
+    headers: { 'Content-Type': 'application/json' },
+  });
+}
+
+function finishExpiredSession(message?: string) {
+  refreshFailed = true;
+  clearAuthSession();
+  redirectToLogin();
+  return unauthorizedResponse(message);
+}
+
+async function refreshAccessToken(): Promise<string | null> {
+  try {
+    const normalizedBase = getApiBaseUrl();
     const response = await fetch(`${normalizedBase}/api/auth/refresh`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ refreshToken }),
+      credentials: 'include',
     });
 
     if (!response.ok) {
-      // Refresh falhou — limpar tudo
-      localStorage.removeItem('nexus_token');
-      localStorage.removeItem('nexus_refresh_token');
+      clearAuthSession();
+      refreshFailed = true;
       return null;
     }
 
-    const data = await response.json();
+    const data = await readJsonResponse(response, 'Nao foi possivel renovar a sessao.');
     if (data.token) {
-      localStorage.setItem('nexus_token', data.token);
+      setAccessToken(data.token);
       return data.token;
     }
     return null;
@@ -38,10 +112,30 @@ async function refreshAccessToken(): Promise<string | null> {
 }
 
 export async function apiFetch(path: string, options: RequestInit = {}, retries = 2): Promise<Response> {
-  const token = localStorage.getItem('nexus_token');
+  let token = accessTokenMemory || sessionStorage.getItem(ACCESS_TOKEN_KEY);
   const userRole = localStorage.getItem('nexus_user_role');
   const impersonatedOrgId = localStorage.getItem('nexus_selected_client');
-  
+  const shouldUseAuth = !isAuthPath(path);
+
+  if (shouldUseAuth && refreshFailed) {
+    return finishExpiredSession();
+  }
+
+  if (shouldUseAuth && isTokenExpiring(token)) {
+    if (!isRefreshing) {
+      isRefreshing = true;
+      refreshPromise = refreshAccessToken().finally(() => {
+        isRefreshing = false;
+        refreshPromise = null;
+      });
+    }
+    token = await (refreshPromise || refreshAccessToken());
+
+    if (!token) {
+      return finishExpiredSession();
+    }
+  }
+
   const headers: Record<string, string> = {
     'Content-Type': 'application/json',
     ...(token ? { 'Authorization': `Bearer ${token}` } : {}),
@@ -49,28 +143,31 @@ export async function apiFetch(path: string, options: RequestInit = {}, retries 
     ...(options.headers as Record<string, string> || {}),
   };
 
-  const normalizedBase = API_URL?.replace(/\/$/, '') || '';
+  const normalizedBase = getApiBaseUrl();
   const normalizedPath = path.startsWith('/') ? path : `/${path}`;
   const url = `${normalizedBase}${normalizedPath}`;
 
   try {
     const controller = new AbortController();
-    const timeoutId = setTimeout(() => controller.abort(), 15000);
+    const timeoutMs = (options as any).timeoutMs || 30000;
+    const timeoutId = setTimeout(() => {
+      controller.abort(new DOMException('Request timed out', 'TimeoutError'));
+    }, timeoutMs);
 
-    const response = await fetch(url, {
-      ...options,
-      headers,
-      signal: controller.signal
-    });
+    let response: Response;
+    try {
+      response = await fetch(url, {
+        ...options,
+        headers,
+        credentials: 'include',
+        signal: controller.signal
+      });
+    } finally {
+      clearTimeout(timeoutId);
+    }
 
-    clearTimeout(timeoutId);
-
-    // Se token expirou, tentar refresh automaticamente
     if (response.status === 401) {
-      const body = await response.clone().json().catch(() => ({}));
-      
-      if (body.error === 'TOKEN_EXPIRED' && !path.includes('/api/auth/refresh')) {
-        // Evitar múltiplos refreshes simultâneos
+      if (!path.includes('/api/auth/refresh')) {
         if (!isRefreshing) {
           isRefreshing = true;
           refreshPromise = refreshAccessToken().finally(() => {
@@ -80,49 +177,28 @@ export async function apiFetch(path: string, options: RequestInit = {}, retries 
         }
 
         const newToken = await (refreshPromise || refreshAccessToken());
-        
+
         if (newToken) {
-          // Retentar a request original com o novo token
           headers['Authorization'] = `Bearer ${newToken}`;
-          const retryResponse = await fetch(url, {
+          return fetch(url, {
             ...options,
             headers,
+            credentials: 'include',
           });
-          return retryResponse;
-        } else {
-          // Refresh falhou — redirecionar para login
-          localStorage.removeItem('nexus_token');
-          localStorage.removeItem('nexus_refresh_token');
-          if (window.location.pathname !== '/login') {
-            window.location.href = '/login';
-          }
         }
-      } else if (!path.includes('/api/auth/me') && !path.includes('/api/auth/refresh')) {
-        // Outro tipo de 401 (não é expiração)
-        localStorage.removeItem('nexus_token');
-        localStorage.removeItem('nexus_refresh_token');
-        if (window.location.pathname !== '/login') {
-          window.location.href = '/login';
-        }
-      }
-    }
 
-    // 403 — sem permissão
-    if (response.status === 403) {
-      const isAuthCheck = path.includes('/api/auth/me');
-      if (!isAuthCheck) {
-        console.warn(`[API] Sem permissão para: ${path}`);
+        return finishExpiredSession();
+      } else {
+        return finishExpiredSession();
       }
     }
 
     return response;
   } catch (error: any) {
-    if (retries > 0 && (error.name === 'AbortError' || error.name === 'TypeError')) {
-      console.warn(`[API_FETCH] Tentando novamente... (${retries} restantes) para: ${path}`);
+    if (retries > 0 && (error.name === 'AbortError' || error.name === 'TimeoutError' || error.name === 'TypeError')) {
       return apiFetch(path, options, retries - 1);
     }
-    
-    console.error(`[API_FETCH_ERROR] Falha crítica em ${path}:`, error);
+
     throw error;
   }
 }

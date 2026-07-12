@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+import { useNavigate, useLocation, Link } from "react-router-dom";
 import { 
   Building2, 
   Plus, 
@@ -13,12 +14,16 @@ import {
   RefreshCw,
   User,
   Mail,
-  Lock
+  Phone,
+  Lock,
+  Palette
 } from "lucide-react";
 import { motion } from "motion/react";
 import { apiFetch } from "../../lib/api";
 
 export default function AdminAgencies() {
+  const navigate = useNavigate();
+  const location = useLocation();
   const [agencies, setAgencies] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
   const [showModal, setShowModal] = useState(false);
@@ -27,7 +32,9 @@ export default function AdminAgencies() {
     domain: '', 
     slug: '',
     plan: 'Pro', 
+    planId: null as string | null,
     adminEmail: '', 
+    adminPhone: '',
     adminPassword: '', 
     adminName: '',
     isTestAccount: false,
@@ -63,7 +70,7 @@ export default function AdminAgencies() {
       
       const data = await res.json();
       if (res.ok) {
-        alert("Domínio configurado com sucesso no Vercel e DirectAdmin!");
+        alert("Dominio cadastrado. Configure o DNS no servidor Docker/Portainer para ativar a URL.");
         setShowDomainModal(false);
         setCustomDomain('');
         fetchAgencies();
@@ -79,17 +86,29 @@ export default function AdminAgencies() {
   };
 
   const fetchAgencies = async () => {
+    setLoading(true);
     try {
-      const [orgsRes, plansRes] = await Promise.all([
-        apiFetch('/api/admin/orgs'),
-        apiFetch('/api/admin/plans')
-      ]);
-      if (orgsRes.ok) setAgencies(await orgsRes.json());
-      if (plansRes.ok) setAvailablePlans(await plansRes.json());
+      const orgsRes = await apiFetch('/api/admin/orgs?type=CLIENT');
+      if (orgsRes.ok) {
+        setAgencies(await orgsRes.json());
+      } else {
+        const data = await orgsRes.json().catch(() => ({}));
+        console.error("Erro ao carregar clientes", data);
+        setAgencies([]);
+      }
     } catch (err) {
       console.error(err);
+      setAgencies([]);
     } finally {
       setLoading(false);
+    }
+
+    try {
+      const plansRes = await apiFetch('/api/admin/plans', {}, 0);
+      if (plansRes.ok) setAvailablePlans(await plansRes.json());
+    } catch (err) {
+      console.error("Erro ao carregar planos", err);
+      setAvailablePlans([]);
     }
   };
 
@@ -102,7 +121,7 @@ export default function AdminAgencies() {
       });
       if (res.ok) {
         setShowModal(false);
-        setNewOrg({ name: '', domain: '', slug: '', plan: 'Pro', adminEmail: '', adminPassword: '', adminName: '', isTestAccount: false, betaAccess: false });
+        setNewOrg({ name: '', domain: '', slug: '', plan: 'Pro', planId: null, adminEmail: '', adminPhone: '', adminPassword: '', adminName: '', isTestAccount: false, betaAccess: false });
         fetchAgencies();
       } else {
         const data = await res.json();
@@ -123,16 +142,91 @@ export default function AdminAgencies() {
     }
   };
 
+  const handleEditSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!editData) return;
+
+    const password = typeof editData.password === 'string' ? editData.password.trim() : '';
+    if (password) {
+      if (password.length < 10) {
+        alert("A senha deve ter no minimo 10 caracteres.");
+        return;
+      }
+      if (!/[a-z]/.test(password) || !/[A-Z]/.test(password) || !/\d/.test(password)) {
+        alert("A senha deve conter letras maiusculas, minusculas e numeros.");
+        return;
+      }
+    }
+
+    const payload: Record<string, any> = {
+      name: editData.name,
+      slug: editData.slug,
+      plan: editData.plan,
+      planId: editData.planId,
+    };
+
+    if (typeof editData.domain === 'string') payload.domain = editData.domain.trim() || null;
+    const adminEmail = typeof editData.adminEmail === 'string' ? editData.adminEmail.trim() : '';
+    if (adminEmail) payload.adminEmail = adminEmail;
+    const adminPhone = typeof editData.adminPhone === 'string' ? editData.adminPhone.trim() : '';
+    if (adminPhone) payload.adminPhone = adminPhone;
+    if (password) payload.password = password;
+
+    try {
+      const res = await apiFetch(`/api/admin/orgs/${editData.id}`, {
+        method: 'PATCH',
+        body: JSON.stringify(payload)
+      });
+      const data = await res.json().catch(() => ({}));
+      if (res.ok) {
+        setIsEditing(false);
+        setEditData(null);
+        fetchAgencies();
+      } else {
+        alert(data.details || data.error || "Erro ao atualizar agencia");
+      }
+    } catch (err) {
+      console.error(err);
+      alert("Erro ao conectar com o servidor.");
+    }
+  };
+
   useEffect(() => {
     fetchAgencies();
   }, []);
 
   return (
     <div className="flex flex-col gap-8">
+      {/* Tabs */}
+      <div className="flex items-center gap-1 bg-white rounded-[32px] border border-gray-100 shadow-sm p-1.5 w-fit">
+        <Link
+          to="/admin/agencies"
+          className={`flex items-center gap-2 px-5 py-2.5 rounded-2xl font-bold text-sm transition-all ${
+            !location.pathname.includes('whitelabel')
+              ? 'bg-gray-900 text-white shadow-lg shadow-gray-200'
+              : 'text-gray-400 hover:text-gray-700 hover:bg-gray-50'
+          }`}
+        >
+          <Building2 size={18} />
+          Clientes da Agência
+        </Link>
+        <Link
+          to="/admin/whitelabel"
+          className={`flex items-center gap-2 px-5 py-2.5 rounded-2xl font-bold text-sm transition-all ${
+            location.pathname.includes('whitelabel')
+              ? 'bg-gray-900 text-white shadow-lg shadow-gray-200'
+              : 'text-gray-400 hover:text-gray-700 hover:bg-gray-50'
+          }`}
+        >
+          <Palette size={18} />
+          White-label
+        </Link>
+      </div>
+
       <div className="flex justify-between items-center">
         <div>
-          <h1 className="text-2xl font-bold text-gray-900">Gestão de Clientes</h1>
-          <p className="text-sm text-gray-500">Gerencie todas as instâncias e sub-contas da plataforma.</p>
+          <h1 className="text-2xl font-bold text-gray-900">Clientes da Agência</h1>
+          <p className="text-sm text-gray-500">Organizações que usam o Nexus360 como plataforma de gestão.</p>
         </div>
         <button 
           onClick={() => setShowModal(true)}
@@ -187,7 +281,14 @@ export default function AdminAgencies() {
                             <span className="px-2 py-0.5 bg-orange-100 text-orange-700 text-[9px] font-black uppercase rounded-full">Beta Access</span>
                           )}
                         </h4>
-                        <p className="text-xs text-gray-500 font-medium">{org.domain || 'Sem domínio'}</p>
+                        <div className="flex items-center gap-2 mt-0.5">
+                          <span className="text-[10px] text-gray-400 font-mono">/{org.slug || '—'}</span>
+                          {org.domain ? (
+                            <span className="text-[10px] text-emerald-600 font-bold flex items-center gap-1">• {org.domain}</span>
+                          ) : (
+                            <span className="text-[10px] text-gray-400">• Sem domínio próprio</span>
+                          )}
+                        </div>
                       </div>
                     </div>
                   </td>
@@ -208,7 +309,7 @@ export default function AdminAgencies() {
                       <button 
                         onClick={() => {
                           localStorage.setItem('nexus_selected_client', org.id);
-                          window.location.href = '/dashboard';
+                          navigate('/dashboard');
                         }}
                         className="p-2 hover:bg-emerald-50 rounded-lg text-gray-400 hover:text-emerald-600 transition-all"
                         title="Acessar como Suporte (Impersonate)"
@@ -227,7 +328,17 @@ export default function AdminAgencies() {
                       </button>
                       <button 
                         onClick={() => {
-                          setEditData(org);
+                          setEditData({
+                            id: org.id,
+                            name: org.name || '',
+                            slug: org.slug || '',
+                            domain: org.domain || '',
+                            plan: org.planObj?.name || org.plan || '',
+                            planId: org.planId || '',
+                            adminEmail: '',
+                            adminPhone: '',
+                            password: ''
+                          });
                           setIsEditing(true);
                         }}
                         className="p-2 hover:bg-gray-100 rounded-lg text-gray-400 hover:text-gray-900 transition-all"
@@ -285,48 +396,59 @@ export default function AdminAgencies() {
                 </div>
               </div>
               <div>
-                <label className="text-xs font-bold text-gray-400 uppercase mb-2 block pl-1">Link da Agência (Slug)</label>
+                <label className="text-xs font-bold text-gray-400 uppercase mb-2 block pl-1">Link interno (Slug)</label>
                 <div className="relative">
                   <Globe className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400" size={16} />
                   <input 
                     required
-                    className="w-full pl-12 pr-4 py-3 bg-gray-50 rounded-xl outline-none focus:ring-2 focus:ring-primary border-none font-mono text-[10px]"
+                    className="w-full pl-12 pr-4 py-3 bg-gray-50 rounded-xl outline-none focus:ring-2 focus:ring-primary border-none font-mono text-xs"
                     value={newOrg.slug}
-                    onChange={e => setNewOrg({...newOrg, slug: e.target.value.toLowerCase().replace(/[^a-z0-9-]/g, '')})}
-                    placeholder="ex: imobiliaria-alpha"
+                    onChange={e => setNewOrg({ ...newOrg, slug: e.target.value })}
+                    placeholder="imobiliaria-alpha"
                   />
                 </div>
               </div>
 
-              <div className="md:col-span-2 mt-4">
-                 <h3 className="text-[10px] font-bold text-blue-600 uppercase tracking-[2px] mb-4">Acesso do Administrador</h3>
+              <div className="md:col-span-2">
+                 <h3 className="text-[10px] font-bold text-blue-600 uppercase tracking-[2px] mb-4">Dados do Administrador</h3>
               </div>
-
               <div>
                 <label className="text-xs font-bold text-gray-400 uppercase mb-2 block pl-1">Nome do Admin</label>
                 <div className="relative">
                   <User className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400" size={16} />
-                  <input 
-                    required
+                  <input
                     className="w-full pl-12 pr-4 py-3 bg-gray-50 rounded-xl outline-none focus:ring-2 focus:ring-primary border-none"
                     value={newOrg.adminName}
                     onChange={e => setNewOrg({...newOrg, adminName: e.target.value})}
-                    placeholder="Nome completo"
+                    placeholder="Responsavel pelo CRM"
                   />
                 </div>
               </div>
-
               <div>
                 <label className="text-xs font-bold text-gray-400 uppercase mb-2 block pl-1">E-mail do Admin</label>
                 <div className="relative">
                   <Mail className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400" size={16} />
-                  <input 
-                    type="email"
+                  <input
                     required
+                    type="email"
                     className="w-full pl-12 pr-4 py-3 bg-gray-50 rounded-xl outline-none focus:ring-2 focus:ring-primary border-none"
                     value={newOrg.adminEmail}
                     onChange={e => setNewOrg({...newOrg, adminEmail: e.target.value})}
-                    placeholder="contato@cliente.com.br"
+                    placeholder="admin@cliente.com.br"
+                  />
+                </div>
+              </div>
+              <div>
+                <label className="text-xs font-bold text-gray-400 uppercase mb-2 block pl-1">Telefone do Admin</label>
+                <div className="relative">
+                  <Phone className="absolute left-4 top-1/2 -translate-y-1/2 text-gray-400" size={16} />
+                  <input
+                    required
+                    type="tel"
+                    className="w-full pl-12 pr-4 py-3 bg-gray-50 rounded-xl outline-none focus:ring-2 focus:ring-primary border-none"
+                    value={newOrg.adminPhone}
+                    onChange={e => setNewOrg({...newOrg, adminPhone: e.target.value})}
+                    placeholder="(11) 99999-9999"
                   />
                 </div>
               </div>
@@ -363,7 +485,6 @@ export default function AdminAgencies() {
                     setNewOrg({
                       ...newOrg, 
                       plan: selectedPlan?.name || e.target.value,
-                      //@ts-ignore
                       planId: selectedPlan?.id || null
                     });
                   }}
@@ -464,8 +585,8 @@ export default function AdminAgencies() {
               <div className="bg-amber-50 border border-amber-100 p-4 rounded-2xl mb-2">
                 <p className="text-[10px] font-bold text-amber-800 uppercase tracking-widest mb-1">Atenção</p>
                 <p className="text-[10px] text-amber-700 leading-relaxed">
-                  Este processo irá configurar o domínio automaticamente no <strong>Vercel</strong> e no <strong>DirectAdmin</strong>. 
-                  Certifique-se que o domínio já aponta para os nossos servidores.
+                  Este processo cadastra a URL no Nexus360 para uso com Docker/Portainer.
+                  Certifique-se que o DNS do dominio aponta para o servidor configurado.
                 </p>
               </div>
 
@@ -506,19 +627,7 @@ export default function AdminAgencies() {
             className="bg-white rounded-[32px] p-8 w-full max-w-md shadow-2xl"
           >
             <h2 className="text-xl font-bold text-gray-900 mb-6">Editar Agência</h2>
-            <form onSubmit={async (e) => {
-              e.preventDefault();
-              try {
-                const res = await apiFetch(`/api/admin/orgs/${editData.id}`, {
-                  method: 'PATCH',
-                  body: JSON.stringify(editData)
-                });
-                if (res.ok) {
-                  setIsEditing(false);
-                  fetchAgencies();
-                }
-              } catch (err) { console.error(err); }
-            }} className="flex flex-col gap-4">
+            <form onSubmit={handleEditSubmit} className="flex flex-col gap-4">
               <div>
                 <label className="text-xs font-bold text-gray-400 uppercase mb-2 block">Nome da Agência</label>
                 <input 
@@ -566,6 +675,21 @@ export default function AdminAgencies() {
                 </select>
               </div>
 
+              <div>
+                <label className="text-xs font-bold text-gray-400 uppercase mb-2 block">Domínio Personalizado</label>
+                <input 
+                  className="w-full px-4 py-3 bg-gray-50 rounded-xl outline-none focus:ring-2 focus:ring-primary border-none font-mono text-xs"
+                  value={editData.domain || ''}
+                  onChange={e => setEditData({...editData, domain: e.target.value.toLowerCase().replace(/[^a-z0-9.-]/g, '')})}
+                  placeholder="crm.cliente.com.br"
+                />
+                {editData.slug && (
+                  <p className="text-[10px] text-gray-400 mt-1 font-mono">
+                    URL interna: nexus360.consultio.com.br/<span className="text-blue-500 font-bold">{editData.slug}</span>
+                  </p>
+                )}
+              </div>
+
               <div className="md:col-span-2 mt-4">
                  <h3 className="text-[10px] font-bold text-blue-600 uppercase tracking-[2px] mb-2">Dados de Acesso (Opcional)</h3>
               </div>
@@ -582,9 +706,21 @@ export default function AdminAgencies() {
               </div>
 
               <div>
+                <label className="text-xs font-bold text-gray-400 uppercase mb-2 block">Telefone</label>
+                <input
+                  type="tel"
+                  className="w-full px-4 py-3 bg-gray-50 rounded-xl outline-none focus:ring-2 focus:ring-primary border-none"
+                  value={editData.adminPhone || ''}
+                  onChange={e => setEditData({...editData, adminPhone: e.target.value})}
+                  placeholder="Novo telefone"
+                />
+              </div>
+
+              <div>
                 <label className="text-xs font-bold text-gray-400 uppercase mb-2 block">Nova Senha</label>
                 <input 
                   type="password"
+                  autoComplete="new-password"
                   className="w-full px-4 py-3 bg-gray-50 rounded-xl outline-none focus:ring-2 focus:ring-primary border-none font-mono"
                   value={editData.password || ''}
                   onChange={e => setEditData({...editData, password: e.target.value})}

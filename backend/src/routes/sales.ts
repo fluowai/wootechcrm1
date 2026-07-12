@@ -5,6 +5,7 @@ import { proposalAI } from "../services/proposalAI.js";
 import { v4 as uuidv4 } from 'uuid';
 import { sanitizeBody } from "../utils/sanitizer.js";
 import { auditFromRequest } from "../utils/auditLogger.js";
+import { emitAutomationEvent } from "../workers/automationWorker.js";
 
 export function salesRoutes(prisma: PrismaClient) {
   const router = Router();
@@ -89,16 +90,7 @@ export function salesRoutes(prisma: PrismaClient) {
     }
 
     try {
-      const config = await prisma.organization.findUnique({
-        where: { id: orgId },
-        select: { groqKey: true }
-      });
-  
-      if (!config?.groqKey) {
-        return res.status(400).json({ error: "Configure sua chave do Groq para usar a IA." });
-      }
-
-      const content = await proposalAI.generate(niche, clientName, services || [], config.groqKey);
+      const content = await proposalAI.generate(prisma, niche, clientName, services || [], orgId, req.user?.id);
       res.json(content);
     } catch (error: any) {
       console.error("[SALES_PROPOSAL_GENERATE_ERROR]", error);
@@ -132,6 +124,7 @@ export function salesRoutes(prisma: PrismaClient) {
       });
 
       auditFromRequest(req, "PROPOSAL_SENT", "Proposal", proposal.id);
+      emitAutomationEvent("proposal.sent", { organizationId: orgId, proposalId: proposal.id });
       res.json(proposal);
     } catch (error) {
       next(error);

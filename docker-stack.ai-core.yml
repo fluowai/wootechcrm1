@@ -1,0 +1,68 @@
+services:
+  litellm:
+    image: ghcr.io/berriai/litellm:main-latest
+    command: ["--config", "/app/config.yaml", "--port", "4000", "--num_workers", "2"]
+    environment:
+      LITELLM_MASTER_KEY: "${LITELLM_MASTER_KEY:-}"
+      OPENAI_API_KEY: "${OPENAI_API_KEY:-}"
+      GEMINI_API_KEY: "${GEMINI_API_KEY:-}"
+      GROQ_API_KEY: "${GROQ_API_KEY:-}"
+    configs:
+      - source: litellm_config
+        target: /app/config.yaml
+    networks:
+      nexus360_internal:
+        aliases:
+          - litellm
+    deploy:
+      replicas: 1
+      restart_policy:
+        condition: any
+      labels:
+        - "traefik.enable=false"
+
+  # Qdrant e MinIO — adicione quando precisar de vector store ou file storage
+  # qdrant:
+  #   image: qdrant/qdrant:latest
+  #   volumes:
+  #     - ai_core_qdrant:/qdrant/storage
+  #   networks:
+  #     nexus360_internal:
+  #       aliases:
+  #         - qdrant
+  #   deploy:
+  #     replicas: 1
+  #     restart_policy:
+  #       condition: any
+
+  # minio:
+  #   image: minio/minio:latest
+  #   command: ["server", "/data", "--console-address", ":9001"]
+  #   environment:
+  #     MINIO_ROOT_USER: "${AI_CORE_MINIO_ROOT_USER:-nexusai}"
+  #     MINIO_ROOT_PASSWORD: "${AI_CORE_MINIO_ROOT_PASSWORD?AI_CORE_MINIO_ROOT_PASSWORD obrigatoria}"
+  #   volumes:
+  #     - ai_core_minio:/data
+  #   networks:
+  #     nexus360_internal:
+  #       aliases:
+  #         - ai-core-minio
+  #   deploy:
+  #     replicas: 1
+  #     restart_policy:
+  #       condition: any
+
+configs:
+  litellm_config:
+    file: ./litellm.config.yaml
+
+volumes:
+  # ai_core_qdrant:
+  #   name: nexus360_ai_core_qdrant
+  # ai_core_minio:
+  #   name: nexus360_ai_core_minio
+
+networks:
+  nexus360_internal:
+    external: true
+    name: nexus360_nexus360_internal

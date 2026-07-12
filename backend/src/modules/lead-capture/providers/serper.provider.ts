@@ -17,7 +17,8 @@ export class SerperLeadProvider implements LeadProvider {
         headers: {
           'X-API-KEY': params.apiKey,
           'Content-Type': 'application/json'
-        }
+        },
+        timeout: 45000
       });
 
       const data = response.data;
