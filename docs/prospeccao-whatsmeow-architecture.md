@@ -2,7 +2,7 @@
 
 ## Diagnostico do sistema atual
 
-O Nexus360 ja possui uma base relevante para prospeccao ativa:
+O WooTech CRM ja possui uma base relevante para prospeccao ativa:
 
 - Captura de leads em `backend/src/modules/lead-capture`, com provedores Serper, SerpAPI e Outscraper.
 - Persistencia em `LeadCaptureSource` e `CapturedLead`.

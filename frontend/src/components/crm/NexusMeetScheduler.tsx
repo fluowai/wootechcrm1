@@ -59,7 +59,7 @@ export function NexusMeetScheduler({ lead, onClose }: Props) {
   };
 
   const handleCopy = () => {
-    const text = `🚀 Convite Nexus Meet Elite\n\n📌 *${formData.title}*\n📅 Data: ${formData.date}\n⏰ Hora: ${formData.time}\n\n🔗 Link de Acesso: ${window.location.origin}${result?.link}\n🔑 Código de Acesso: *${result?.code}*\n\n_Por favor, identifique-se com seu nome real ao entrar._`;
+    const text = `🚀 Convite WooTech Meet Elite\n\n📌 *${formData.title}*\n📅 Data: ${formData.date}\n⏰ Hora: ${formData.time}\n\n🔗 Link de Acesso: ${window.location.origin}${result?.link}\n🔑 Código de Acesso: *${result?.code}*\n\n_Por favor, identifique-se com seu nome real ao entrar._`;
     navigator.clipboard.writeText(text);
     setCopied(true);
     setTimeout(() => setCopied(false), 2000);
@@ -87,7 +87,7 @@ export function NexusMeetScheduler({ lead, onClose }: Props) {
               <Video size={24} />
             </div>
             <div>
-              <h2 className="text-xl font-bold">Nexus Meet Scheduler</h2>
+              <h2 className="text-xl font-bold">WooTech Meet Scheduler</h2>
               <p className="text-[10px] text-gray-500 uppercase tracking-widest font-bold">Ambiente de Alta Performance</p>
             </div>
           </div>

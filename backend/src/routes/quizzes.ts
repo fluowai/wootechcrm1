@@ -169,7 +169,7 @@ export function quizPublicRoutes(prisma: PrismaClient) {
           <div class="quiz-logo">Q</div>
           <div>
             <div class="quiz-title">\${QUIZ_NAME}</div>
-            <div class="quiz-brand">Qualificação Nexus360</div>
+            <div class="quiz-brand">Qualificação WooTech CRM</div>
           </div>
         </div>
         <div class="slide" style="text-align:center;padding:20px 0">

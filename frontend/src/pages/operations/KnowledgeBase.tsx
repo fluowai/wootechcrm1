@@ -381,7 +381,7 @@ function FilterSelect({ value, onChange, children }: { value: string; onChange: 
 
 function ArticleCard({ article, acpPhase, onView, onEdit, onDelete }: { article: any; acpPhase: string | null; onView: () => void; onEdit: () => void; onDelete: () => void }) {
   const tags = parseTags(article.tags);
-  const summary = article.content?.replace(/\s+/g, " ").slice(0, 120) || "Documentação interna da operação Nexus360.";
+  const summary = article.content?.replace(/\s+/g, " ").slice(0, 120) || "Documentação interna da operação WooTech CRM.";
 
   return (
     <motion.article

@@ -308,7 +308,7 @@ export default function Calendar() {
                       <span>{new Date(event.startDate).toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' })}</span>
                     </div>
                     
-                    {/* Link de reunião Nexus Meet */}
+                    {/* Link de reunião WooTech Meet */}
                     {event.meetingLink && (
                       <div className="mt-3 flex flex-col gap-2">
                         <div className="flex items-center gap-2 text-[10px] text-gray-400 font-medium">
@@ -461,7 +461,7 @@ function EventModal({ onClose, onSuccess, initialDate, editingEvent, members }: 
               value={formData.type}
               onChange={e => setFormData({...formData, type: e.target.value})}
             >
-              <option value="reunion">🎥 Reunião (gera link Nexus Meet)</option>
+              <option value="reunion">🎥 Reunião (gera link WooTech Meet)</option>
               <option value="task">📋 Tarefa</option>
               <option value="deadline">🔴 Deadline</option>
               <option value="birthday">🎂 Aniversário</option>

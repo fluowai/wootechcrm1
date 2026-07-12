@@ -81,7 +81,7 @@ export default function AdminWhiteLabel() {
   });
 
   const panelHost = (() => {
-    const panelUrl = import.meta.env.VITE_PANEL_URL || "https://nexus360.consultio.com.br";
+    const panelUrl = import.meta.env.VITE_PANEL_URL || "https://woocrm.wootech.com.br";
     try {
       return new URL(panelUrl).hostname;
     } catch {
@@ -281,7 +281,7 @@ export default function AdminWhiteLabel() {
       <div className="flex justify-between items-center">
         <div>
           <h1 className="text-2xl font-bold text-gray-900">White-label</h1>
-          <p className="text-sm text-gray-500">Organizações que revendem o Nexus360 como plataforma própria com marca personalizada.</p>
+          <p className="text-sm text-gray-500">Organizações que revendem o WooTech CRM como plataforma própria com marca personalizada.</p>
         </div>
         <button
           onClick={() => { resetForm(); setShowModal(true); }}

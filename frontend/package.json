@@ -1,6 +1,6 @@
 {
   "name": "nexus360-frontend",
-  "description": "Nexus 360 frontend application",
+  "description": "WooTech CRM frontend application",
   "private": true,
   "version": "1.0.0",
   "type": "module",

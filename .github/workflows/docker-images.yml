@@ -13,10 +13,10 @@ permissions:
 env:
   REGISTRY: ghcr.io
   IMAGE_OWNER: fluowai
-  API_IMAGE: nexus360-api
-  FRONTEND_IMAGE: nexus360-frontend
-  GOOGLE_MAPS_SCRAPER_IMAGE: nexus360-google-maps-scraper
-  WHATSAPP_BRIDGE_IMAGE: nexus360-whatsapp-bridge
+  API_IMAGE: wootech-crm-api
+  FRONTEND_IMAGE: wootech-crm-frontend
+  GOOGLE_MAPS_SCRAPER_IMAGE: wootech-crm-google-maps-scraper
+  WHATSAPP_BRIDGE_IMAGE: wootech-crm-whatsapp-bridge
 
 jobs:
   build:
@@ -66,7 +66,7 @@ jobs:
           build-args: |
             VITE_API_URL=same-origin
             VITE_LIVEKIT_URL=
-            VITE_PANEL_URL=https://nexus360.consultio.com.br
+            VITE_PANEL_URL=https://woocrm.wootech.com.br
           tags: |
             ${{ env.REGISTRY }}/${{ env.IMAGE_OWNER }}/${{ env.FRONTEND_IMAGE }}:latest
             ${{ env.REGISTRY }}/${{ env.IMAGE_OWNER }}/${{ env.FRONTEND_IMAGE }}:${{ github.sha }}

@@ -173,7 +173,7 @@ const Layout = ({
               </div>
             )}
             <div>
-              <div className="text-[19px] font-bold leading-tight">{whiteLabel?.name || "Nexus360"}</div>
+              <div className="text-[19px] font-bold leading-tight">{whiteLabel?.name || "WooTech CRM"}</div>
               <div className="text-[13px] font-medium text-[#64748B]">SaaS Performance Hub</div>
             </div>
           </div>
@@ -220,7 +220,7 @@ const Layout = ({
                 <Monitor size={18} />
               </div>
             )}
-            <span className="font-black text-gray-900">{whiteLabel?.name || "Nexus360"}</span>
+            <span className="font-black text-gray-900">{whiteLabel?.name || "WooTech CRM"}</span>
           </div>
           <button 
             onClick={() => setIsMobileMenuOpen(true)}

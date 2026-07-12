@@ -186,7 +186,7 @@ export default function MeetingRoom() {
               <div className="bg-primary p-3 rounded-2xl shadow-lg shadow-primary/20">
                 <BrainCircuit size={32} />
               </div>
-              <h1 className="text-3xl font-extrabold tracking-tighter">Nexus Meet <span className="text-primary">Elite</span></h1>
+              <h1 className="text-3xl font-extrabold tracking-tighter">WooTech Meet <span className="text-primary">Elite</span></h1>
             </div>
 
             <div className="relative aspect-video bg-[#15181E] rounded-[32px] overflow-hidden border border-gray-800 shadow-2xl group">
@@ -382,13 +382,13 @@ export default function MeetingRoom() {
 
   return (
     <div className="fixed inset-0 bg-[#0F1115] text-white flex flex-col overflow-hidden custom-livekit-theme">
-      {/* Header Nexus */}
+      {/* Header WooTech */}
       <div className="h-14 px-6 flex items-center justify-between bg-[#1A1D23] border-b border-gray-800/50 z-50">
         <div className="flex items-center gap-3">
           <div className="bg-primary p-2 rounded-lg">
             <Video size={18} className="text-white" />
           </div>
-          <span className="font-bold text-sm tracking-tight">Nexus Meet Pro <span className="text-xs font-normal text-gray-400 ml-2 border border-gray-700 px-2 py-0.5 rounded-full">AI Transcription On</span></span>
+          <span className="font-bold text-sm tracking-tight">WooTech Meet Pro <span className="text-xs font-normal text-gray-400 ml-2 border border-gray-700 px-2 py-0.5 rounded-full">AI Transcription On</span></span>
         </div>
         
         <div className="flex gap-4 items-center">

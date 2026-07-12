@@ -29,7 +29,7 @@ export default function ProspectDashboard() {
     <div className="p-6 max-w-7xl mx-auto space-y-6">
       <div className="flex justify-between items-center">
         <div>
-          <h1 className="text-2xl font-black text-slate-900">Nexus Prospect AI</h1>
+          <h1 className="text-2xl font-black text-slate-900">WooTech Prospect AI</h1>
           <p className="text-slate-500">Acompanhe suas minerações autônomas de captação e extração prontas para contato.</p>
         </div>
       </div>

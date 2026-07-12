@@ -334,7 +334,7 @@ GET /api/landing/preview?template=<script>alert(1)</script>
 
 ## CONTACTS & RESOURCES
 
-**Nexus360 Components:**
+**WooTech CRM Components:**
 - Backend: C:\Users\paulo\Vibecoding\Ativos\nexus360\backend
 - Frontend: C:\Users\paulo\Vibecoding\Ativos\nexus360\frontend
 - WhatsApp Bridge: C:\Users\paulo\Vibecoding\Ativos\nexus360\whatsapp-bridge

@@ -243,7 +243,7 @@ export class LeadEnrichmentService {
         const { data } = await axios.get(url, {
           timeout: 10000,
           headers: {
-            "User-Agent": "Nexus360-Enrichment/1.0",
+            "User-Agent": "WooTechCRM-Enrichment/1.0",
           },
         });
 
@@ -353,7 +353,7 @@ export class LeadEnrichmentService {
       const url = website.startsWith("http") ? website : `https://${website}`;
       const { data: html } = await axios.get(url, {
         timeout: 10000,
-        headers: { "User-Agent": "Nexus360-Enrichment/1.0" },
+        headers: { "User-Agent": "WooTechCRM-Enrichment/1.0" },
         maxRedirects: 3,
       });
 

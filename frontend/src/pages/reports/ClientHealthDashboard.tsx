@@ -273,7 +273,7 @@ function ClientDetailModal({ client, onClose }: { client: any; onClose: () => vo
           )}
           {client.recommendation && (
             <div className="mt-5 p-4 rounded-2xl bg-blue-50 border border-blue-100">
-              <p className="text-[10px] font-black text-blue-500 uppercase mb-1">Recomendacao Nexus</p>
+              <p className="text-[10px] font-black text-blue-500 uppercase mb-1">Recomendacao WooTech CRM</p>
               <p className="text-sm font-semibold text-blue-900">{client.recommendation}</p>
             </div>
           )}

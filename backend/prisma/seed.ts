@@ -4,7 +4,7 @@ import bcrypt from "bcryptjs";
 const prisma = new PrismaClient();
 
 async function main() {
-  console.log("🌱 Iniciando seed Nexus360...\n");
+  console.log("🌱 Iniciando seed WooTech CRM...\n");
 
   // ==================== PLANOS ====================
   console.log("📋 Criando planos...");
@@ -318,7 +318,7 @@ async function main() {
       where: { slug: "nexus360-platform" },
       update: {},
       create: {
-        name: "Nexus360 Platform",
+        name: "WooTech CRM Platform",
         slug: "nexus360-platform",
         plan: "Enterprise",
         isActive: true,

@@ -17,7 +17,7 @@ Criar uma central de IA para o Nexus com:
 ## Arquitetura MVP
 
 ```text
-Usuario / WhatsApp / Painel Nexus
+Usuario / WhatsApp / Painel WooTech CRM
         |
         v
 Nexus API (/api/ai/core/chat)
@@ -128,7 +128,7 @@ GET /api/ai/core/health
 
 ## Decisoes tecnicas
 
-- O Nexus continua em Express/Prisma/Vite no MVP para reduzir risco.
+- O WooTech CRM continua em Express/Prisma/Vite no MVP para reduzir risco.
 - LiteLLM fica como contrato OpenAI-compatible.
 - Ollama e o primeiro runtime local, pela simplicidade operacional.
 - Qdrant/MinIO/Redis sobem desde o inicio para evitar nova mudanca de stack quando RAG entrar.

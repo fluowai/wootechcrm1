@@ -1,4 +1,4 @@
-# Deploy do Nexus360 no Portainer
+# Deploy do WooTech CRM no Portainer
 
 Esta stack segue o modelo recomendado para Swarm/Portainer: frontend com Nginx servindo apenas o SPA, API Node na porta `10000`, rede externa `consultio1` para o Traefik e rede overlay interna `nexus360_internal`.
 
@@ -30,21 +30,21 @@ Se o banco estiver vazio, rode `npx prisma db push --skip-generate` fora do boot
 
 ## Publicacao
 
-- Site: `https://nexus360.consultio.com.br`
-- API: `https://nexus360.consultio.com.br/api`
-- Healthcheck: `https://nexus360.consultio.com.br/api/health`
-- Landing pages publicas: `https://nexus360.consultio.com.br/lp/slug-da-landing`
+- Site: `https://woocrm.wootech.com.br`
+- API: `https://woocrm.wootech.com.br/api`
+- Healthcheck: `https://woocrm.wootech.com.br/api/health`
+- Landing pages publicas: `https://woocrm.wootech.com.br/lp/slug-da-landing`
 
 ## White-label e dominios customizados
 
-Cada white-label tem uma URL interna por path no formato `nexus360.consultio.com.br/slug`, por exemplo `nexus360.consultio.com.br/tgamkt`. Essa URL nao exige DNS extra, pois usa o mesmo host principal publicado no Portainer.
+Cada white-label tem uma URL interna por path no formato `woocrm.wootech.com.br/slug`, por exemplo `woocrm.wootech.com.br/tgamkt`. Essa URL nao exige DNS extra, pois usa o mesmo host principal publicado no Portainer.
 
 DNS esperado:
 
 - `crm.tgamkt.com` deve apontar com registro `A` para `207.58.153.219`.
 - Opcionalmente, `www.crm.tgamkt.com` pode apontar com `CNAME` para `crm.tgamkt.com`.
 
-O app identifica o tenant pelo host cadastrado em Admin > White-label e mantem o usuario no dominio personalizado. A URL `nexus360.consultio.com.br/tgamkt` continua disponivel como URL interna/alternativa.
+O app identifica o tenant pelo host cadastrado em Admin > White-label e mantem o usuario no dominio personalizado. A URL `woocrm.wootech.com.br/tgamkt` continua disponivel como URL interna/alternativa.
 
 As regras da stack mantem um `HostRegexp` global para roteamento generico, mas certificado HTTPS valido para dominios de clientes precisa de regra concreta `Host(...)`. O fluxo padrao usa o Docker API para adicionar essa regra diretamente ao servico `nexus360_frontend`:
 

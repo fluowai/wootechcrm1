@@ -85,7 +85,7 @@ export default function PublicProposal() {
              <span className="font-black text-slate-900 tracking-tight text-xl">{proposal.organization?.name}</span>
           </div>
           <div className="hidden md:flex items-center gap-2 text-slate-400 font-bold text-[10px] uppercase tracking-widest border border-slate-100 px-3 py-1.5 rounded-full bg-white shadow-sm">
-             <Lock size={12} className="text-emerald-500" /> Ambiente Seguro Nexus360
+             <Lock size={12} className="text-emerald-500" /> Ambiente Seguro WooTech CRM
           </div>
         </div>
       </nav>
@@ -169,14 +169,14 @@ export default function PublicProposal() {
                   <CheckCircle2 size={48} />
                </div>
                <h2 className="text-4xl font-black">Proposta Aceita com Sucesso!</h2>
-               <p className="text-emerald-50 font-medium max-w-md mx-auto">Nossa equipe já recebeu seus dados e o contrato está sendo preparado para sua assinatura digital. Seja bem-vindo ao Nexus360.</p>
+               <p className="text-emerald-50 font-medium max-w-md mx-auto">Nossa equipe já recebeu seus dados e o contrato está sendo preparado para sua assinatura digital. Seja bem-vindo ao WooTech CRM.</p>
             </motion.div>
           )}
 
           {/* Rodapé Customizável */}
           <footer className="pt-20 border-t border-slate-100 flex flex-col items-center gap-4 text-slate-400 font-bold text-[10px] uppercase tracking-widest">
              <div className="flex items-center gap-6">
-                <span className="flex items-center gap-2"><Globe size={14} /> nexus360.com.br</span>
+                <span className="flex items-center gap-2"><Globe size={14} /> woocrm.wootech.com.br</span>
                 <span className="flex items-center gap-2"><FileText size={14} /> ID: {proposal.slug}</span>
              </div>
              <p className="text-center">{proposal.footerText || `© ${new Date().getFullYear()} ${proposal.organization?.name}. Todos os direitos reservados.`}</p>

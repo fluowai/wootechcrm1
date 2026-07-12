@@ -14,7 +14,7 @@ Para o Nexus, a melhor oportunidade nao e copiar o Paperclip como produto generi
 - CS Agent: monitora clientes, risco de churn, entregas, reunioes, contratos e follow-ups.
 - Marketing/Ops Agent: cria campanhas, criativos, tarefas, calendarios e rotinas.
 
-O Nexus ja tem pecas importantes: `AiAgent`, `AiUsageLedger`, `AiEntitlement`, `AgentQueueItem`, `Automation`, `Task`, `Project`, workers de SDR/follow-up e a Central de Agentes. Falta transformar essas pecas em um sistema persistente de empresas de agentes: organograma, heartbeat, tickets/runs, aprovacoes, memoria, relatorios e controle fino de autonomia.
+O WooTech CRM ja tem pecas importantes: `AiAgent`, `AiUsageLedger`, `AiEntitlement`, `AgentQueueItem`, `Automation`, `Task`, `Project`, workers de SDR/follow-up e a Central de Agentes. Falta transformar essas pecas em um sistema persistente de empresas de agentes: organograma, heartbeat, tickets/runs, aprovacoes, memoria, relatorios e controle fino de autonomia.
 
 ## O que o Paperclip faz bem
 
@@ -245,7 +245,7 @@ Fase 5: Autonomia controlada
 
 Implementar Paperclip dentro do Nexus como "AgentOps" e nao como clone.
 
-O Nexus ja tem uma vantagem que o Paperclip generico nao tem: dados de CRM, vendas, prospeccao, WhatsApp, contratos, propostas, clientes, tarefas e faturamento. Isso permite agentes realmente operacionais, que nao apenas falam, mas criam trabalho, movem processos, avisam humanos e acompanham resultado.
+O WooTech CRM ja tem uma vantagem que o Paperclip generico nao tem: dados de CRM, vendas, prospeccao, WhatsApp, contratos, propostas, clientes, tarefas e faturamento. Isso permite agentes realmente operacionais, que nao apenas falam, mas criam trabalho, movem processos, avisam humanos e acompanham resultado.
 
 O primeiro MVP deve ser:
 

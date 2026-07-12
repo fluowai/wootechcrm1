@@ -63,7 +63,7 @@ const agendorInspiredFeatures = [
   }
 ];
 
-const nexusOnlyFeatures = [
+const wooTechOnlyFeatures = [
   {
     title: "Captação ativa para agências",
     description: "Busque empresas por nicho, cidade e oportunidade. Envie leads prontos para o CRM com análise de IA.",
@@ -107,7 +107,7 @@ const comparison = [
   {
     item: "WhatsApp e atividades",
     agendor: "Comunicação integrada e rotinas comerciais",
-    nexus: "Atalhos, agenda, Nexus Meet e base para omnichannel"
+    nexus: "Atalhos, agenda, WooTech Meet e base para omnichannel"
   },
   {
     item: "Produtos e propostas",
@@ -151,7 +151,7 @@ function Navbar() {
             <Monitor size={21} />
           </div>
           <div>
-            <div className="text-lg font-black tracking-tight text-slate-950">Nexus360</div>
+            <div className="text-lg font-black tracking-tight text-slate-950">WooTech CRM</div>
             <div className="text-[10px] font-bold uppercase tracking-[0.22em] text-slate-400">Agency CRM</div>
           </div>
         </Link>
@@ -286,7 +286,7 @@ export default function LandingPage() {
               A central de gestão comercial feita para agências venderem, entregarem e reterem melhor.
             </h1>
             <p className="mt-7 max-w-2xl text-xl leading-8 text-slate-600">
-              O Nexus360 combina CRM consultivo, captação de leads, propostas, contratos, delivery, financeiro e agentes de IA em uma plataforma única para agências de marketing.
+              O WooTech CRM combina CRM consultivo, captação de leads, propostas, contratos, delivery, financeiro e agentes de IA em uma plataforma única para agências de marketing.
             </p>
             <div className="mt-9 flex flex-col gap-3 sm:flex-row">
               <a href="#demo" className="inline-flex items-center justify-center gap-2 rounded-2xl bg-[#00B87A] px-8 py-4 text-base font-black text-white shadow-xl shadow-emerald-100 transition hover:bg-[#009F6A]">
@@ -334,7 +334,7 @@ export default function LandingPage() {
               </h2>
             </div>
             <p className="max-w-md text-lg leading-8 text-slate-600">
-              O Nexus incorpora os pilares de um CRM B2B consultivo e adiciona a camada que agências precisam depois da venda: contrato, entrega, horas, health score e IA.
+              O WooTech CRM incorpora os pilares de um CRM B2B consultivo e adiciona a camada que agências precisam depois da venda: contrato, entrega, horas, health score e IA.
             </p>
           </div>
 
@@ -355,11 +355,11 @@ export default function LandingPage() {
       <section id="recursos" className="bg-white px-5 py-24 lg:px-8">
         <div className="mx-auto max-w-7xl">
           <div className="mx-auto mb-14 max-w-3xl text-center">
-            <p className="mb-3 text-xs font-black uppercase tracking-[0.25em] text-[#00B87A]">Diferencial Nexus360</p>
+            <p className="mb-3 text-xs font-black uppercase tracking-[0.25em] text-[#00B87A]">Diferencial WooTech CRM</p>
             <h2 className="text-4xl font-black tracking-tight text-slate-950 md:text-5xl">Além do CRM: uma operação completa para agência de marketing.</h2>
           </div>
           <div className="grid gap-6 lg:grid-cols-4">
-            {nexusOnlyFeatures.map((feature) => (
+            {wooTechOnlyFeatures.map((feature) => (
               <div key={feature.title} className="rounded-[1.75rem] bg-slate-950 p-7 text-white shadow-xl shadow-slate-200">
                 <div className="mb-6 flex h-12 w-12 items-center justify-center rounded-2xl bg-white/10 text-[#6EE7B7]">
                   <feature.icon size={23} />
@@ -378,7 +378,7 @@ export default function LandingPage() {
             <p className="mb-3 text-xs font-black uppercase tracking-[0.25em] text-emerald-300">Da prospecção à retenção</p>
             <h2 className="text-4xl font-black tracking-tight md:text-5xl">Uma jornada comercial e operacional no mesmo fluxo.</h2>
             <p className="mt-6 text-lg leading-8 text-slate-300">
-              Em CRMs tradicionais, o trabalho costuma terminar no fechamento. No Nexus, a venda vira onboarding, serviço, tarefa, entrega, cobrança, saúde do cliente e oportunidade de expansão.
+              Em CRMs tradicionais, o trabalho costuma terminar no fechamento. No WooTech CRM, a venda vira onboarding, serviço, tarefa, entrega, cobrança, saúde do cliente e oportunidade de expansão.
             </p>
           </div>
           <div className="rounded-[2rem] border border-white/10 bg-white/5 p-5">
@@ -398,13 +398,13 @@ export default function LandingPage() {
         <div className="mx-auto max-w-7xl">
           <div className="mb-12 max-w-3xl">
             <p className="mb-3 text-xs font-black uppercase tracking-[0.25em] text-[#155EEF]">Comparativo estratégico</p>
-            <h2 className="text-4xl font-black tracking-tight text-slate-950 md:text-5xl">Agendor é forte em vendas consultivas. Nexus quer ser o CRM operacional das agências.</h2>
+            <h2 className="text-4xl font-black tracking-tight text-slate-950 md:text-5xl">Agendor é forte em vendas consultivas. WooTech CRM quer ser o CRM operacional das agências.</h2>
           </div>
           <div className="overflow-hidden rounded-[2rem] border border-slate-200 bg-white shadow-xl shadow-slate-100">
             <div className="grid grid-cols-3 bg-slate-950 px-6 py-4 text-sm font-black uppercase tracking-widest text-white">
               <div>Critério</div>
               <div>Agendor</div>
-              <div>Nexus360</div>
+              <div>WooTech CRM</div>
             </div>
             {comparison.map((row) => (
               <div key={row.item} className="grid grid-cols-1 gap-4 border-t border-slate-100 px-6 py-5 md:grid-cols-3 md:gap-0">
@@ -421,7 +421,7 @@ export default function LandingPage() {
         <div className="mx-auto max-w-7xl">
           <div className="mb-12 text-center">
             <p className="mb-3 text-xs font-black uppercase tracking-[0.25em] text-[#00B87A]">Crescimento possível</p>
-            <h2 className="text-4xl font-black tracking-tight text-slate-950 md:text-5xl">Funções que podem levar o Nexus além do CRM.</h2>
+            <h2 className="text-4xl font-black tracking-tight text-slate-950 md:text-5xl">Funções que podem levar o WooTech CRM além do CRM.</h2>
           </div>
           <div className="grid gap-5 md:grid-cols-2 lg:grid-cols-3">
             {[
@@ -447,7 +447,7 @@ export default function LandingPage() {
       <section id="demo" className="bg-white px-5 py-24 lg:px-8">
         <div className="mx-auto grid max-w-7xl gap-10 rounded-[2.5rem] bg-[#155EEF] p-8 text-white shadow-2xl shadow-blue-200 md:p-12 lg:grid-cols-[1fr_0.8fr] lg:p-16">
           <div>
-            <p className="mb-4 text-xs font-black uppercase tracking-[0.25em] text-blue-100">Teste o Nexus360</p>
+            <p className="mb-4 text-xs font-black uppercase tracking-[0.25em] text-blue-100">Teste o WooTech CRM</p>
             <h2 className="text-4xl font-black tracking-tight md:text-6xl">Tenha controle comercial e operacional da sua agência em uma única tela.</h2>
             <p className="mt-6 max-w-2xl text-lg leading-8 text-blue-100">
               Comece com CRM, leads e contratos. Evolua para delivery, IA, health score e automações que aumentam retenção.
@@ -488,10 +488,10 @@ export default function LandingPage() {
             <h2 className="text-4xl font-black text-slate-950">Perguntas frequentes</h2>
             <p className="mt-4 text-slate-600">As dúvidas mais comuns para quem quer migrar de planilha, CRM simples ou operação fragmentada.</p>
           </div>
-          <FAQItem question="O Nexus substitui um CRM como o Agendor?" answer="Para agências, sim, porque cobre o núcleo comercial e adiciona módulos operacionais que normalmente ficam fora de um CRM puro: contratos, entregas, horas, health score e IA." />
-          <FAQItem question="O Nexus é só para vendas?" answer="Não. O foco é conectar vendas, onboarding, delivery e retenção, para que a agência veja o ciclo completo do cliente." />
+          <FAQItem question="O WooTech CRM substitui um CRM como o Agendor?" answer="Para agências, sim, porque cobre o núcleo comercial e adiciona módulos operacionais que normalmente ficam fora de um CRM puro: contratos, entregas, horas, health score e IA." />
+          <FAQItem question="O WooTech CRM é só para vendas?" answer="Não. O foco é conectar vendas, onboarding, delivery e retenção, para que a agência veja o ciclo completo do cliente." />
           <FAQItem question="Consigo usar com equipe comercial e equipe de entrega?" answer="Sim. A plataforma já tem CRM, tarefas, calendário, clientes, projetos, entregáveis, catálogo de serviços e apontamento de horas." />
-          <FAQItem question="A IA já faz parte do produto?" answer="Sim. O Nexus tem estrutura de agentes, geração de conteúdo, análise de leads, prompts e apoio para reuniões e propostas." />
+          <FAQItem question="A IA já faz parte do produto?" answer="Sim. O WooTech CRM tem estrutura de agentes, geração de conteúdo, análise de leads, prompts e apoio para reuniões e propostas." />
         </div>
       </section>
 
@@ -502,7 +502,7 @@ export default function LandingPage() {
               <Monitor size={20} />
             </div>
             <div>
-              <div className="font-black">Nexus360</div>
+              <div className="font-black">WooTech CRM</div>
               <div className="text-xs text-slate-500">CRM e operação 360 para agências.</div>
             </div>
           </div>

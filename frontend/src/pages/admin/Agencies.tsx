@@ -226,7 +226,7 @@ export default function AdminAgencies() {
       <div className="flex justify-between items-center">
         <div>
           <h1 className="text-2xl font-bold text-gray-900">Clientes da Agência</h1>
-          <p className="text-sm text-gray-500">Organizações que usam o Nexus360 como plataforma de gestão.</p>
+          <p className="text-sm text-gray-500">Organizações que usam o WooTech CRM como plataforma de gestão.</p>
         </div>
         <button 
           onClick={() => setShowModal(true)}
@@ -585,7 +585,7 @@ export default function AdminAgencies() {
               <div className="bg-amber-50 border border-amber-100 p-4 rounded-2xl mb-2">
                 <p className="text-[10px] font-bold text-amber-800 uppercase tracking-widest mb-1">Atenção</p>
                 <p className="text-[10px] text-amber-700 leading-relaxed">
-                  Este processo cadastra a URL no Nexus360 para uso com Docker/Portainer.
+                  Este processo cadastra a URL no WooTech CRM para uso com Docker/Portainer.
                   Certifique-se que o DNS do dominio aponta para o servidor configurado.
                 </p>
               </div>
@@ -685,7 +685,7 @@ export default function AdminAgencies() {
                 />
                 {editData.slug && (
                   <p className="text-[10px] text-gray-400 mt-1 font-mono">
-                    URL interna: nexus360.consultio.com.br/<span className="text-blue-500 font-bold">{editData.slug}</span>
+                    URL interna: woocrm.wootech.com.br/<span className="text-blue-500 font-bold">{editData.slug}</span>
                   </p>
                 )}
               </div>

@@ -49,7 +49,7 @@ export function buildContractData(client: any, soldProduct: any, org: any): Reco
     responsavel_cpf: formatCpf(client.responsibleCpf || ""),
     responsavel_cargo: client.responsibleRole || "",
 
-    prestadora_nome: org.name || "Nexus360",
+    prestadora_nome: org.name || "WooTech CRM",
     prestadora_cnpj: org.cnpj || "",
     prestadora_email: org.email || "",
 

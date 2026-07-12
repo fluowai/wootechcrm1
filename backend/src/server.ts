@@ -98,10 +98,10 @@ const publicDir = path.resolve(__dirname, "..", "public");
 // Necessario para Docker/Portainer atras de proxy reverso.
 app.set('trust proxy', 1);
 
-const panelUrl = process.env.FRONTEND_URL || process.env.APP_URL || 'https://nexus360.consultio.com.br';
+const panelUrl = process.env.FRONTEND_URL || process.env.APP_URL || 'https://woocrm.wootech.com.br';
 const panelOrigin = panelUrl.replace(/\/+$/, '');
 
-let panelHostname = 'nexus360.consultio.com.br';
+let panelHostname = 'woocrm.wootech.com.br';
 try { panelHostname = new URL(panelOrigin).hostname; } catch { /* fallback */ }
 
 const configuredOrigins = (process.env.CORS_ORIGINS || panelUrl || '')
@@ -231,7 +231,7 @@ app.use(helmet({
 app.get("/api/health", async (req, res, next) => {
   try {
     await prisma.$queryRaw`SELECT 1`;
-    res.json({ success: true, message: 'Backend Nexus360 Online' });
+    res.json({ success: true, message: 'Backend WooTech CRM Online' });
   } catch (error) {
     next(error);
   }
@@ -520,7 +520,7 @@ syncVerifiedTraefikDomains(prisma)
   });
 
 const serverInstance = httpServer.listen(PORT, () => {
-  logger.info('Server', `Nexus360 Core rodando na porta ${PORT}`);
+  logger.info('Server', `WooTech CRM Core rodando na porta ${PORT}`);
   logger.info('Server', `API: http://localhost:${PORT}/api`);
 });
 

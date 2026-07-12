@@ -263,7 +263,7 @@ export default function AdminAI() {
       <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
         <div>
           <h1 className="text-2xl font-bold text-gray-950">AI Core & Modelos</h1>
-          <p className="text-sm text-gray-500">Modelos, agentes, cotas, rebilling e consumo da IA da Nexus.</p>
+          <p className="text-sm text-gray-500">Modelos, agentes, cotas, rebilling e consumo da IA do WooTech CRM.</p>
         </div>
         <button
           onClick={syncModels}

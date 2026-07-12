@@ -8,7 +8,7 @@ async function test() {
   const orgResponse = await fetch(`${baseUrl}/api/admin/organizations`, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ name: 'Nexus Test Agency', plan: 'Enterprise', domain: 'nexus-test.com' })
+    body: JSON.stringify({ name: 'WooTech Test Agency', plan: 'Enterprise', domain: 'wootech-test.com' })
   });
   const org = await orgResponse.json();
   console.log('Organization created:', org);

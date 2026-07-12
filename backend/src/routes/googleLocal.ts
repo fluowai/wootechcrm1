@@ -205,7 +205,7 @@ export function googleLocalRoutes(prisma: PrismaClient) {
     const auditData = (profile.auditData || {}) as any;
     const score = Math.round(Number(auditData.opportunityScore || profile.auditScore || 0));
     const notes = [
-      "[Nexus GBP Analyzer]",
+      "[WooTech GBP Analyzer]",
       `Perfil: ${profile.name}`,
       profile.category ? `Categoria: ${profile.category}` : null,
       profile.address ? `Endereço: ${profile.address}` : null,
@@ -235,7 +235,7 @@ export function googleLocalRoutes(prisma: PrismaClient) {
         status: "novo",
         organizationId: orgId,
         assignedToId: req.user?.id,
-        source: "Nexus GBP Analyzer",
+        source: "WooTech GBP Analyzer",
         channel: "Google Maps",
         tags: profile.category || "GBP",
         score,

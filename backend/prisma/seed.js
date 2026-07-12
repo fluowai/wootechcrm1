@@ -137,7 +137,7 @@ const featureFlags = [
 ];
 
 async function main() {
-  console.log("Seeding Nexus360 database...");
+  console.log("Seeding WooTech CRM database...");
 
   for (const plan of plans) {
     await prisma.plan.upsert({
@@ -172,7 +172,7 @@ async function main() {
       isActive: true,
     },
     create: {
-      name: "Nexus360 Platform",
+      name: "WooTech CRM Platform",
       slug: "nexus360-platform",
       plan: "Enterprise",
       planId: enterprisePlan?.id,

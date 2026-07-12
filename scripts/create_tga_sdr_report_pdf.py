@@ -244,7 +244,7 @@ def build_pdf(data):
         topMargin=1.05 * cm,
         bottomMargin=1.45 * cm,
         title="Relatório SDR - TGA Marketing",
-        author="Nexus360",
+        author="WooTech CRM",
     )
     story = []
 
@@ -358,7 +358,7 @@ def build_pdf(data):
     story.append(para("Notas de metodologia", styles["section"]))
     story.append(
         para(
-            "O relatório considera apenas os registros presentes no CRM Nexus360 da organização TGA MARKETING. "
+            "O relatório considera apenas os registros presentes no WooTech CRM da organização TGA MARKETING. "
             "Foram contabilizadas atividades marcadas como ligação no período de 03/06/2026 a 15/06/2026, "
             "atividades de retorno/interesse e eventos de agenda vinculados aos respectivos leads no período de 16/06/2026 a 19/06/2026.",
             styles["body"],

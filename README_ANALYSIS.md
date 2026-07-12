@@ -292,61 +292,61 @@ Priority 4 (REVIEW):
 
 `
 C:\Users\paulo\Vibecoding\Ativos\nexus360\
-¦
+ï¿½
 +-- ARCHITECTURE_AND_SECURITY_ANALYSIS.md     ?? 24.7 KB
 +-- SECURITY_QUICK_REFERENCE.md               ?? 9.8 KB
 +-- DETAILED_FILE_MAPPING.md                  ?? 12.8 KB
-¦
+ï¿½
 +-- backend/
-¦   +-- src/
-¦   ¦   +-- server.ts                         ?? Main Express app
-¦   ¦   +-- middleware/
-¦   ¦   ¦   +-- auth.ts                       ?? CRITICAL: JWT auth
-¦   ¦   ¦   +-- tenant.ts                     ?? CRITICAL: Multi-tenant
-¦   ¦   ¦   +-- access.ts                     ?? Feature enforcement
-¦   ¦   ¦   +-- errorHandler.ts               ?? Error handling
-¦   ¦   +-- lib/
-¦   ¦   ¦   +-- access.ts                     ?? Access control
-¦   ¦   ¦   +-- prisma.ts                     Database client
-¦   ¦   +-- utils/
-¦   ¦   ¦   +-- security.ts                   ?? Password/HMAC
-¦   ¦   ¦   +-- sanitizer.ts                  ?? Input validation
-¦   ¦   ¦   +-- auditLogger.ts                ?? Audit logging
-¦   ¦   +-- routes/
-¦   ¦   ¦   +-- auth.ts                       ?? CRITICAL: Auth endpoints
-¦   ¦   ¦   +-- admin.ts                      ?? CRITICAL: Admin operations
-¦   ¦   ¦   +-- crm.ts                        CRM logic
-¦   ¦   ¦   +-- whatsapp.ts                   ?? HIGH: Webhook security
-¦   ¦   ¦   +-- leadCapture.ts                ?? HIGH: External APIs
-¦   ¦   ¦   +-- prospectingFunnels.ts         Campaign automation
-¦   ¦   ¦   +-- [35+ more route files]
-¦   ¦   +-- services/
-¦   ¦   ¦   +-- prospect/                     AI agents
-¦   ¦   ¦   +-- lead-capture/                 ?? Lead service
-¦   ¦   ¦   ¦   +-- lead-capture.service.ts   Lead search
-¦   ¦   ¦   ¦   +-- lead-ai.service.ts        ?? HIGH: AI/Prompt
-¦   ¦   ¦   +-- [10+ more services]
-¦   ¦   +-- workers/
-¦   ¦       +-- [Background jobs]
-¦   ¦
-¦   +-- prisma/
-¦       +-- schema.prisma                     ?? CRITICAL: Database schema
-¦
+ï¿½   +-- src/
+ï¿½   ï¿½   +-- server.ts                         ?? Main Express app
+ï¿½   ï¿½   +-- middleware/
+ï¿½   ï¿½   ï¿½   +-- auth.ts                       ?? CRITICAL: JWT auth
+ï¿½   ï¿½   ï¿½   +-- tenant.ts                     ?? CRITICAL: Multi-tenant
+ï¿½   ï¿½   ï¿½   +-- access.ts                     ?? Feature enforcement
+ï¿½   ï¿½   ï¿½   +-- errorHandler.ts               ?? Error handling
+ï¿½   ï¿½   +-- lib/
+ï¿½   ï¿½   ï¿½   +-- access.ts                     ?? Access control
+ï¿½   ï¿½   ï¿½   +-- prisma.ts                     Database client
+ï¿½   ï¿½   +-- utils/
+ï¿½   ï¿½   ï¿½   +-- security.ts                   ?? Password/HMAC
+ï¿½   ï¿½   ï¿½   +-- sanitizer.ts                  ?? Input validation
+ï¿½   ï¿½   ï¿½   +-- auditLogger.ts                ?? Audit logging
+ï¿½   ï¿½   +-- routes/
+ï¿½   ï¿½   ï¿½   +-- auth.ts                       ?? CRITICAL: Auth endpoints
+ï¿½   ï¿½   ï¿½   +-- admin.ts                      ?? CRITICAL: Admin operations
+ï¿½   ï¿½   ï¿½   +-- crm.ts                        CRM logic
+ï¿½   ï¿½   ï¿½   +-- whatsapp.ts                   ?? HIGH: Webhook security
+ï¿½   ï¿½   ï¿½   +-- leadCapture.ts                ?? HIGH: External APIs
+ï¿½   ï¿½   ï¿½   +-- prospectingFunnels.ts         Campaign automation
+ï¿½   ï¿½   ï¿½   +-- [35+ more route files]
+ï¿½   ï¿½   +-- services/
+ï¿½   ï¿½   ï¿½   +-- prospect/                     AI agents
+ï¿½   ï¿½   ï¿½   +-- lead-capture/                 ?? Lead service
+ï¿½   ï¿½   ï¿½   ï¿½   +-- lead-capture.service.ts   Lead search
+ï¿½   ï¿½   ï¿½   ï¿½   +-- lead-ai.service.ts        ?? HIGH: AI/Prompt
+ï¿½   ï¿½   ï¿½   +-- [10+ more services]
+ï¿½   ï¿½   +-- workers/
+ï¿½   ï¿½       +-- [Background jobs]
+ï¿½   ï¿½
+ï¿½   +-- prisma/
+ï¿½       +-- schema.prisma                     ?? CRITICAL: Database schema
+ï¿½
 +-- frontend/
-¦   +-- src/
-¦   ¦   +-- lib/
-¦   ¦   ¦   +-- api.ts                        ?? Token management
-¦   ¦   ¦   +-- useAuth.ts                    Auth state
-¦   ¦   ¦   +-- access.ts                     Permission checking
-¦   ¦   +-- pages/                            70+ pages
-¦   ¦   +-- components/                       50+ components
-¦   ¦   +-- types.ts                          Type definitions
-¦   ¦
-¦   +-- vite.config.ts                        Build config
-¦
+ï¿½   +-- src/
+ï¿½   ï¿½   +-- lib/
+ï¿½   ï¿½   ï¿½   +-- api.ts                        ?? Token management
+ï¿½   ï¿½   ï¿½   +-- useAuth.ts                    Auth state
+ï¿½   ï¿½   ï¿½   +-- access.ts                     Permission checking
+ï¿½   ï¿½   +-- pages/                            70+ pages
+ï¿½   ï¿½   +-- components/                       50+ components
+ï¿½   ï¿½   +-- types.ts                          Type definitions
+ï¿½   ï¿½
+ï¿½   +-- vite.config.ts                        Build config
+ï¿½
 +-- whatsapp-bridge/
-¦   +-- main.go                               ?? Webhook handler
-¦
+ï¿½   +-- main.go                               ?? Webhook handler
+ï¿½
 +-- docker-compose.yml                        ?? Orchestration
 +-- .env.example                              ?? Configuration template
 +-- package.json                              ?? Dependencies
@@ -421,6 +421,6 @@ This analysis provides foundation for:
 **Generated by**: Security Analysis Tool
 **Date**: 2026-06-05 19:58:39
 **Platform**: Windows PowerShell
-**Target**: Nexus360 CRM + Lead Gen + Automation Platform
+**Target**: WooTech CRM + Lead Gen + Automation Platform
 
 **Total Documentation**: 47.4 KB of analysis across 3 comprehensive documents

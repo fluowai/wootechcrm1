@@ -138,7 +138,7 @@ function AgencyTab({ data, setData }: any) {
           <label className="text-[10px] font-black text-gray-400 uppercase tracking-widest ml-1">Razão Social</label>
           <div className="relative">
             <Building2 className="absolute left-4 top-3 text-gray-400" size={18} />
-            <input className="modal-input pl-12" value={data.corporateName} onChange={e => setData({...data, corporateName: e.target.value})} placeholder="Nexus Marketing LTDA" />
+            <input className="modal-input pl-12" value={data.corporateName} onChange={e => setData({...data, corporateName: e.target.value})} placeholder="WooTech CRM LTDA" />
           </div>
         </div>
         <div className="space-y-1.5">
@@ -358,7 +358,7 @@ function IATab({ data, setData, onSave }: any) {
         <div className="relative z-10 space-y-4">
           <div className="flex items-center gap-3 text-blue-400">
             <Sparkles size={32} />
-            <span className="font-black text-xl tracking-tighter uppercase">Nexus AI & Prospecting</span>
+            <span className="font-black text-xl tracking-tighter uppercase">WooTech AI & Prospecting</span>
           </div>
           <h3 className="text-4xl font-black leading-tight">Conectores de API</h3>
           <p className="text-slate-400 text-lg">Configure suas próprias chaves para captação de leads e inteligência artificial.</p>

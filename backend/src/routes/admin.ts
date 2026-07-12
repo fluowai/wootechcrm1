@@ -666,8 +666,8 @@ export function adminRoutes(prisma: PrismaClient) {
       res.json({
         success: true,
         message: savedDomain.verification.verified
-          ? "Dominio cadastrado e DNS validado para o servidor Nexus360."
-          : "Dominio cadastrado. Configure o DNS para apontar ao servidor Nexus360 e validar a URL do cliente.",
+          ? "Dominio cadastrado e DNS validado para o servidor WooTech CRM."
+          : "Dominio cadastrado. Configure o DNS para apontar ao servidor WooTech CRM e validar a URL do cliente.",
         domain: {
           ...savedDomain.domainRecord,
           dns: getDnsInstructions(domain, org.slug),

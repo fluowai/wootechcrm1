@@ -55,7 +55,7 @@ export const PlanGuard: React.FC<PlanGuardProps> = ({
         </h3>
         
         <p className="text-gray-500 text-sm leading-relaxed mb-8">
-          Este recurso está disponível apenas para clientes com o plano <strong>{requiredPlan}</strong> ou superior. Faça o upgrade agora e desbloqueie o poder total do Nexus360.
+          Este recurso está disponível apenas para clientes com o plano <strong>{requiredPlan}</strong> ou superior. Faça o upgrade agora e desbloqueie o poder total do WooTech CRM.
         </p>
 
         <div className="flex flex-col gap-3">

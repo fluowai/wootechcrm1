@@ -221,7 +221,7 @@ Dependencies:
 
 ## File Locations (Windows Format)
 
-**Nexus360 Root:**
+**WooTech CRM Root:**
 C:\Users\paulo\Vibecoding\Ativos\nexus360\
 
 **Documentation:**

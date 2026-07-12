@@ -273,7 +273,7 @@ function TaskModal({ onClose, onSuccess, initialData }: { onClose: () => void, o
         <div className="p-8 border-b border-gray-100 flex justify-between items-center bg-gray-50/50">
           <div>
             <h2 className="text-2xl font-black text-gray-900 tracking-tight">{initialData ? 'Atualizar Demanda' : 'Configurar Nova Demanda'}</h2>
-            <p className="text-[10px] text-gray-400 font-bold uppercase tracking-widest mt-1">Orquestração Operacional Nexus360</p>
+            <p className="text-[10px] text-gray-400 font-bold uppercase tracking-widest mt-1">Orquestração Operacional WooTech CRM</p>
           </div>
           <button onClick={onClose} className="p-2 hover:bg-white rounded-full shadow-sm transition-all border border-transparent hover:border-gray-100">
             <X size={20} className="text-gray-400" />

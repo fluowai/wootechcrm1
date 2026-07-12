@@ -757,7 +757,7 @@ async function main() {
     name: page.name,
     status: page.status,
     local: `http://localhost:10000/lp/${page.slug}`,
-    prod: `https://nexus360.consultio.com.br/lp/${page.slug}`,
+    prod: `https://woocrm.wootech.com.br/lp/${page.slug}`,
   })));
 }
 

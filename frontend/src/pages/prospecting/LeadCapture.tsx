@@ -1779,7 +1779,7 @@ export default function LeadCapture() {
                       </div>
                       <div>
                         <h2 className="text-xl font-black text-gray-900 tracking-tight">Prospecção Ativa & Agendamento IA</h2>
-                        <p className="text-[10px] font-bold text-indigo-600 uppercase tracking-widest">SDR WhatsApp + Agenda Própria Nexus360</p>
+                        <p className="text-[10px] font-bold text-indigo-600 uppercase tracking-widest">SDR WhatsApp + Agenda Própria WooTech CRM</p>
                       </div>
                     </div>
                     <button 

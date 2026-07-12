@@ -18,7 +18,7 @@ export default function Login({ onAuthenticated }: { onAuthenticated?: (user: an
   const [orgName, setOrgName] = useState("");
   const [phone, setPhone] = useState("");
   const { config: whiteLabel, customDomain } = useWhitelabel();
-  const brandLabel = whiteLabel?.name || "Nexus360";
+  const brandLabel = whiteLabel?.name || "WooTech CRM";
 
   useEffect(() => {
     if (customDomain) setIsRegister(false);
@@ -166,7 +166,7 @@ export default function Login({ onAuthenticated }: { onAuthenticated?: (user: an
                   <input 
                     type="text"
                     className="w-full bg-gray-50 border border-gray-100 rounded-2xl py-3.5 px-4 text-sm outline-none focus:ring-2 focus:ring-primary/20 transition-all"
-                    placeholder="Nexus360 Master"
+                    placeholder="WooTech CRM Master"
                     value={orgName}
                     onChange={e => setOrgName(e.target.value)}
                     required
@@ -234,7 +234,7 @@ export default function Login({ onAuthenticated }: { onAuthenticated?: (user: an
 
           <div className="mt-8 pt-8 border-t border-gray-100 text-center">
              <p className="text-[10px] text-gray-400">
-              {customDomain ? "Ambiente seguro para usuarios autorizados." : "© 2026 Nexus360 Digital. Primeiro usuário = SUPERADMIN."}
+              {customDomain ? "Ambiente seguro para usuarios autorizados." : "© 2026 WooTech CRM. Primeiro usuário = SUPERADMIN."}
              </p>
           </div>
         </div>

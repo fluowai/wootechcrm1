@@ -35,7 +35,7 @@ export async function convertProspectingRunToCrm(prisma: PrismaClient, run: any,
   const assignedToId = qualification.consultantId || leadSnapshot.responsibleId || null;
   const { pipelineId, stageId } = await pickDefaultPipeline(prisma, organizationId);
   const notes = [
-    "Convertido automaticamente pela prospeccao Nexus WhatsMeow.",
+    "Convertido automaticamente pela prospeccao WooTech WhatsMeow.",
     input.reason ? `Motivo: ${input.reason}` : null,
     input.summary ? `Resumo: ${input.summary}` : null,
     leadSnapshot.category ? `Segmento: ${leadSnapshot.category}` : null,

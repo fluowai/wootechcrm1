@@ -1,4 +1,4 @@
-// Nexus360 CRM 360 - Schema Completo para Agência de Geração de Leads
+// WooTech CRM - Schema Completo para Agência de Geração de Leads
 
 generator client {
   provider      = "prisma-client-js"
@@ -148,7 +148,7 @@ model Organization {
   saasInvoices      SaaSInvoice[]
   supportTickets    SupportTicket[]
 
-  // Nexus Prospect AI
+  // WooTech Prospect AI
   prospectMissions  ProspectMission[]
 
   // Autonomus CRM: verticalização por tipo de negócio
@@ -489,7 +489,7 @@ model User {
   refreshTokens        RefreshToken[]
   accountVerifications AccountVerification[]
   
-  // Nexus Prospect AI
+  // WooTech Prospect AI
   prospectMissions       ProspectMission[]
   prospectMissionsOwned  ProspectMission[] @relation("MissionSalesOwner")
   

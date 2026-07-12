@@ -134,7 +134,7 @@ export class ProposalService {
   ${content?.notes ? `<div><h4>Observações:</h4><p>${content.notes}</p></div>` : ""}
   ${content?.terms ? `<div><h4>Termos:</h4><p>${content.terms}</p></div>` : ""}
   <div class="footer">
-    <p>Proposta gerada por Nexus360 — ${new Date().toLocaleString("pt-BR")}</p>
+    <p>Proposta gerada por WooTech CRM — ${new Date().toLocaleString("pt-BR")}</p>
   </div>
 </body></html>`;
   }

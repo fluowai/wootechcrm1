@@ -129,7 +129,7 @@ func main() {
 	mux.HandleFunc("/calls/", a.handleCalls)
 
 	addr := env("WHATSAPP_BRIDGE_ADDR", ":8091")
-	log.Printf("Nexus360 Whatsmeow bridge listening on %s", addr)
+	log.Printf("WooTech CRM Whatsmeow bridge listening on %s", addr)
 	log.Fatal(http.ListenAndServe(addr, withSecret(mux)))
 }
 

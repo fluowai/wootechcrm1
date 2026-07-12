@@ -70,7 +70,7 @@ export default function ReleaseControl() {
     <div className="flex flex-col gap-8 max-w-4xl">
       <div>
         <h1 className="text-3xl font-black text-gray-900 tracking-tight">Controle de Lançamento</h1>
-        <p className="text-gray-500 font-medium">Gerencie a disponibilidade global de recursos do Nexus360.</p>
+        <p className="text-gray-500 font-medium">Gerencie a disponibilidade global de recursos do WooTech CRM.</p>
       </div>
 
       <div className="bg-amber-50 border border-amber-200 p-6 rounded-[24px] flex items-start gap-4">

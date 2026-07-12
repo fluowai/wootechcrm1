@@ -134,7 +134,7 @@ export async function startProfileDiscovery(query: string) {
   const created = await scraperRequest("/api/v1/jobs", {
     method: "POST",
     body: JSON.stringify({
-      name: `Nexus Profile Discovery - ${cleanQuery.slice(0, 80)}`,
+      name: `WooTech Profile Discovery - ${cleanQuery.slice(0, 80)}`,
       keywords: [cleanQuery],
       lang: "pt",
       zoom: 15,
@@ -497,7 +497,7 @@ async function scrapePoint(keyword: string, latitude: number, longitude: number,
   const created = await scraperRequest("/api/v1/jobs", {
     method: "POST",
     body: JSON.stringify({
-      name: `Nexus Geo Grid - ${keyword}`,
+      name: `WooTech Geo Grid - ${keyword}`,
       keywords: [keyword],
       lang: "pt",
       zoom,

@@ -210,7 +210,7 @@ export default function GoogleLocal() {
   return (
     <div className="flex flex-col gap-8">
       <div className="flex flex-wrap items-center justify-between gap-4">
-        <div><h1 className="text-2xl font-black">Nexus GBP Analyzer</h1><p className="text-sm text-gray-500">Busca empresas no Google Maps, audita o perfil, compara concorrentes e mantém o mapa de posicionamento.</p></div>
+        <div><h1 className="text-2xl font-black">WooTech GBP Analyzer</h1><p className="text-sm text-gray-500">Busca empresas no Google Maps, audita o perfil, compara concorrentes e mantém o mapa de posicionamento.</p></div>
         <button onClick={() => setShowDiscovery((value) => !value)} className="flex items-center gap-2 rounded-xl bg-indigo-600 px-4 py-3 text-sm font-bold text-white"><Plus size={18} /> Buscar perfil</button>
       </div>
       {message && <div className="rounded-xl border border-red-200 bg-red-50 p-4 text-sm font-semibold text-red-700">{message}</div>}

@@ -4,7 +4,7 @@ Data: 2026-06-04
 
 ## Premissas
 
-Esta auditoria foi feita sobre o codigo atual do Nexus360, nao apenas sobre uma descricao abstrata. O sistema ja possui uma base SaaS multi-tenant, CRM, agenda, funis, captura de leads, WhatsApp via WhatsMeow e algumas automacoes. O objetivo correto nao e reconstruir tudo, mas consolidar os blocos existentes em uma esteira unica, observavel e controlada.
+Esta auditoria foi feita sobre o codigo atual do WooTech CRM, nao apenas sobre uma descricao abstrata. O sistema ja possui uma base SaaS multi-tenant, CRM, agenda, funis, captura de leads, WhatsApp via WhatsMeow e algumas automacoes. O objetivo correto nao e reconstruir tudo, mas consolidar os blocos existentes em uma esteira unica, observavel e controlada.
 
 Requisito de produto reforcado:
 
@@ -31,7 +31,7 @@ Requisito de produto reforcado:
   - Ainda nao mostra painel completo de disparos, erros, opt-outs, distribuicao por numero, limites diarios e saude dos canais.
 
 - `frontend/src/pages/prospecting/MissionsList.tsx`
-  - Lista missoes agendadas do modulo `Nexus Prospect AI`.
+  - Lista missoes agendadas do modulo `WooTech Prospect AI`.
   - Usa a rota `/api/nexus-prospect/missions`.
   - Representa a automacao por nicho/regiao/horario.
 
@@ -112,7 +112,7 @@ Requisito de produto reforcado:
   - Boa base para evoluir intencao, decisor, objecoes e proximo passo.
 
 - `backend/src/controllers/prospectController.ts` e `backend/src/routes/prospect.ts`
-  - CRUD de missoes do `Nexus Prospect AI`.
+  - CRUD de missoes do `WooTech Prospect AI`.
   - Cria missoes com nicho, cidade, UF, data, horario, recorrencia, limite e abordagem.
   - Exibe metricas basicas.
 
@@ -834,7 +834,7 @@ Impacto:
 
 A direcao tecnica recomendada e:
 
-1. Manter o Nexus360 como plataforma SaaS.
+1. Manter o WooTech CRM como plataforma SaaS.
 2. Consolidar a maquina outbound em cima de `CapturedLead`, `ProspectingRun`, `Conversation`, `Message`, `CalendarEvent` e CRM.
 3. Rebaixar `ProspectLead`/agentes mock para legado ou migrar para a nova trilha.
 4. Criar fila persistente e sender pool antes de aumentar volume.

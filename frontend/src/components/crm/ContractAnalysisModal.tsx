@@ -57,7 +57,7 @@ export const ContractAnalysisModal: React.FC<ContractAnalysisModalProps> = ({ on
           <div>
             <div className="flex items-center gap-2 text-primary mb-1">
               <Sparkles size={20} />
-              <span className="text-[10px] font-black uppercase tracking-widest">Inteligência Jurídica Nexus</span>
+              <span className="text-[10px] font-black uppercase tracking-widest">Inteligência Jurídica WooTech</span>
             </div>
             <h2 className="text-2xl font-black text-gray-900 tracking-tight">Análise Comparativa de Contratos</h2>
           </div>

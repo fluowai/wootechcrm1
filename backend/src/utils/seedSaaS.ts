@@ -42,7 +42,7 @@ export async function seedSaaSCore() {
     { moduleKey: "ai", key: "ai.sdr", name: "Agente SDR Automático" },
 
     { moduleKey: "white_label", key: "white_label.custom_domain", name: "Domínio Customizado" },
-    { moduleKey: "white_label", key: "white_label.remove_brand", name: "Remover Marca Nexus360" },
+    { moduleKey: "white_label", key: "white_label.remove_brand", name: "Remover Marca WooTech CRM" },
     
     { moduleKey: "automations", key: "automation.create", name: "Criar Automações" },
     { moduleKey: "automations", key: "automation.webhooks", name: "Webhooks de Saída" },

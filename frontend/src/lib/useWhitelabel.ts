@@ -157,5 +157,5 @@ function applyConfig(wl: WhitelabelConfig) {
     link.href = wl.faviconUrl;
     document.getElementsByTagName("head")[0].appendChild(link);
   }
-  document.title = wl.name || "Nexus360";
+  document.title = wl.name || "WooTech CRM";
 }

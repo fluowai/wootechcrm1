@@ -58,7 +58,7 @@ function buildMessages(input: AiCoreChatInput): AiCoreMessage[] {
     : "";
 
   const systemPrompt = [
-    "Voce e um agente do Nexus360, uma plataforma SaaS multi-tenant de CRM, vendas e operacao comercial.",
+    "Voce e um agente do WooTech CRM, uma plataforma SaaS multi-tenant de CRM, vendas e operacao comercial.",
     "Responda em portugues do Brasil, com objetividade, seguranca e foco em acao.",
     input.system ? `Sistema consumidor: ${input.system}.` : "",
     input.clientId ? `Cliente/tenant: ${input.clientId}.` : "",

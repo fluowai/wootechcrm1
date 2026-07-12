@@ -1,4 +1,4 @@
-# Plano de Evolucao Nexus360 inspirado na GoHighLevel
+# Plano de Evolucao WooTech CRM inspirado na GoHighLevel
 
 Data: 2026-06-27
 
@@ -6,7 +6,7 @@ Data: 2026-06-27
 
 A GoHighLevel se posiciona como um sistema operacional de crescimento para agencias e negocios locais. O diferencial nao e uma funcionalidade isolada: e a unificacao de captura, relacionamento, fechamento, reputacao, reativacao, IA, cobranca e revenda por subconta.
 
-A Nexus360 ja tem boa parte da base: CRM, pipelines, automacoes, WhatsApp, prospeccao, landing pages, quizzes, ads, whitelabel, planos, eventos de uso, logs de IA e uma stack AI Core com LiteLLM/Ollama/Qdrant/MinIO/Redis. O proximo salto e transformar essas pecas em uma experiencia de produto no estilo GHL: agencia controla subcontas, planos, limites, add-ons, modelos de IA e consumo; cliente usa ferramentas simples e integradas.
+O WooTech CRM ja tem boa parte da base: CRM, pipelines, automacoes, WhatsApp, prospeccao, landing pages, quizzes, ads, whitelabel, planos, eventos de uso, logs de IA e uma stack AI Core com LiteLLM/Ollama/Qdrant/MinIO/Redis. O proximo salto e transformar essas pecas em uma experiencia de produto no estilo GHL: agencia controla subcontas, planos, limites, add-ons, modelos de IA e consumo; cliente usa ferramentas simples e integradas.
 
 ## O que a GHL tem como referencia
 
@@ -42,7 +42,7 @@ Base encontrada no repositorio:
 
 3. Produto de IA revendivel
    - A GHL empacota IA como AI Employee com acesso por subconta, planos e rebilling.
-   - A Nexus precisa de um "Nexus AI Employee" ou "Nexus AI Core" vendavel por cliente/subconta.
+   - A plataforma precisa de um "WooTech AI Employee" ou "WooTech AI Core" vendavel por cliente/subconta.
 
 4. Roteamento por agente
    - Hoje existe chamada generica para o AI Core.

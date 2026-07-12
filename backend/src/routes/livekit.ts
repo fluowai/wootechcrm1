@@ -50,7 +50,7 @@ export function livekitRoutes(prisma: PrismaClient) {
 
     const meeting = {
       id: roomId,
-      title: String(title || "Reuniao Nexus360").slice(0, 120),
+      title: String(title || "Reuniao WooTech CRM").slice(0, 120),
       date,
       code,
       orgId: req.user?.orgId,

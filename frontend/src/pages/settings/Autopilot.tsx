@@ -126,7 +126,7 @@ export default function Autopilot({ selectedClientId }: AutopilotProps) {
           <div>
             <div className="inline-flex items-center gap-2 rounded-lg border border-blue-100 bg-blue-50 px-3 py-2 text-xs font-black uppercase tracking-wider text-blue-700">
               <Bot size={16} />
-              Nexus Autopilot
+              WooTech Autopilot
             </div>
             <h1 className="mt-3 text-3xl font-black text-slate-950">Operacao autonoma</h1>
             <p className="mt-2 max-w-3xl text-sm leading-6 text-slate-600">
@@ -298,7 +298,7 @@ export default function Autopilot({ selectedClientId }: AutopilotProps) {
               <div className="mt-5 rounded-lg border border-slate-200 bg-slate-50 p-4">
                 <p className="text-xs font-black uppercase tracking-wider text-slate-500">Regra de autonomia</p>
                 <p className="mt-2 text-sm font-bold text-slate-800">
-                  {result.summary?.autonomyRule || 'A Nexus executa o ciclo completo; humano so entra para credenciais e tokens.'}
+                  {result.summary?.autonomyRule || 'O WooTech CRM executa o ciclo completo; humano so entra para credenciais e tokens.'}
                 </p>
                 {(result.summary?.requiredHumanActions || []).length > 0 ? (
                   <ul className="mt-3 space-y-2 text-sm font-medium text-amber-800">

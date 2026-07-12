@@ -26,7 +26,7 @@ function normalizeDatabaseUrl(url) {
 process.env.DATABASE_URL = normalizeDatabaseUrl(process.env.DIRECT_URL || process.env.DATABASE_URL);
 
 const prisma = new PrismaClient();
-const ACCOUNT_NAME = "WooTech";
+const ACCOUNT_NAME = "WooTech CRM";
 const ACCOUNT_SLUG = "wootech";
 const ADMIN_EMAIL = "admin@wootech.com.br";
 const ADMIN_PASSWORD = "WooTech@2026";
@@ -34,7 +34,7 @@ const CLOSER_EMAIL = "closer@wootech.com.br";
 const CLOSER_PASSWORD = "CloserWooTech@2026";
 const LANDING_SLUG = "wootech-inteligente";
 const LANDING_DOMAIN = "wootech.com.br";
-const CRM_DOMAIN = "crm.wootech.com.br";
+const CRM_DOMAIN = "woocrm.wootech.com.br";
 const ASSET_BASE_URL = "/lp-assets/wootech";
 const WOOTECH_LOGO_SVG = `<svg xmlns="http://www.w3.org/2000/svg" width="260" height="70" viewBox="0 0 260 70"><rect width="260" height="70" fill="#030507"/><g transform="translate(14 17) skewX(-28)"><rect width="23" height="36" rx="2" fill="#ffd10a"/><rect x="24" width="23" height="36" rx="2" fill="#e6a900"/><rect x="48" width="23" height="36" rx="2" fill="#f7f8fb"/></g><text x="94" y="44" fill="#f7f8fb" font-family="Inter,Arial,sans-serif" font-size="20" font-weight="800" letter-spacing="6">WOO</text><text x="169" y="44" fill="#ffd10a" font-family="Inter,Arial,sans-serif" font-size="20" font-weight="800" letter-spacing="6">TECH</text></svg>`;
 const WOOTECH_LOGO_DATA_URL = `data:image/svg+xml;charset=utf-8,${encodeURIComponent(WOOTECH_LOGO_SVG)}`;
@@ -75,7 +75,7 @@ async function copyWootechAssets() {
 
 async function getDomainStatus(domain) {
   const expectedIp = process.env.WHITELABEL_DOCKER_IP || "207.58.153.219";
-  const expectedCname = (process.env.WHITELABEL_CNAME_TARGET || "nexus360.consultio.com.br")
+  const expectedCname = (process.env.WHITELABEL_CNAME_TARGET || "woocrm.wootech.com.br")
     .replace(/\.$/, "")
     .toLowerCase();
 

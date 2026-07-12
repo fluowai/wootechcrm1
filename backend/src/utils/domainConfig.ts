@@ -21,12 +21,12 @@ export function normalizeDomain(value: unknown) {
 }
 
 export function getPanelHost() {
-  const panelUrl = process.env.FRONTEND_URL || process.env.APP_URL || "https://nexus360.consultio.com.br";
+  const panelUrl = process.env.FRONTEND_URL || process.env.APP_URL || "https://woocrm.wootech.com.br";
 
   try {
     return new URL(panelUrl).hostname;
   } catch {
-    return "nexus360.consultio.com.br";
+    return "woocrm.wootech.com.br";
   }
 }
 

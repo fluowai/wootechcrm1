@@ -65,7 +65,7 @@ export default function PromptArchitect() {
       "Estruturando dobras estratégicas de alta conversão...",
       "Escrevendo copywriting persuasivo com Inteligência Artificial...",
       "Estilizando layout corporativo moderno...",
-      "Publicando a página nos servidores seguros do Nexus360..."
+      "Publicando a página nos servidores seguros do WooTech CRM..."
     ];
     
     let currentMsgIdx = 0;
@@ -306,7 +306,7 @@ export default function PromptArchitect() {
                   </div>
                   <h2 className="text-3xl font-black text-gray-900 leading-tight">Site Criado e Hospedado!</h2>
                   <p className="text-gray-500 max-w-lg mx-auto font-medium">
-                    Sua Landing Page foi construída de forma estratégica e já está publicada nos servidores do Nexus360.
+                    Sua Landing Page foi construída de forma estratégica e já está publicada nos servidores do WooTech CRM.
                   </p>
                 </div>
 
@@ -343,7 +343,7 @@ export default function PromptArchitect() {
                       <div className="w-3 h-3 rounded-full bg-yellow-400"></div>
                       <div className="w-3 h-3 rounded-full bg-green-400"></div>
                       <div className="flex-1 bg-white mx-10 rounded text-[10px] text-gray-400 py-1 text-center font-mono truncate">
-                        https://nexus360.consultio.com.br/lp/{generatedSite.slug}
+                        https://woocrm.wootech.com.br/lp/{generatedSite.slug}
                       </div>
                     </div>
                     <iframe 
@@ -373,8 +373,8 @@ export default function PromptArchitect() {
                   <div className="bg-gradient-to-r from-blue-600 via-indigo-600 to-purple-600 p-8 rounded-[2rem] text-white shadow-xl flex flex-col md:flex-row items-center justify-between gap-6 relative overflow-hidden border border-white/10">
                     <div className="absolute -top-10 -right-10 w-40 h-40 bg-white/10 rounded-full blur-2xl"></div>
                     <div className="space-y-2 max-w-xl">
-                      <span className="inline-block px-3 py-1 bg-white/20 text-white text-[10px] font-black rounded-full uppercase tracking-wider">Hospedagem Nexus360</span>
-                      <h3 className="text-2xl font-black tracking-tight">Hospedar e Publicar este Site no Nexus360!</h3>
+                      <span className="inline-block px-3 py-1 bg-white/20 text-white text-[10px] font-black rounded-full uppercase tracking-wider">Hospedagem WooTech CRM</span>
+                      <h3 className="text-2xl font-black tracking-tight">Hospedar e Publicar este Site no WooTech CRM!</h3>
                       <p className="text-sm text-blue-100 leading-relaxed font-medium">
                         Em vez de copiar o prompt, nossa IA integrada pode escrever todo o copywriting persuasivo, gerar o código estruturado da Landing Page e publicá-la automaticamente em 1-Clique nos seus servidores seguros!
                       </p>

@@ -126,7 +126,7 @@ export default function QuizExperience({ quizName, questions, onComplete, onClos
           </div>
           <div>
             <span className="font-bold text-gray-900 block leading-tight">{quizName}</span>
-            <span className="text-[10px] text-gray-400 font-bold uppercase tracking-widest">Powered by Nexus360</span>
+            <span className="text-[10px] text-gray-400 font-bold uppercase tracking-widest">Powered by WooTech CRM</span>
           </div>
         </div>
         <button 

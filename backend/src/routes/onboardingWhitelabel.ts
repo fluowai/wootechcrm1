@@ -191,7 +191,7 @@ export function onboardingWhitelabelRoutes(prisma: PrismaClient) {
         success: true,
         message: verification.verified
           ? "Dominio cadastrado e DNS verificado com sucesso!"
-          : "Dominio cadastrado. Configure o DNS para apontar ao servidor Nexus360.",
+          : "Dominio cadastrado. Configure o DNS para apontar ao servidor WooTech CRM.",
         domain: {
           name: normalizedDomain,
           status: verification.verified ? "verified" : "pending",

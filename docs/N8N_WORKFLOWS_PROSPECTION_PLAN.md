@@ -4,7 +4,7 @@ Data: 2026-06-23
 
 ## Objetivo
 
-Analisar os workflows n8n recebidos e definir o que pode ser aproveitado na Nexus para montar uma maquina de prospeccao automatica de leads, usando a base ja existente do Nexus360: captacao, CRM, WhatsApp, funis IA, agenda, conversas e automacoes.
+Analisar os workflows n8n recebidos e definir o que pode ser aproveitado no WooTech CRM para montar uma maquina de prospeccao automatica de leads, usando a base ja existente da plataforma: captacao, CRM, WhatsApp, funis IA, agenda, conversas e automacoes.
 
 Arquivos analisados:
 
@@ -18,7 +18,7 @@ Arquivos analisados:
 
 ## Leitura executiva
 
-A Nexus ja tem a base mais importante para nao depender de n8n como core: `LeadCaptureSource`, `CapturedLead`, enriquecimento com IA/CNPJ, `ProspectingFunnel`, `ProspectingRun`, WhatsMeow, omnichannel, CRM e agenda.
+O WooTech CRM ja tem a base mais importante para nao depender de n8n como core: `LeadCaptureSource`, `CapturedLead`, enriquecimento com IA/CNPJ, `ProspectingFunnel`, `ProspectingRun`, WhatsMeow, omnichannel, CRM e agenda.
 
 O que vale aproveitar dos fluxos n8n nao e a arquitetura em si, mas os padroes de operacao:
 
@@ -257,7 +257,7 @@ O que aproveitar:
 
 Como encaixar na Nexus:
 
-- A Nexus ja tem um servico parecido em `backend/src/services/messageRewrite.ts`.
+- O WooTech CRM ja tem um servico parecido em `backend/src/services/messageRewrite.ts`.
 - Evoluir esse servico para suportar tom por campanha: direto, consultivo, educacional, reativacao.
 - Adicionar auditoria: original, final, provider, modelo, aplicado ou nao.
 

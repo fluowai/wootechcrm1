@@ -46,7 +46,7 @@ async function fetchViaJina(url: string): Promise<string | null> {
     const { data } = await axios.get(`https://r.jina.ai/http://${url.replace(/^https?:\/\//, "")}`, {
       headers: {
         "X-Return-Format": "markdown",
-        "User-Agent": "Mozilla/5.0 (compatible; Nexus360Scanner/1.0)"
+        "User-Agent": "Mozilla/5.0 (compatible; WooTechCRMScanner/1.0)"
       },
       timeout: 20000,
     });

@@ -96,7 +96,7 @@ export default function Dashboard() {
           Bem-vindo, {data.userName || 'Usuário'} 👋
         </h1>
         <p className="text-sm sm:text-base text-gray-500 font-medium">
-          {data.orgName || 'Nexus360'} — Resumo da performance hoje.
+          {data.orgName || 'WooTech CRM'} — Resumo da performance hoje.
         </p>
       </div>
       

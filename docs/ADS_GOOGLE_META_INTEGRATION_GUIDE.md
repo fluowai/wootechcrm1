@@ -1,15 +1,15 @@
-# Nexus360 Ads: guia de integracao Google Ads e Meta Ads
+# WooTech CRM Ads: guia de integracao Google Ads e Meta Ads
 
 Atualizado em 10/06/2026.
 
-Este guia documenta o fluxo para conectar Google Ads e Meta Ads ao Nexus360, configurar URLs exigidas pelas plataformas, orientar clientes e preparar revisao de aplicativo.
+Este guia documenta o fluxo para conectar Google Ads e Meta Ads ao WooTech CRM, configurar URLs exigidas pelas plataformas, orientar clientes e preparar revisao de aplicativo.
 
-## 1. URLs oficiais do Nexus360
+## 1. URLs oficiais do WooTech CRM
 
 Use `APP_URL` como dominio publico da instalacao. Em producao padrao:
 
 ```text
-APP_URL=https://nexus360.consultio.com.br
+APP_URL=https://woocrm.wootech.com.br
 ```
 
 Para white-label, substitua por `https://crm.seudominio.com.br`.
@@ -18,11 +18,11 @@ Para white-label, substitua por `https://crm.seudominio.com.br`.
 
 | Uso | URL padrao | Observacao |
 | --- | --- | --- |
-| Pagina inicial | `https://nexus360.consultio.com.br` | Home/app principal. |
-| Politica de privacidade | `https://nexus360.consultio.com.br/legal/privacy` | Obrigatoria para Google OAuth e Meta App. |
-| Termos de uso | `https://nexus360.consultio.com.br/legal/terms` | Recomendada/solicitada em revisoes e apps comerciais. |
-| Exclusao de dados | `https://nexus360.consultio.com.br/legal/data-deletion` | Usada pela Meta para instrucoes de exclusao de dados. |
-| Relatorio individual do cliente | `https://nexus360.consultio.com.br/client-results/{token}` | Gerado no modulo Trafego (Ads). |
+| Pagina inicial | `https://woocrm.wootech.com.br` | Home/app principal. |
+| Politica de privacidade | `https://woocrm.wootech.com.br/legal/privacy` | Obrigatoria para Google OAuth e Meta App. |
+| Termos de uso | `https://woocrm.wootech.com.br/legal/terms` | Recomendada/solicitada em revisoes e apps comerciais. |
+| Exclusao de dados | `https://woocrm.wootech.com.br/legal/data-deletion` | Usada pela Meta para instrucoes de exclusao de dados. |
+| Relatorio individual do cliente | `https://woocrm.wootech.com.br/client-results/{token}` | Gerado no modulo Trafego (Ads). |
 
 ### URLs tecnicas de OAuth planejadas
 
@@ -53,14 +53,14 @@ flowchart LR
   Recs --> Portal
 ```
 
-## 3. Fluxo operacional no Nexus360
+## 3. Fluxo operacional no WooTech CRM
 
 ```mermaid
 sequenceDiagram
   participant U as Usuario interno
-  participant N as Nexus360
+  participant N as WooTech CRM
   participant A as API Google/Meta
-  participant DB as Banco Nexus360
+  participant DB as Banco WooTech CRM
   participant C as Cliente final
 
   U->>N: Cadastra conta Ads e vincula ao cliente
@@ -109,7 +109,7 @@ Coletar somente o necessario:
 6. Cadastre a redirect URI:
 
 ```text
-https://nexus360.consultio.com.br/api/ads/oauth/google/callback
+https://woocrm.wootech.com.br/api/ads/oauth/google/callback
 ```
 
 Para white-label:
@@ -125,7 +125,7 @@ https://crm.seudominio.com.br/api/ads/oauth/google/callback
 | App homepage | `{APP_URL}` |
 | Privacy Policy URL | `{APP_URL}/legal/privacy` |
 | Terms of Service URL | `{APP_URL}/legal/terms` |
-| Authorized domain | dominio sem protocolo, ex: `nexus360.consultio.com.br` |
+| Authorized domain | dominio sem protocolo, ex: `woocrm.wootech.com.br` |
 | Authorized redirect URI | `{APP_URL}/api/ads/oauth/google/callback` |
 
 ### 5.3 Escopos Google
@@ -164,7 +164,7 @@ GOOGLE_ADS_LOGIN_CUSTOMER_ID=
 7. Configure redirect URI.
 
 ```text
-https://nexus360.consultio.com.br/api/ads/oauth/meta/callback
+https://woocrm.wootech.com.br/api/ads/oauth/meta/callback
 ```
 
 Para white-label:
@@ -177,7 +177,7 @@ https://crm.seudominio.com.br/api/ads/oauth/meta/callback
 
 | Campo Meta | Valor |
 | --- | --- |
-| App Domains | `nexus360.consultio.com.br` |
+| App Domains | `woocrm.wootech.com.br` |
 | Privacy Policy URL | `{APP_URL}/legal/privacy` |
 | Terms of Service URL | `{APP_URL}/legal/terms` |
 | User Data Deletion | `{APP_URL}/legal/data-deletion` |
@@ -199,7 +199,7 @@ Para alterar campanhas, pausar, editar verba ou aplicar recomendacoes:
 ads_management
 ```
 
-Recomendacao: iniciar em modo leitura com `ads_read`. Liberar `ads_management` apenas quando houver aprovacao humana dentro do Nexus360 e revisao adequada na Meta.
+Recomendacao: iniciar em modo leitura com `ads_read`. Liberar `ads_management` apenas quando houver aprovacao humana dentro do WooTech CRM e revisao adequada na Meta.
 
 ## 7. Checklist para o cliente autorizar
 
@@ -208,9 +208,9 @@ Recomendacao: iniciar em modo leitura com `ads_read`. Liberar `ads_management` a
 ```mermaid
 flowchart TD
   A["Cliente recebe link Conectar Google Ads"] --> B["Faz login com conta que tem acesso ao Google Ads"]
-  B --> C["Confere app Nexus360 e permissoes"]
+  B --> C["Confere app WooTech CRM e permissoes"]
   C --> D["Autoriza acesso"]
-  D --> E["Nexus360 lista contas acessiveis"]
+  D --> E["WooTech CRM lista contas acessiveis"]
   E --> F["Agencia seleciona conta e vincula ao cliente"]
   F --> G["Sincronizacao e relatorio ficam ativos"]
 ```
@@ -218,7 +218,7 @@ flowchart TD
 Orientacao para o cliente:
 
 1. Use a conta Google que tem acesso administrativo ou leitura na conta de anuncios.
-2. Autorize o Nexus360 a consultar dados de campanha.
+2. Autorize o WooTech CRM a consultar dados de campanha.
 3. Nao compartilhe senha. A conexao ocorre por OAuth.
 4. O acesso pode ser revogado a qualquer momento na conta Google.
 
@@ -229,7 +229,7 @@ flowchart TD
   A["Cliente recebe link Conectar Meta Ads"] --> B["Faz login com perfil que acessa o Business Manager"]
   B --> C["Seleciona Business e Ad Account"]
   C --> D["Autoriza permissoes solicitadas"]
-  D --> E["Nexus360 vincula a conta ao cliente"]
+  D --> E["WooTech CRM vincula a conta ao cliente"]
   E --> F["Metricas, agentes e link individual ficam ativos"]
 ```
 
@@ -260,8 +260,8 @@ Orientacao para o cliente:
 ## 9. Variaveis de ambiente recomendadas
 
 ```text
-APP_URL=https://nexus360.consultio.com.br
-FRONTEND_URL=https://nexus360.consultio.com.br
+APP_URL=https://woocrm.wootech.com.br
+FRONTEND_URL=https://woocrm.wootech.com.br
 
 GOOGLE_ADS_DEVELOPER_TOKEN=
 GOOGLE_ADS_CLIENT_ID=

@@ -98,9 +98,9 @@ async function main() {
     where: { slug: 'nexus-agency' },
     update: {},
     create: {
-      name: 'Nexus Digital Agency',
+      name: 'WooTech Digital Agency',
       slug: 'nexus-agency',
-      domain: 'agency.nexus360.com.br',
+      domain: 'agency.wootech.com.br',
       primaryColor: '#0F172A',
       secondaryColor: '#3B82F6',
     },
@@ -108,11 +108,11 @@ async function main() {
 
   // 4. Criar Super Admin User
   await prisma.user.upsert({
-    where: { email: 'admin@nexus360.com.br' },
+    where: { email: 'admin@wootech.com.br' },
     update: {},
     create: {
-      email: 'admin@nexus360.com.br',
-      name: 'Nexus Admin',
+      email: 'admin@wootech.com.br',
+      name: 'WooTech Admin',
       password: hashedPassword,
       role: 'SUPER_ADMIN',
     },

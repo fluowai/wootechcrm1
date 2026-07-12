@@ -3,7 +3,7 @@
 
 ## EXECUTIVE SUMMARY
 
-Nexus360 is a sophisticated enterprise SaaS platform built with:
+WooTech CRM is a sophisticated enterprise SaaS platform built with:
 - Backend: Node.js/Express + Prisma ORM + PostgreSQL
 - Frontend: React 19 + TypeScript + Vite + Tailwind CSS
 - Multi-tenant architecture with agency/organization hierarchies
@@ -34,76 +34,76 @@ C:\Users\paulo\Vibecoding\Ativos\nexus360\
 ### Backend Structure
 backend/
 +-- src/
-¦   +-- server.ts                 # Express app entry point (395 lines)
-¦   +-- controllers/              # Route handlers
-¦   ¦   +-- prospectController.ts
-¦   +-- middleware/               # Auth, error handling, tenant
-¦   ¦   +-- auth.ts              # JWT authentication (151 lines)
-¦   ¦   +-- tenant.ts            # Multi-tenant isolation (89 lines)
-¦   ¦   +-- access.ts            # Feature/subscription access control
-¦   ¦   +-- errorHandler.ts
-¦   +-- routes/                   # API endpoints (40+ files)
-¦   ¦   +-- admin.ts             # Super admin operations
-¦   ¦   +-- auth.ts              # Login, register, refresh (578 lines)
-¦   ¦   +-- crm.ts               # CRM opportunities/leads (736 lines)
-¦   ¦   +-- leadCapture.ts       # Lead sourcing (400+ lines)
-¦   ¦   +-- whatsapp.ts          # WhatsApp integration (1000+ lines)
-¦   ¦   +-- prospectingFunnels.ts # Prospecting automation
-¦   ¦   +-- onboarding.ts        # Onboarding wizard
-¦   ¦   +-- marketing.ts         # Marketing campaigns
-¦   ¦   +-- automation.ts        # Workflow automation
-¦   ¦   +-- [35+ more routes]
-¦   +-- services/                # Business logic
-¦   ¦   +-- prospect/            # AI prospecting agents
-¦   ¦   +-- lead-capture/        # Lead capture service
-¦   ¦   +-- prospectingAutomation.ts
-¦   ¦   +-- whatsappIntelligence.ts
-¦   ¦   +-- onboardingAI.ts
-¦   ¦   +-- [more services]
-¦   +-- lib/
-¦   ¦   +-- prisma.ts           # Prisma client singleton
-¦   ¦   +-- access.ts           # Access control logic (74 lines)
-¦   +-- utils/
-¦   ¦   +-- security.ts         # Password validation, cookies (84 lines)
-¦   ¦   +-- sanitizer.ts        # Input sanitization (102 lines)
-¦   ¦   +-- auditLogger.ts      # Activity logging
-¦   ¦   +-- aiKeys.ts           # AI API key management
-¦   ¦   +-- [5+ utilities]
-¦   +-- middleware/              # Auth & error handling
-¦   +-- workers/                 # Background jobs
-¦       +-- automationWorker.ts
-¦       +-- followUpWorker.ts
+ï¿½   +-- server.ts                 # Express app entry point (395 lines)
+ï¿½   +-- controllers/              # Route handlers
+ï¿½   ï¿½   +-- prospectController.ts
+ï¿½   +-- middleware/               # Auth, error handling, tenant
+ï¿½   ï¿½   +-- auth.ts              # JWT authentication (151 lines)
+ï¿½   ï¿½   +-- tenant.ts            # Multi-tenant isolation (89 lines)
+ï¿½   ï¿½   +-- access.ts            # Feature/subscription access control
+ï¿½   ï¿½   +-- errorHandler.ts
+ï¿½   +-- routes/                   # API endpoints (40+ files)
+ï¿½   ï¿½   +-- admin.ts             # Super admin operations
+ï¿½   ï¿½   +-- auth.ts              # Login, register, refresh (578 lines)
+ï¿½   ï¿½   +-- crm.ts               # CRM opportunities/leads (736 lines)
+ï¿½   ï¿½   +-- leadCapture.ts       # Lead sourcing (400+ lines)
+ï¿½   ï¿½   +-- whatsapp.ts          # WhatsApp integration (1000+ lines)
+ï¿½   ï¿½   +-- prospectingFunnels.ts # Prospecting automation
+ï¿½   ï¿½   +-- onboarding.ts        # Onboarding wizard
+ï¿½   ï¿½   +-- marketing.ts         # Marketing campaigns
+ï¿½   ï¿½   +-- automation.ts        # Workflow automation
+ï¿½   ï¿½   +-- [35+ more routes]
+ï¿½   +-- services/                # Business logic
+ï¿½   ï¿½   +-- prospect/            # AI prospecting agents
+ï¿½   ï¿½   +-- lead-capture/        # Lead capture service
+ï¿½   ï¿½   +-- prospectingAutomation.ts
+ï¿½   ï¿½   +-- whatsappIntelligence.ts
+ï¿½   ï¿½   +-- onboardingAI.ts
+ï¿½   ï¿½   +-- [more services]
+ï¿½   +-- lib/
+ï¿½   ï¿½   +-- prisma.ts           # Prisma client singleton
+ï¿½   ï¿½   +-- access.ts           # Access control logic (74 lines)
+ï¿½   +-- utils/
+ï¿½   ï¿½   +-- security.ts         # Password validation, cookies (84 lines)
+ï¿½   ï¿½   +-- sanitizer.ts        # Input sanitization (102 lines)
+ï¿½   ï¿½   +-- auditLogger.ts      # Activity logging
+ï¿½   ï¿½   +-- aiKeys.ts           # AI API key management
+ï¿½   ï¿½   +-- [5+ utilities]
+ï¿½   +-- middleware/              # Auth & error handling
+ï¿½   +-- workers/                 # Background jobs
+ï¿½       +-- automationWorker.ts
+ï¿½       +-- followUpWorker.ts
 +-- prisma/
-¦   +-- schema.prisma           # Database schema (2,947 lines!)
-¦   +-- seed.js                 # Seed data
-¦   +-- [seed variations]
+ï¿½   +-- schema.prisma           # Database schema (2,947 lines!)
+ï¿½   +-- seed.js                 # Seed data
+ï¿½   +-- [seed variations]
 +-- dist/                       # Compiled output
 
 ### Frontend Structure
 frontend/
 +-- src/
-¦   +-- App.tsx                 # Main app router (17,359 lines)
-¦   +-- types.ts                # TypeScript definitions (14,476 lines)
-¦   +-- main.tsx                # Entry point
-¦   +-- index.css               # Global styles
-¦   +-- lib/
-¦   ¦   +-- api.ts              # API client with token refresh (246 lines)
-¦   ¦   +-- useAuth.ts          # Auth hook (51 lines)
-¦   ¦   +-- access.ts           # Permission checking (99 lines)
-¦   ¦   +-- useWhitelabel.ts    # White label config
-¦   ¦   +-- agentsConfig.ts     # AI agent configuration
-¦   ¦   +-- [utilities]
-¦   +-- components/
-¦   ¦   +-- crm/                # CRM UI components
-¦   ¦   +-- sidebar/            # Navigation
-¦   ¦   +-- ErrorBoundary.tsx
-¦   ¦   +-- [other components]
-¦   +-- pages/
-¦       +-- admin/              # Super admin pages (15 files)
-¦       +-- prospect/           # Prospecting pages
-¦       +-- prospecting/        # Prospecting UI
-¦       +-- LandingTemplates/   # Landing page editor
-¦       +-- [60+ page components]
+ï¿½   +-- App.tsx                 # Main app router (17,359 lines)
+ï¿½   +-- types.ts                # TypeScript definitions (14,476 lines)
+ï¿½   +-- main.tsx                # Entry point
+ï¿½   +-- index.css               # Global styles
+ï¿½   +-- lib/
+ï¿½   ï¿½   +-- api.ts              # API client with token refresh (246 lines)
+ï¿½   ï¿½   +-- useAuth.ts          # Auth hook (51 lines)
+ï¿½   ï¿½   +-- access.ts           # Permission checking (99 lines)
+ï¿½   ï¿½   +-- useWhitelabel.ts    # White label config
+ï¿½   ï¿½   +-- agentsConfig.ts     # AI agent configuration
+ï¿½   ï¿½   +-- [utilities]
+ï¿½   +-- components/
+ï¿½   ï¿½   +-- crm/                # CRM UI components
+ï¿½   ï¿½   +-- sidebar/            # Navigation
+ï¿½   ï¿½   +-- ErrorBoundary.tsx
+ï¿½   ï¿½   +-- [other components]
+ï¿½   +-- pages/
+ï¿½       +-- admin/              # Super admin pages (15 files)
+ï¿½       +-- prospect/           # Prospecting pages
+ï¿½       +-- prospecting/        # Prospecting UI
+ï¿½       +-- LandingTemplates/   # Landing page editor
+ï¿½       +-- [60+ page components]
 +-- dist/                       # Build output
 
 ### WhatsApp Bridge (Go)
@@ -551,7 +551,7 @@ SEED_ADMIN_PASSWORD=Admin@2024!
    - Concern: No log retention policy visible
 
 5. **Error Messages**
-   - Risk: Generic "Usuário ou senha inválidos" but
+   - Risk: Generic "Usuï¿½rio ou senha invï¿½lidos" but
    - Pattern: User enumeration possible via timing
    - Detailed error codes in responses (may leak structure)
 

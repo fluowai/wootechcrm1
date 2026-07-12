@@ -117,7 +117,7 @@ export default function Onboarding() {
                       Sua jornada épica começa aqui.
                     </h1>
                     <p className="text-gray-400 text-lg">
-                      Vamos configurar as bases da sua agência inteligente. Em instantes você terá acesso ao ecossistema <span className="text-primary font-bold">Nexus360</span>.
+                      Vamos configurar as bases da sua agência inteligente. Em instantes você terá acesso ao ecossistema <span className="text-primary font-bold">WooTech CRM</span>.
                     </p>
                   </div>
                   <button 

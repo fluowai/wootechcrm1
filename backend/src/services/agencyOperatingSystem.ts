@@ -404,7 +404,7 @@ export async function processWhatsappOperationalMessage(prisma: PrismaClient, in
       senderType: "AI",
       type: "text",
       isPrivate: true,
-      content: `Nexus criou tarefa ${task.title}${agent ? ` para ${agent.name}` : ""}.`,
+      content: `WooTech CRM criou tarefa ${task.title}${agent ? ` para ${agent.name}` : ""}.`,
       metadata: { source: "agency_operating_system", taskId: task.id, queueItemId: queueItem?.id || null },
     },
   }).catch(() => null);

@@ -125,7 +125,7 @@ export default function CRMSalesPage() {
   };
 
   const faqs = [
-    ["Preciso cadastrar cartão para testar?", "Não. Você pode explorar o Nexus360 por 3 dias sem informar cartão de crédito."],
+    ["Preciso cadastrar cartão para testar?", "Não. Você pode explorar o WooTech CRM por 3 dias sem informar cartão de crédito."],
     ["O que acontece ao fim dos 3 dias?", "Você escolhe se deseja contratar o plano. Nada é cobrado automaticamente durante o teste."],
     ["Posso mudar de plano depois?", "Sim. Você pode começar com o plano mais adequado para o momento da empresa e evoluir quando precisar de mais capacidade."],
     ["Consigo migrar dados de outra ferramenta?", "Sim. O time pode orientar a migração de planilhas, CRMs e bases atuais conforme o plano contratado."],
@@ -176,7 +176,7 @@ export default function CRMSalesPage() {
                 Sua operação inteira. <span className="text-[#0F9F6E]">Finalmente conectada.</span>
               </h1>
               <p className="mt-7 max-w-2xl text-lg leading-8 text-[#587064] lg:text-xl">
-                O Nexus360 une prospecção, CRM, WhatsApp, projetos, financeiro, clientes e agentes de IA para sua empresa crescer sem virar refém de planilhas e ferramentas soltas.
+                O WooTech CRM une prospecção, CRM, WhatsApp, projetos, financeiro, clientes e agentes de IA para sua empresa crescer sem virar refém de planilhas e ferramentas soltas.
               </p>
               <div className="mt-9 flex flex-col gap-3 sm:flex-row">
                 <button onClick={() => plans[0] && startTrial(plans[0])} className="group inline-flex items-center justify-center gap-2 rounded-2xl bg-[#0F9F6E] px-7 py-4 font-black text-white shadow-xl shadow-emerald-200 transition hover:-translate-y-1 hover:bg-[#087A55]">
@@ -215,7 +215,7 @@ export default function CRMSalesPage() {
                       </div>
                     </div>
                     <div className="rounded-2xl bg-[#EAF8F1] p-5 text-[#12372A]">
-                      <Bot className="text-[#0F9F6E]" /><div className="mt-5 text-sm font-black">IA Nexus</div><p className="mt-2 text-xs leading-5 text-[#587064]">3 oportunidades pedem follow-up hoje.</p>
+                      <Bot className="text-[#0F9F6E]" /><div className="mt-5 text-sm font-black">IA WooTech</div><p className="mt-2 text-xs leading-5 text-[#587064]">3 oportunidades pedem follow-up hoje.</p>
                       <div className="mt-5 rounded-xl bg-[#0F9F6E] px-3 py-2 text-center text-[11px] font-black text-white">VER AÇÕES</div>
                     </div>
                   </div>
@@ -251,7 +251,7 @@ export default function CRMSalesPage() {
             <div className="rounded-[34px] bg-[#0B6B4A] p-8 text-white shadow-2xl shadow-emerald-900/15 lg:p-12">
               <div className="inline-flex rounded-2xl bg-white/15 p-3"><Rocket /></div>
               <h2 className="mt-7 text-4xl font-black tracking-[-.04em]">Menos caos operacional. Mais margem para crescer.</h2>
-              <p className="mt-5 text-lg leading-8 text-[#D8F3E6]">O Nexus360 dá ao gestor a visão do todo e ao time a clareza da próxima ação.</p>
+              <p className="mt-5 text-lg leading-8 text-[#D8F3E6]">O WooTech CRM dá ao gestor a visão do todo e ao time a clareza da próxima ação.</p>
               <div className="mt-8 space-y-4">
                 {outcomes.map((outcome) => <div key={outcome} className="flex gap-3"><div className="mt-0.5 text-[#A7F3D0]"><CircleCheck size={20} /></div><span className="font-semibold text-white">{outcome}</span></div>)}
               </div>
@@ -294,10 +294,10 @@ export default function CRMSalesPage() {
           </div>
         </section>
 
-        <section className="bg-[#0F9F6E] px-5 py-20 text-white lg:px-8"><div className="mx-auto flex max-w-5xl flex-col items-center text-center"><NexusLogo light /><h2 className="mt-8 text-4xl font-black tracking-[-.04em] sm:text-5xl">Sua empresa já tem potencial. Agora ela pode ter um sistema.</h2><p className="mt-5 max-w-2xl text-lg text-emerald-50">Experimente o Nexus360 por 3 dias e veja sua operação por inteiro.</p><button onClick={() => plans[0] && startTrial(plans[0])} className="mt-8 rounded-2xl bg-white px-8 py-4 font-black text-[#0B7C57] shadow-xl transition hover:-translate-y-1">Começar agora</button></div></section>
+        <section className="bg-[#0F9F6E] px-5 py-20 text-white lg:px-8"><div className="mx-auto flex max-w-5xl flex-col items-center text-center"><NexusLogo light /><h2 className="mt-8 text-4xl font-black tracking-[-.04em] sm:text-5xl">Sua empresa já tem potencial. Agora ela pode ter um sistema.</h2><p className="mt-5 max-w-2xl text-lg text-emerald-50">Experimente o WooTech CRM por 3 dias e veja sua operação por inteiro.</p><button onClick={() => plans[0] && startTrial(plans[0])} className="mt-8 rounded-2xl bg-white px-8 py-4 font-black text-[#0B7C57] shadow-xl transition hover:-translate-y-1">Começar agora</button></div></section>
       </main>
 
-      <footer className="bg-[#064E3B] px-5 py-10 text-[#D8F3E6]"><div className="mx-auto flex max-w-7xl flex-col items-center justify-between gap-5 sm:flex-row"><NexusLogo light /><div className="text-sm">© {new Date().getFullYear()} Nexus360. Todos os direitos reservados.</div><div className="flex gap-5 text-sm"><Link to="/legal/privacy">Privacidade</Link><Link to="/legal/terms">Termos</Link></div></div></footer>
+      <footer className="bg-[#064E3B] px-5 py-10 text-[#D8F3E6]"><div className="mx-auto flex max-w-7xl flex-col items-center justify-between gap-5 sm:flex-row"><NexusLogo light /><div className="text-sm">© {new Date().getFullYear()} WooTech CRM. Todos os direitos reservados.</div><div className="flex gap-5 text-sm"><Link to="/legal/privacy">Privacidade</Link><Link to="/legal/terms">Termos</Link></div></div></footer>
 
       <AnimatePresence>
         {selectedPlan && (

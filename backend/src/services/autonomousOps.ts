@@ -190,7 +190,7 @@ export async function runAutonomousOperatingCycle(prisma: PrismaClient, input: A
   const campaign = await prisma.campaign.create({
     data: {
       name: campaignName,
-      description: `Campanha criada pelo Nexus Autopilot para: ${objective}`,
+      description: `Campanha criada pelo WooTech Autopilot para: ${objective}`,
       type: "autopilot_acquisition",
       status: "planejamento",
       startDate: new Date(),
@@ -301,7 +301,7 @@ export async function runAutonomousOperatingCycle(prisma: PrismaClient, input: A
     tasks.push(await prisma.task.create({
       data: {
         title,
-        description: `${description}\n\nCriado pelo Nexus Autopilot.\nProjeto: ${project.title}`,
+        description: `${description}\n\nCriado pelo WooTech Autopilot.\nProjeto: ${project.title}`,
         status: "pendente",
         priority,
         dueDate: addDays(days),
@@ -441,7 +441,7 @@ export async function runAutonomousOperatingCycle(prisma: PrismaClient, input: A
   await prisma.notification.create({
     data: {
       organizationId: input.organizationId,
-      title: "Nexus Autopilot iniciou uma operacao",
+      title: "WooTech Autopilot iniciou uma operacao",
       message: `Campanha, landing page, funil, fonte de leads e tarefas criadas para: ${objective}`,
       type: "info",
       link: "/autopilot",
@@ -489,7 +489,7 @@ export async function runAutonomousOperatingCycle(prisma: PrismaClient, input: A
       },
       requiredHumanActions,
       bmOperations,
-      autonomyRule: "Humano so intervem para conectar BM/contas de anuncio e validar tokens/permissoes. O restante do ciclo e executado pela Nexus.",
+      autonomyRule: "Humano so intervem para conectar BM/contas de anuncio e validar tokens/permissoes. O restante do ciclo e executado pelo WooTech CRM.",
     },
   };
 }
@@ -507,7 +507,7 @@ export async function getAutopilotStatus(prisma: PrismaClient, organizationId: s
       take: 8,
     }),
     prisma.task.findMany({
-      where: { organizationId, description: { contains: "Nexus Autopilot" } },
+      where: { organizationId, description: { contains: "WooTech Autopilot" } },
       orderBy: { createdAt: "desc" },
       take: 12,
     }),

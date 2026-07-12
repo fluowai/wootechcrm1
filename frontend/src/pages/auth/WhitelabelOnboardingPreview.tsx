@@ -59,7 +59,7 @@ export default function WhitelabelOnboardingPreview() {
               <Monitor size={20} />
             </div>
           )}
-          <span>{brand.name || "Nexus360"}</span>
+          <span>{brand.name || "WooTech CRM"}</span>
         </div>
 
         <motion.div

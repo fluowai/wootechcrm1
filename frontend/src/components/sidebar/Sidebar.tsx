@@ -227,7 +227,7 @@ export const Sidebar: React.FC<{
                 <Monitor size={20} />
               </div>
             )}
-            <span className="logo-text">{whiteLabel?.name || "Nexus360"}</span>
+            <span className="logo-text">{whiteLabel?.name || "WooTech CRM"}</span>
           </div>
           <button
             className="hidden md:flex p-1.5 hover:bg-gray-100 rounded-lg text-gray-400 transition-colors"

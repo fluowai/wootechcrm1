@@ -66,7 +66,7 @@ export default function DomainSettings() {
   const [copiedField, setCopiedField] = useState<string | null>(null);
 
   const panelHost = (() => {
-    const panelUrl = import.meta.env.VITE_PANEL_URL || "https://nexus360.consultio.com.br";
+    const panelUrl = import.meta.env.VITE_PANEL_URL || "https://woocrm.wootech.com.br";
     try {
       return new URL(panelUrl).hostname;
     } catch {

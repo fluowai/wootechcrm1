@@ -84,8 +84,8 @@ export const errorHandler = (err: AppError, req: Request, res: Response, _next: 
   res.status(status).json({
     success: false,
     error: ['development', 'test'].includes(process.env.NODE_ENV || 'development')
-      ? err.message || 'Erro interno no servidor Nexus360.'
-      : 'Erro interno no servidor Nexus360.',
+      ? err.message || 'Erro interno no servidor WooTech CRM.'
+      : 'Erro interno no servidor WooTech CRM.',
     code: err.code || 'INTERNAL_ERROR',
   });
 };

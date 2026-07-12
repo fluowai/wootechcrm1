@@ -188,7 +188,7 @@ export default function SystemTeam() {
                   </td>
                   <td className="px-4 py-4">
                     <span className="text-xs font-medium text-gray-600">
-                      {u.organization?.name || <span className="text-gray-400 italic">Global / Nexus360</span>}
+                      {u.organization?.name || <span className="text-gray-400 italic">Global / WooTech CRM</span>}
                     </span>
                   </td>
                   <td className="px-4 py-4">

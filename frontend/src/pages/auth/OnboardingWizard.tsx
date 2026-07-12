@@ -286,7 +286,7 @@ export default function OnboardingWizard() {
           <div className="mb-12">
             <div className="flex items-center gap-3 text-2xl font-black tracking-tighter italic">
               <div className="w-10 h-10 bg-primary rounded-lg flex items-center justify-center shadow-card text-white not-italic">N</div>
-              NEXUS<span className="text-primary">360</span>
+              WOO<span className="text-primary">TECH</span>
             </div>
           </div>
           {steps.map((s) => (
@@ -327,7 +327,7 @@ export default function OnboardingWizard() {
                   </div>
                   <div className="space-y-4">
                     <h1 className="text-5xl font-black leading-tight text-slate-950">
-                      Como deseja usar o Nexus360?
+                      Como deseja usar o WooTech CRM?
                     </h1>
                     <p className="text-gray-500 text-lg">
                       Escolha o perfil que melhor se encaixa no seu negócio.
@@ -380,7 +380,7 @@ export default function OnboardingWizard() {
                       Vamos configurar seu negocio.
                     </h1>
                     <p className="text-gray-500 text-lg">
-                      Em 5 passos, a IA do <span className="text-primary font-bold">Nexus360</span> entende seu modelo de negocio
+                      Em 5 passos, a IA do <span className="text-primary font-bold">WooTech CRM</span> entende seu modelo de negocio
                       e prepara pipelines, campos personalizados e processos iniciais para sua operacao.
                     </p>
                   </div>
@@ -407,7 +407,7 @@ export default function OnboardingWizard() {
                     <div className="space-y-2">
                       <label className="text-[10px] font-bold text-gray-500 uppercase tracking-widest">Nome da Empresa</label>
                       <input
-                        placeholder="Ex: Nexus360"
+                        placeholder="Ex: WooTech CRM"
                         className="w-full px-6 py-5 bg-slate-50 border border-gray-200 rounded-lg outline-none focus:border-primary focus:bg-white transition-all text-xl"
                         value={formData.businessName}
                         onChange={e => setFormData({...formData, businessName: e.target.value})}
@@ -439,7 +439,7 @@ export default function OnboardingWizard() {
                       />
                     </div>
                     <div className="space-y-2">
-                      <label className="text-[10px] font-bold text-gray-500 uppercase tracking-widest">Servicos que a Nexus deve executar</label>
+                      <label className="text-[10px] font-bold text-gray-500 uppercase tracking-widest">Servicos que o WooTech CRM deve executar</label>
                       <textarea
                         rows={6}
                         placeholder="Um servico por linha. Ex: Gestao de trafego pago, landing pages, BDR, SDR, closer..."
@@ -667,7 +667,7 @@ export default function OnboardingWizard() {
                         <div className="space-y-2">
                           <label className="text-[10px] font-bold text-gray-500 uppercase tracking-widest">Empresa</label>
                           <input
-                            placeholder="Ex: Nexus360"
+                            placeholder="Ex: WooTech CRM"
                             className="w-full px-4 py-3 bg-white border border-gray-200 rounded-lg outline-none focus:border-primary text-sm"
                             value={expForm.companyName}
                             onChange={e => setExpForm({...expForm, companyName: e.target.value})}

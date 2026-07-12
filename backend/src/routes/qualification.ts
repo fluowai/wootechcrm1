@@ -158,7 +158,7 @@ export function qualificationPublicPageRoutes(prisma: PrismaClient) {
   <main class="shell">
     <section class="card">
       <header class="hero">
-        <div class="eyebrow">Qualificacao Nexus360</div>
+        <div class="eyebrow">Qualificacao WooTech CRM</div>
         <h1>${title}</h1>
         <p>${description}</p>
       </header>

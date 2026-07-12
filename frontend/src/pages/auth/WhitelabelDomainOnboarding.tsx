@@ -17,7 +17,7 @@ export default function WhitelabelDomainOnboarding({ onAuthenticated }: { onAuth
   const [error, setError] = useState("");
   const [adminExists, setAdminExists] = useState(false);
 
-  const brandLabel = whiteLabel?.name || "Nexus360";
+  const brandLabel = whiteLabel?.name || "WooTech CRM";
 
   useEffect(() => {
     if (hasAccessToken()) {

@@ -6,7 +6,7 @@ services:
     environment:
       VITE_API_URL: "same-origin"
       VITE_LIVEKIT_URL: ""
-      VITE_PANEL_URL: "https://nexus360.consultio.com.br"
+      VITE_PANEL_URL: "https://woocrm.wootech.com.br"
       VITE_SUPABASE_URL: "${SUPABASE_URL:-}"
       VITE_SUPABASE_ANON_KEY: "${SUPABASE_ANON_KEY:-}"
     networks:
@@ -25,15 +25,15 @@ services:
         - "traefik.http.routers.nexus360_frontend.tls.certresolver=letsencryptresolver"
         - "traefik.http.routers.nexus360_frontend.priority=1"
         - "traefik.http.routers.nexus360_frontend.service=nexus360_frontend"
-        - "traefik.http.routers.nexus360_custom_static.rule=Host(`crm.consultio.com.br`) || Host(`crm.tgamkt.com`) || Host(`wootech.com.br`) || Host(`crm.wootech.com.br`)"
+        - "traefik.http.routers.nexus360_custom_static.rule=Host(`crm.consultio.com.br`) || Host(`crm.tgamkt.com`) || Host(`wootech.com.br`) || Host(`woocrm.wootech.com.br`)"
         - "traefik.http.routers.nexus360_custom_static.entrypoints=websecure"
         - "traefik.http.routers.nexus360_custom_static.tls.certresolver=letsencryptresolver"
         - "traefik.http.routers.nexus360_custom_static.priority=200"
         - "traefik.http.routers.nexus360_custom_static.service=nexus360_frontend"
-        - "traefik.http.routers.nexus360_wootech_crm.rule=Host(`crm.wootech.com.br`)"
+        - "traefik.http.routers.nexus360_wootech_crm.rule=Host(`woocrm.wootech.com.br`)"
         - "traefik.http.routers.nexus360_wootech_crm.entrypoints=websecure"
         - "traefik.http.routers.nexus360_wootech_crm.tls.certresolver=letsencryptresolver"
-        - "traefik.http.routers.nexus360_wootech_crm.tls.domains[0].main=crm.wootech.com.br"
+        - "traefik.http.routers.nexus360_wootech_crm.tls.domains[0].main=woocrm.wootech.com.br"
         - "traefik.http.routers.nexus360_wootech_crm.priority=300"
         - "traefik.http.routers.nexus360_wootech_crm.service=nexus360_frontend"
         - "traefik.http.services.nexus360_frontend.loadbalancer.server.port=80"
@@ -43,10 +43,10 @@ services:
     environment:
       NODE_ENV: production
       PORT: 10000
-      FRONTEND_URL: "https://nexus360.consultio.com.br"
-      CORS_ORIGINS: "${CORS_ORIGINS:-https://nexus360.consultio.com.br,https://www.nexus360.consultio.com.br}"
+      FRONTEND_URL: "https://woocrm.wootech.com.br"
+      CORS_ORIGINS: "${CORS_ORIGINS:-https://woocrm.wootech.com.br,https://www.woocrm.wootech.com.br}"
       WHITELABEL_DOCKER_IP: "${WHITELABEL_DOCKER_IP:-207.58.153.219}"
-      WHITELABEL_CNAME_TARGET: "${WHITELABEL_CNAME_TARGET:-nexus360.consultio.com.br}"
+      WHITELABEL_CNAME_TARGET: "${WHITELABEL_CNAME_TARGET:-woocrm.wootech.com.br}"
       TRAEFIK_SYNC_MODE: "${TRAEFIK_SYNC_MODE:-docker-service}"
       TRAEFIK_DYNAMIC_DIR: "/traefik/dynamic"
       TRAEFIK_FRONTEND_URL: "${TRAEFIK_FRONTEND_URL:-http://nexus360_frontend:80}"
@@ -123,7 +123,7 @@ services:
         - "traefik.http.routers.nexus360_api.tls.certresolver=letsencryptresolver"
         - "traefik.http.routers.nexus360_api.priority=10"
         - "traefik.http.routers.nexus360_api.service=nexus360_api"
-        - "traefik.http.routers.nexus360_custom_static_api.rule=(Host(`crm.consultio.com.br`) || Host(`crm.tgamkt.com`) || Host(`wootech.com.br`) || Host(`crm.wootech.com.br`)) && (PathPrefix(`/api`) || PathPrefix(`/lp`))"
+        - "traefik.http.routers.nexus360_custom_static_api.rule=(Host(`crm.consultio.com.br`) || Host(`crm.tgamkt.com`) || Host(`wootech.com.br`) || Host(`woocrm.wootech.com.br`)) && (PathPrefix(`/api`) || PathPrefix(`/lp`))"
         - "traefik.http.routers.nexus360_custom_static_api.entrypoints=websecure"
         - "traefik.http.routers.nexus360_custom_static_api.tls.certresolver=letsencryptresolver"
         - "traefik.http.routers.nexus360_custom_static_api.priority=210"
@@ -134,10 +134,10 @@ services:
         - "traefik.http.routers.nexus360_wootech_landing.tls.domains[0].main=wootech.com.br"
         - "traefik.http.routers.nexus360_wootech_landing.priority=300"
         - "traefik.http.routers.nexus360_wootech_landing.service=nexus360_api"
-        - "traefik.http.routers.nexus360_wootech_crm_api.rule=Host(`crm.wootech.com.br`) && (PathPrefix(`/api`) || PathPrefix(`/lp`))"
+        - "traefik.http.routers.nexus360_wootech_crm_api.rule=Host(`woocrm.wootech.com.br`) && (PathPrefix(`/api`) || PathPrefix(`/lp`))"
         - "traefik.http.routers.nexus360_wootech_crm_api.entrypoints=websecure"
         - "traefik.http.routers.nexus360_wootech_crm_api.tls.certresolver=letsencryptresolver"
-        - "traefik.http.routers.nexus360_wootech_crm_api.tls.domains[0].main=crm.wootech.com.br"
+        - "traefik.http.routers.nexus360_wootech_crm_api.tls.domains[0].main=woocrm.wootech.com.br"
         - "traefik.http.routers.nexus360_wootech_crm_api.priority=310"
         - "traefik.http.routers.nexus360_wootech_crm_api.service=nexus360_api"
         - "traefik.http.services.nexus360_api.loadbalancer.server.port=10000"
@@ -172,7 +172,7 @@ services:
     environment:
       WHATSAPP_BRIDGE_ADDR: ":8091"
       WHATSAPP_BRIDGE_SECRET: "${WHATSAPP_BRIDGE_SECRET:-dev-whatsapp-bridge-secret}"
-      WHATSAPP_BRIDGE_PUBLIC_URL: "${WHATSAPP_BRIDGE_PUBLIC_URL:-https://nexus360.consultio.com.br}"
+      WHATSAPP_BRIDGE_PUBLIC_URL: "${WHATSAPP_BRIDGE_PUBLIC_URL:-https://woocrm.wootech.com.br}"
       NEXUS_BACKEND_URL: "${NEXUS_BACKEND_URL:-http://backend:10000}"
     volumes:
       - whatsapp_bridge_data:/app/data
