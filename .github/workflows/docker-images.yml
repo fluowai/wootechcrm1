@@ -4,6 +4,7 @@ on:
   push:
     branches:
       - main
+      - codex/crm-functional-fixes
   workflow_dispatch:
 
 permissions:
