@@ -2,7 +2,7 @@ version: "3.8"
 
 services:
   frontend:
-    image: ghcr.io/fluowai/nexus360-frontend:latest
+    image: ghcr.io/fluowai/wootech-crm-frontend:latest
     environment:
       VITE_API_URL: "same-origin"
       VITE_LIVEKIT_URL: ""
@@ -33,7 +33,7 @@ services:
         - "traefik.http.services.nexus360_frontend.loadbalancer.server.port=80"
 
   api:
-    image: ghcr.io/fluowai/nexus360-api:latest
+    image: ghcr.io/fluowai/wootech-crm-api:latest
     environment:
       NODE_ENV: "production"
       PORT: "10000"
@@ -128,7 +128,7 @@ services:
         - "traefik.http.services.nexus360_api.loadbalancer.server.port=10000"
 
   google-maps-scraper:
-    image: ghcr.io/fluowai/nexus360-google-maps-scraper:latest
+    image: ghcr.io/fluowai/wootech-crm-google-maps-scraper:latest
     command:
       - "-web"
       - "-addr"
@@ -153,7 +153,7 @@ services:
     stop_grace_period: 30s
 
   whatsapp-bridge:
-    image: ghcr.io/fluowai/nexus360-whatsapp-bridge:latest
+    image: ghcr.io/fluowai/wootech-crm-whatsapp-bridge:latest
     environment:
       WHATSAPP_BRIDGE_ADDR: ":8091"
       WHATSAPP_BRIDGE_SECRET: "${WHATSAPP_BRIDGE_SECRET:-dev-whatsapp-bridge-secret}"

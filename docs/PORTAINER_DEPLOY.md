@@ -6,8 +6,8 @@ O frontend nao usa `cat <<EOF` no comando da stack. Em alguns ambientes do Porta
 
 ## Imagens
 
-- `ghcr.io/fluowai/nexus360-frontend:latest`
-- `ghcr.io/fluowai/nexus360-api:latest`
+- `ghcr.io/fluowai/wootech-crm-frontend:latest`
+- `ghcr.io/fluowai/wootech-crm-api:latest`
 
 O workflow `.github/workflows/docker-images.yml` publica as imagens no GHCR quando ha push na branch `main`.
 
