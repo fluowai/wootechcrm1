@@ -26,6 +26,7 @@ import {
 } from "lucide-react";
 import { motion } from "motion/react";
 import { apiFetch } from "../../lib/api";
+import { generateSecurePassword } from "../../lib/securePassword";
 
 interface WhitelabelBranding {
   name?: string;
@@ -128,10 +129,7 @@ export default function AdminWhiteLabel() {
   useEffect(() => { fetchOrgs(); }, []);
 
   const generatePassword = () => {
-    const chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789!@#$%^&*";
-    let pass = "";
-    for (let i = 0; i < 12; i++) pass += chars.charAt(Math.floor(Math.random() * chars.length));
-    setForm({ ...form, adminPassword: pass });
+    setForm({ ...form, adminPassword: generateSecurePassword() });
   };
 
   const handleCreate = async (e: React.FormEvent) => {

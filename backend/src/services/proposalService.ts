@@ -96,7 +96,7 @@ export class ProposalService {
       )
       .join("");
 
-    const totalValue = proposal.items.reduce((sum, i) => sum + i.total, 0);
+    const totalValue = proposal.items.reduce((sum, i) => sum + Number(i.total), 0);
 
     return `
 <!DOCTYPE html>

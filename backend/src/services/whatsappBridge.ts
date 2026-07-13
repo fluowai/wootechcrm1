@@ -9,7 +9,11 @@ export function bridgeBaseUrl() {
 }
 
 export function bridgeSecret() {
-  return process.env.WHATSAPP_BRIDGE_SECRET || "dev-whatsapp-bridge-secret";
+  const secret = process.env.WHATSAPP_BRIDGE_SECRET;
+  if (!secret || secret.length < 32) {
+    throw new Error("WHATSAPP_BRIDGE_SECRET must contain at least 32 characters");
+  }
+  return secret;
 }
 
 export function normalizeInstanceName(value?: string | null) {

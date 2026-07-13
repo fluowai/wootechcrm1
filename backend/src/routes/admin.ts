@@ -25,6 +25,58 @@ function buildOrgSlug(value: unknown) {
 export function adminRoutes(prisma: PrismaClient) {
   const router = Router();
 
+  router.get("/monitor", async (_req: AuthRequest, res) => {
+    const startedAt = Date.now();
+    try {
+      await prisma.$queryRaw`SELECT 1`;
+      const memory = process.memoryUsage();
+      res.json({
+        status: "healthy",
+        database: "healthy",
+        latencyMs: Date.now() - startedAt,
+        uptimeSeconds: Math.floor(process.uptime()),
+        memory: { usedBytes: memory.heapUsed, totalBytes: memory.heapTotal },
+        checkedAt: new Date().toISOString(),
+      });
+    } catch {
+      res.status(503).json({ status: "degraded", database: "unavailable", latencyMs: Date.now() - startedAt });
+    }
+  });
+
+  router.get("/tickets", async (_req: AuthRequest, res) => {
+    const [tickets, open, resolved] = await prisma.$transaction([
+      prisma.supportTicket.findMany({
+        include: { organization: { select: { name: true } } },
+        orderBy: { updatedAt: "desc" },
+        take: 100,
+      }),
+      prisma.supportTicket.count({ where: { status: { in: ["OPEN", "IN_PROGRESS"] } } }),
+      prisma.supportTicket.count({ where: { status: { in: ["RESOLVED", "CLOSED"] } } }),
+    ]);
+    res.json({ tickets, summary: { open, resolved } });
+  });
+
+  router.get("/billing", async (_req: AuthRequest, res) => {
+    const [invoices, paid, pending, activeSubscribers] = await prisma.$transaction([
+      prisma.saaSInvoice.findMany({
+        include: { organization: { select: { name: true } } },
+        orderBy: { dueDate: "desc" },
+        take: 100,
+      }),
+      prisma.saaSInvoice.aggregate({ where: { status: "PAID" }, _sum: { amount: true } }),
+      prisma.saaSInvoice.aggregate({ where: { status: { in: ["PENDING", "OVERDUE"] } }, _sum: { amount: true } }),
+      prisma.saaSSubscription.count({ where: { status: "ACTIVE" } }),
+    ]);
+    res.json({
+      invoices,
+      metrics: {
+        totalPaid: Number(paid._sum.amount || 0),
+        totalPending: Number(pending._sum.amount || 0),
+        activeSubscribers,
+      },
+    });
+  });
+
   router.get("/metrics", async (req: AuthRequest, res) => {
     if (req.user?.role !== 'SUPER_ADMIN') {
       return res.status(403).json({ error: "Access denied. Super Admin role required." });

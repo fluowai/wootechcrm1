@@ -42,6 +42,7 @@ services:
     image: ghcr.io/fluowai/wootech-crm-api:latest
     environment:
       NODE_ENV: production
+      RUN_BACKGROUND_WORKERS: "true"
       PORT: 10000
       FRONTEND_URL: "https://woocrm.wootech.com.br"
       CORS_ORIGINS: "${CORS_ORIGINS:-https://woocrm.wootech.com.br,https://www.woocrm.wootech.com.br}"
@@ -171,7 +172,7 @@ services:
     image: ghcr.io/fluowai/wootech-crm-whatsapp-bridge:latest
     environment:
       WHATSAPP_BRIDGE_ADDR: ":8091"
-      WHATSAPP_BRIDGE_SECRET: "${WHATSAPP_BRIDGE_SECRET:-dev-whatsapp-bridge-secret}"
+      WHATSAPP_BRIDGE_SECRET: "${WHATSAPP_BRIDGE_SECRET:?WHATSAPP_BRIDGE_SECRET obrigatorio}"
       WHATSAPP_BRIDGE_PUBLIC_URL: "${WHATSAPP_BRIDGE_PUBLIC_URL:-https://woocrm.wootech.com.br}"
       NEXUS_BACKEND_URL: "${NEXUS_BACKEND_URL:-http://backend:10000}"
     volumes:

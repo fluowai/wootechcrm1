@@ -19,7 +19,12 @@ describe("KeyedMutex", () => {
       mutex.acquire("key1", async () => { order.push(1); await new Promise(r => setTimeout(r, 10)); order.push(2); }),
       mutex.acquire("key2", async () => { order.push(3); await new Promise(r => setTimeout(r, 5)); order.push(4); }),
     ]);
-    expect(order).toEqual([1, 3, 2, 4]);
+    // Different keys may finish in either order depending on scheduler timing.
+    // Verify the meaningful guarantees: both tasks started before the slower
+    // one completed, while each task preserved its own internal ordering.
+    expect(order.indexOf(1)).toBeLessThan(order.indexOf(2));
+    expect(order.indexOf(3)).toBeLessThan(order.indexOf(4));
+    expect(order.indexOf(3)).toBeLessThan(order.indexOf(2));
   });
 
   it("detects locked keys", async () => {

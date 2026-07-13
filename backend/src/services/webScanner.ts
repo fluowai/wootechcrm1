@@ -3,6 +3,7 @@ import * as cheerio from "cheerio";
 import { PrismaClient } from "@prisma/client";
 import { runAiCoreChat } from "./aiCoreClient.js";
 import { runGovernedAiText } from "./aiExecution.js";
+import { assertSafeExternalUrl, safeExternalFetch } from "../utils/externalUrl.js";
 
 export interface ScanInput {
   companyName: string;
@@ -43,6 +44,7 @@ async function searchGoogle(serperKey: string, query: string) {
 
 async function fetchViaJina(url: string): Promise<string | null> {
   try {
+    await assertSafeExternalUrl(url);
     const { data } = await axios.get(`https://r.jina.ai/http://${url.replace(/^https?:\/\//, "")}`, {
       headers: {
         "X-Return-Format": "markdown",
@@ -59,10 +61,14 @@ async function fetchViaJina(url: string): Promise<string | null> {
 async function fetchViaCheerio(url: string): Promise<{ text: string; products: string[] }> {
   try {
     const fullUrl = url.startsWith("http") ? url : `https://${url}`;
-    const { data: html } = await axios.get(fullUrl, {
+    const response = await safeExternalFetch(fullUrl, {
       headers: { "User-Agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36" },
-      timeout: 15000,
-    });
+      signal: AbortSignal.timeout(15_000),
+    }, 3);
+    if (!response.ok) return { text: "", products: [] };
+    const contentLength = Number(response.headers.get("content-length") || 0);
+    if (contentLength > 2_000_000) return { text: "", products: [] };
+    const html = (await response.text()).slice(0, 2_000_000);
     const $ = cheerio.load(html);
     $("script, style, nav, footer, header, iframe").remove();
     const text = $("body").text().replace(/\s+/g, " ").trim().slice(0, 10000);

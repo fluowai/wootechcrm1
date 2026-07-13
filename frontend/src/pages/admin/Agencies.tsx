@@ -20,6 +20,7 @@ import {
 } from "lucide-react";
 import { motion } from "motion/react";
 import { apiFetch } from "../../lib/api";
+import { generateSecurePassword } from "../../lib/securePassword";
 
 export default function AdminAgencies() {
   const navigate = useNavigate();
@@ -49,12 +50,7 @@ export default function AdminAgencies() {
   const [availablePlans, setAvailablePlans] = useState<any[]>([]);
 
   const generatePassword = () => {
-    const chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789!@#$%^&*";
-    let pass = "";
-    for (let i = 0; i < 12; i++) {
-      pass += chars.charAt(Math.floor(Math.random() * chars.length));
-    }
-    setNewOrg({ ...newOrg, adminPassword: pass });
+    setNewOrg({ ...newOrg, adminPassword: generateSecurePassword() });
   };
 
   const handleDomainRegister = async (e: React.FormEvent) => {

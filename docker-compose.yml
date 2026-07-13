@@ -15,13 +15,13 @@ services:
       WHITELABEL_DOCKER_IP: ${WHITELABEL_DOCKER_IP:-}
       WHITELABEL_CNAME_TARGET: ${WHITELABEL_CNAME_TARGET:-localhost}
       SEED_ADMIN_EMAIL: ${SEED_ADMIN_EMAIL:-admin@nexus360.com}
-      SEED_ADMIN_PASSWORD: ${SEED_ADMIN_PASSWORD:-Admin@2024!}
+      SEED_ADMIN_PASSWORD: ${SEED_ADMIN_PASSWORD:?SEED_ADMIN_PASSWORD obrigatoria}
       WHATSAPP_BRIDGE_URL: ${WHATSAPP_BRIDGE_URL:-http://whatsapp-bridge:8091}
-      WHATSAPP_BRIDGE_SECRET: ${WHATSAPP_BRIDGE_SECRET:-dev-whatsapp-bridge-secret}
+      WHATSAPP_BRIDGE_SECRET: ${WHATSAPP_BRIDGE_SECRET:?WHATSAPP_BRIDGE_SECRET obrigatorio}
       GOOGLE_MAPS_SCRAPER_URL: ${GOOGLE_MAPS_SCRAPER_URL:-http://google-maps-scraper:8080}
       GOOGLE_MAPS_SCRAPER_CONCURRENCY: ${GOOGLE_MAPS_SCRAPER_CONCURRENCY:-2}
       GOOGLE_MAPS_SCRAPER_JOB_TIMEOUT_MS: ${GOOGLE_MAPS_SCRAPER_JOB_TIMEOUT_MS:-240000}
-    command: sh -c "if [ \"$${RUN_DB_PUSH:-false}\" = \"true\" ]; then npx prisma db push; fi; if [ \"$${RUN_SEED:-false}\" = \"true\" ]; then npm run seed; fi; npm run start"
+      RUN_BACKGROUND_WORKERS: "false"
     expose:
       - "10000"
     ports:
@@ -32,6 +32,27 @@ services:
       timeout: 10s
       retries: 5
       start_period: 30s
+    networks:
+      - nexus360
+
+  worker:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    container_name: nexus360-worker
+    restart: unless-stopped
+    env_file:
+      - ./backend/.env
+    environment:
+      NODE_ENV: production
+      RUN_MIGRATIONS: "false"
+      WHATSAPP_BRIDGE_URL: ${WHATSAPP_BRIDGE_URL:-http://whatsapp-bridge:8091}
+      WHATSAPP_BRIDGE_SECRET: ${WHATSAPP_BRIDGE_SECRET:?WHATSAPP_BRIDGE_SECRET obrigatorio}
+      GOOGLE_MAPS_SCRAPER_URL: ${GOOGLE_MAPS_SCRAPER_URL:-http://google-maps-scraper:8080}
+    command: npm run start:worker
+    depends_on:
+      backend:
+        condition: service_healthy
     networks:
       - nexus360
 
@@ -86,7 +107,7 @@ services:
     restart: unless-stopped
     environment:
       WHATSAPP_BRIDGE_ADDR: ":8091"
-      WHATSAPP_BRIDGE_SECRET: ${WHATSAPP_BRIDGE_SECRET:-}
+      WHATSAPP_BRIDGE_SECRET: ${WHATSAPP_BRIDGE_SECRET:?WHATSAPP_BRIDGE_SECRET obrigatorio}
       WHATSAPP_BRIDGE_PUBLIC_URL: ${WHATSAPP_BRIDGE_PUBLIC_URL:-http://localhost:8091}
       NEXUS_BACKEND_URL: ${NEXUS_BACKEND_URL:-http://backend:10000}
     volumes:

@@ -107,13 +107,13 @@ export default function Proposals() {
 
             <div className="flex items-center gap-4 py-4 border-y border-gray-50">
                <button 
-                onClick={() => copyLink(item.slug)}
+                onClick={() => copyLink(item.publicToken)}
                 className="flex-1 flex items-center justify-center gap-2 bg-gray-50 text-gray-500 py-3 rounded-xl text-[10px] font-black uppercase hover:bg-gray-100 transition-all"
                >
                  <Copy size={14} /> Link
                </button>
                <a 
-                href={`/p/${item.slug}`} 
+                href={`/p/${item.publicToken}`}
                 target="_blank"
                 className="flex-1 flex items-center justify-center gap-2 bg-blue-50 text-primary py-3 rounded-xl text-[10px] font-black uppercase hover:bg-blue-100 transition-all"
                >

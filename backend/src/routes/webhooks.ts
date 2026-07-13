@@ -3,6 +3,7 @@ import { PrismaClient } from "@prisma/client";
 import { AuthRequest } from "../middleware/auth.js";
 import { getPagination } from "../utils/pagination.js";
 import { retryFailedEvent } from "../services/webhookDelivery.js";
+import { assertSafeExternalUrl } from "../utils/externalUrl.js";
 
 const URL_REGEX = /^https?:\/\/.+/i;
 
@@ -32,6 +33,11 @@ export function webhookRoutes(prisma: PrismaClient) {
       const { url, secret, events, isActive } = req.body;
       if (!url || !URL_REGEX.test(url)) {
         return res.status(400).json({ error: "URL inválida. Deve começar com http:// ou https://" });
+      }
+      try {
+        await assertSafeExternalUrl(url);
+      } catch {
+        return res.status(400).json({ error: "URL externa não permitida" });
       }
       if (!Array.isArray(events) || events.length === 0) {
         return res.status(400).json({ error: "Informe ao menos um evento" });
@@ -65,6 +71,13 @@ export function webhookRoutes(prisma: PrismaClient) {
       const { url, secret, events, isActive } = req.body;
       if (url && !URL_REGEX.test(url)) {
         return res.status(400).json({ error: "URL inválida" });
+      }
+      if (url) {
+        try {
+          await assertSafeExternalUrl(url);
+        } catch {
+          return res.status(400).json({ error: "URL externa não permitida" });
+        }
       }
       if (events && (!Array.isArray(events) || events.length === 0)) {
         return res.status(400).json({ error: "Informe ao menos um evento" });

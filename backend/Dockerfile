@@ -40,6 +40,12 @@ ENV PORT=10000
 EXPOSE 10000
 
 COPY docker-entrypoint.sh /app/docker-entrypoint.sh
-RUN chmod +x /app/docker-entrypoint.sh
+RUN chmod +x /app/docker-entrypoint.sh \
+  && groupadd --system --gid 10001 app \
+  && useradd --system --uid 10001 --gid app --home-dir /app app \
+  && chown -R app:app /app
+
+USER app
 
 ENTRYPOINT ["/app/docker-entrypoint.sh"]
+CMD ["npm", "run", "start"]

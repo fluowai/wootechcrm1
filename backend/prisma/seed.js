@@ -186,7 +186,10 @@ async function main() {
   const existingAdmin = await prisma.user.findUnique({ where: { email: adminEmail } });
 
   if (!existingAdmin) {
-    const adminPassword = process.env.SEED_ADMIN_PASSWORD || "Admin@2024!";
+    const adminPassword = process.env.SEED_ADMIN_PASSWORD;
+    if (!adminPassword || adminPassword.length < 12) {
+      throw new Error("SEED_ADMIN_PASSWORD must contain at least 12 characters");
+    }
     const hashedPassword = await bcrypt.hash(adminPassword, 12);
 
     await prisma.user.create({

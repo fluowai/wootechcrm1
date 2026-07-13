@@ -3,8 +3,10 @@ package main
 import (
 	"bytes"
 	"context"
+	"crypto/hmac"
 	"crypto/rand"
 	"crypto/sha1"
+	"crypto/sha256"
 	"encoding/base64"
 	"encoding/hex"
 	"encoding/json"
@@ -18,6 +20,7 @@ import (
 	"path/filepath"
 	"regexp"
 	"sort"
+	"strconv"
 	"strings"
 	"sync"
 	"time"
@@ -139,7 +142,11 @@ func withSecret(next http.Handler) http.Handler {
 			next.ServeHTTP(w, r)
 			return
 		}
-		expected := env("WHATSAPP_BRIDGE_SECRET", "dev-whatsapp-bridge-secret")
+		expected := strings.TrimSpace(os.Getenv("WHATSAPP_BRIDGE_SECRET"))
+		if len(expected) < 32 {
+			writeJSON(w, http.StatusServiceUnavailable, map[string]any{"error": "BRIDGE_SECRET_NOT_CONFIGURED"})
+			return
+		}
 		if r.Header.Get("x-whatsapp-bridge-secret") != expected {
 			writeJSON(w, http.StatusUnauthorized, map[string]any{"error": "INVALID_BRIDGE_SECRET"})
 			return
@@ -1104,7 +1111,14 @@ func (a *app) downloadMedia(client *whatsmeow.Client, messageID string, media wh
 		return "", 0
 	}
 	baseURL := strings.TrimRight(env("WHATSAPP_BRIDGE_PUBLIC_URL", "http://localhost:8091"), "/")
-	return baseURL + "/media/" + name, len(data)
+	expires := time.Now().Add(15 * time.Minute).Unix()
+	secret := strings.TrimSpace(os.Getenv("WHATSAPP_BRIDGE_SECRET"))
+	if len(secret) < 32 {
+		_ = os.Remove(path)
+		return "", 0
+	}
+	token := mediaSignature(name, expires, secret)
+	return fmt.Sprintf("%s/media/%s?expires=%d&token=%s", baseURL, name, expires, token), len(data)
 }
 
 func (a *app) profilePictureURL(client *whatsmeow.Client, jid types.JID, isCommunity bool) string {
@@ -1159,7 +1173,12 @@ func (a *app) postInternal(payload map[string]any) {
 		return
 	}
 	req.Header.Set("Content-Type", "application/json")
-	req.Header.Set("x-whatsapp-bridge-secret", env("WHATSAPP_BRIDGE_SECRET", "dev-whatsapp-bridge-secret"))
+	secret := strings.TrimSpace(os.Getenv("WHATSAPP_BRIDGE_SECRET"))
+	if len(secret) < 32 {
+		log.Printf("internal event skipped: WHATSAPP_BRIDGE_SECRET is not configured securely")
+		return
+	}
+	req.Header.Set("x-whatsapp-bridge-secret", secret)
 
 	resp, err := http.DefaultClient.Do(req)
 	if err != nil {
@@ -1175,12 +1194,26 @@ func (a *app) postInternal(payload map[string]any) {
 
 func (a *app) handleMedia(w http.ResponseWriter, r *http.Request) {
 	name := filepath.Base(strings.TrimPrefix(r.URL.Path, "/media/"))
+	expires, err := strconv.ParseInt(r.URL.Query().Get("expires"), 10, 64)
+	secret := strings.TrimSpace(os.Getenv("WHATSAPP_BRIDGE_SECRET"))
+	expected := mediaSignature(name, expires, secret)
+	provided := r.URL.Query().Get("token")
+	if err != nil || expires < time.Now().Unix() || len(secret) < 32 || !hmac.Equal([]byte(expected), []byte(provided)) {
+		writeJSON(w, http.StatusUnauthorized, map[string]any{"error": "MEDIA_URL_INVALID_OR_EXPIRED"})
+		return
+	}
 	path := filepath.Join(a.mediaDir, name)
 	if _, err := os.Stat(path); err != nil {
 		http.NotFound(w, r)
 		return
 	}
 	http.ServeFile(w, r, path)
+}
+
+func mediaSignature(name string, expires int64, secret string) string {
+	mac := hmac.New(sha256.New, []byte(secret))
+	_, _ = mac.Write([]byte(fmt.Sprintf("%s:%d", name, expires)))
+	return base64.RawURLEncoding.EncodeToString(mac.Sum(nil))
 }
 
 func writeJSON(w http.ResponseWriter, status int, payload any) {

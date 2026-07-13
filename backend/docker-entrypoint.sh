@@ -9,4 +9,16 @@ for var in DATABASE_URL DIRECT_URL SUPABASE_DB_URL JWT_SECRET; do
   fi
 done
 
-exec npm run start
+if [ "${RUN_MIGRATIONS:-true}" = "true" ]; then
+  npx prisma migrate deploy
+fi
+
+if [ "${RUN_SEED:-false}" = "true" ]; then
+  npm run seed
+fi
+
+if [ "$#" -eq 0 ]; then
+  set -- npm run start
+fi
+
+exec "$@"

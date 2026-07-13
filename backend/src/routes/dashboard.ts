@@ -31,7 +31,7 @@ export function dashboardRoutes(prisma: PrismaClient) {
         safeDashboardValue("leads", 0, () => prisma.lead.count({ where: { organizationId: orgId } })),
         safeDashboardValue("clients", 0, () => prisma.client.count({ where: { organizationId: orgId } })),
         safeDashboardValue("proposals", 0, () => prisma.proposal.count({ where: { organizationId: orgId } })),
-        safeDashboardValue("invoices", { _sum: { total: 0 } }, () => prisma.invoice.aggregate({ where: { organizationId: orgId, status: 'paga' }, _sum: { total: true } })),
+        safeDashboardValue("invoices", { _sum: { total: null } }, () => prisma.invoice.aggregate({ where: { organizationId: orgId, status: 'paga' }, _sum: { total: true } })),
         safeDashboardValue("creatives", 0, () => prisma.creative.count({ where: { organizationId: orgId } })),
         safeDashboardValue("chartData", [], () =>
           prisma.$queryRawUnsafe<Array<{ date: Date; leads: bigint; conv: bigint }>>(
@@ -76,7 +76,7 @@ export function dashboardRoutes(prisma: PrismaClient) {
         userName: user?.name || "Usuário",
         plan,
         usage: { leads },
-        metrics: { leads, clients, proposals, conversions, revenue: invoices._sum.total || 0, contentCount },
+        metrics: { leads, clients, proposals, conversions, revenue: Number(invoices._sum.total || 0), contentCount },
         chartData: chartData.length > 0 ? chartData : [],
         monthlyGoals: [
           { label: "Leads Qualificados", current: monthlyStats.qualifiedLeads, total: totalLeadGoal, color: "bg-blue-600" },

@@ -95,7 +95,7 @@ export function clientPortalRoutes(prisma: PrismaClient) {
         })),
         invoices: client.invoices.map((inv) => ({
           id: inv.invoiceNumber || inv.id,
-          amount: inv.total.toLocaleString("pt-BR", { style: "currency", currency: "BRL" }),
+          amount: Number(inv.total).toLocaleString("pt-BR", { style: "currency", currency: "BRL" }),
           status: inv.status,
           dueDate: new Date(inv.dueDate).toLocaleDateString("pt-BR"),
         })),

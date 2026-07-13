@@ -87,10 +87,10 @@ export function financeRoutes(prisma: PrismaClient) {
       ]);
 
       res.json({
-        balance: (revenue._sum.total || 0) - (expenses._sum.amount || 0),
-        revenue: revenue._sum.total || 0,
-        pending: pending._sum.total || 0,
-        expenses: expenses._sum.amount || 0
+        balance: Number(revenue._sum.total || 0) - Number(expenses._sum.amount || 0),
+        revenue: Number(revenue._sum.total || 0),
+        pending: Number(pending._sum.total || 0),
+        expenses: Number(expenses._sum.amount || 0)
       });
     } catch (error) {
       next(error);

@@ -312,7 +312,11 @@ async function main() {
   const existingAdmin = await prisma.user.findUnique({ where: { email: adminEmail } });
 
   if (!existingAdmin) {
-    const hashedPassword = await bcrypt.hash("Admin@2024!", 12);
+    const adminPassword = process.env.SEED_ADMIN_PASSWORD;
+    if (!adminPassword || adminPassword.length < 12) {
+      throw new Error("SEED_ADMIN_PASSWORD must contain at least 12 characters");
+    }
+    const hashedPassword = await bcrypt.hash(adminPassword, 12);
     
     const org = await prisma.organization.upsert({
       where: { slug: "nexus360-platform" },

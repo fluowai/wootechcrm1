@@ -217,7 +217,7 @@ model AgencyPlan {
   agencyId  String
   agency    Agency   @relation(fields: [agencyId], references: [id])
   name      String
-  price     Float
+  price     Decimal @db.Decimal(18, 2)
   limits    Json
   features  Json
   isActive  Boolean  @default(true)
@@ -400,7 +400,7 @@ model SaaSSubscription {
   trialEndsAt     DateTime?
   currentPeriodStart DateTime?
   currentPeriodEnd DateTime?
-  price           Float?
+  price           Decimal? @db.Decimal(18, 2)
   billingCycle    String?      // MONTHLY, YEARLY
   provider        String?      // Stripe, Asaas, etc.
   providerSubId   String?
@@ -414,7 +414,7 @@ model SaaSInvoice {
   id             String       @id @default(uuid())
   organizationId String
   organization   Organization @relation(fields: [organizationId], references: [id])
-  amount         Float
+  amount         Decimal @db.Decimal(18, 2)
   dueDate        DateTime
   paidAt         DateTime?
   status         String       @default("PENDING") // PENDING, PAID, CANCELLED
@@ -532,7 +532,7 @@ model Lead {
   
   birthDate DateTime?
   status   String  @default("novo") // qualificado, desqualificado, etc.
-  value    Float   @default(0)
+  value    Decimal @default(0) @db.Decimal(18, 2)
   tags     String?
   source   String?
   channel  String?
@@ -653,7 +653,7 @@ model Client {
   segment   String? // Segmento: Tech, Saúde, Retail, etc
   porte     String? // Porte: MEI, Pequeno, Médio, Grande
   employees Int?
-  revenue   Float?
+  revenue   Decimal? @db.Decimal(18, 2)
 
   // Dados do Responsável
   responsibleName  String?
@@ -800,8 +800,8 @@ model Opportunity {
   stage       String @default("qualificacao") // Legacy / fallback
   probability Int    @default(10)
 
-  value          Float  @default(0)
-  estimatedValue Float?
+  value          Decimal @default(0) @db.Decimal(18, 2)
+  estimatedValue Decimal? @db.Decimal(18, 2)
 
   expectedCloseDate DateTime?
   closedAt          DateTime?
@@ -846,6 +846,7 @@ model Proposal {
   id              String   @id @default(uuid())
   title           String
   slug            String   @unique
+  publicToken     String   @unique @default(uuid())
   status          String   @default("draft")
   
   clientId        String?
@@ -882,8 +883,8 @@ model ProposalItem {
   service     String
   description String?
   quantity    Int     @default(1)
-  unitPrice   Float   @default(0)
-  total       Float   @default(0)
+  unitPrice   Decimal @default(0) @db.Decimal(18, 2)
+  total       Decimal @default(0) @db.Decimal(18, 2)
 
   order Int @default(0)
 }
@@ -898,13 +899,13 @@ model Campaign {
   startDate DateTime?
   endDate   DateTime?
 
-  budget         Float @default(0)
-  spent          Float @default(0)
+  budget         Decimal @default(0) @db.Decimal(18, 2)
+  spent          Decimal @default(0) @db.Decimal(18, 2)
   impressions    Int   @default(0)
   clicks         Int   @default(0)
   leadsGenerated Int   @default(0)
   conversions    Int   @default(0)
-  revenue        Float @default(0)
+  revenue        Decimal @default(0) @db.Decimal(18, 2)
 
   utmSource   String?
   utmMedium   String?
@@ -959,10 +960,10 @@ model Invoice {
   dueDate   DateTime
   paidAt    DateTime?
 
-  subtotal Float @default(0)
-  discount Float @default(0)
-  tax      Float @default(0)
-  total    Float @default(0)
+  subtotal Decimal @default(0) @db.Decimal(18, 2)
+  discount Decimal @default(0) @db.Decimal(18, 2)
+  tax      Decimal @default(0) @db.Decimal(18, 2)
+  total    Decimal @default(0) @db.Decimal(18, 2)
 
   description String?
 
@@ -1136,7 +1137,7 @@ model Product {
 model Expense {
   id            String    @id @default(uuid())
   description   String
-  amount        Float
+  amount        Decimal @db.Decimal(18, 2)
   category      String
   date          DateTime  @default(now())
   status        String    @default("pendente")
@@ -1666,7 +1667,7 @@ model Automation {
 model GlobalPlan {
   id        String   @id @default(uuid())
   name      String
-  price     Float
+  price     Decimal @db.Decimal(18, 2)
   interval  String   @default("monthly") // monthly, yearly
   features  Json // Array of string features
   isActive  Boolean  @default(true)
@@ -3107,7 +3108,7 @@ model RenewalOpportunity {
   client         Client       @relation(fields: [clientId], references: [id])
 
   type           String       // RENEWAL, UPSELL, CROSS_SELL, REACTIVATION
-  value          Float        @default(0)
+  value          Decimal      @default(0) @db.Decimal(18, 2)
   status         String       @default("OPEN") // OPEN, WON, LOST
   expectedDate   DateTime?
 
@@ -3961,7 +3962,7 @@ model PaymentTransaction {
 
   provider       String   // ASAAS, MERCADO_PAGO, INTER
   method         String   @default("PIX")
-  amount         Float
+  amount         Decimal @db.Decimal(18, 2)
   status         String   @default("pending")
   externalId     String?
   qrCode         String?  @db.Text

@@ -26,7 +26,11 @@ function bridgeBaseUrl() {
 }
 
 function bridgeSecret() {
-  return process.env.WHATSAPP_BRIDGE_SECRET || "dev-whatsapp-bridge-secret";
+  const secret = process.env.WHATSAPP_BRIDGE_SECRET;
+  if (!secret || secret.length < 32) {
+    throw new Error("WHATSAPP_BRIDGE_SECRET must contain at least 32 characters");
+  }
+  return secret;
 }
 
 async function callBridge(path: string, body: any) {

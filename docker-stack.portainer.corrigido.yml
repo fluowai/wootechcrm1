@@ -8,7 +8,7 @@ services:
       VITE_LIVEKIT_URL: ""
       VITE_PANEL_URL: "https://woocrm.wootech.com.br"
       VITE_SUPABASE_URL: "https://ywvhfgvlnbigfmerilcq.supabase.co"
-      VITE_SUPABASE_ANON_KEY: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Inl3dmhmZ3ZsbmJpZ2ZtZXJpbGNxIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzc1MDYyOTEsImV4cCI6MjA5MzA4MjI5MX0.2FezfFHWhx7aXYKCTORnvDXeEDfshzHvzyiA9DMP5vs"
+      VITE_SUPABASE_ANON_KEY: "${SUPABASE_ANON_KEY:?SUPABASE_ANON_KEY obrigatoria}"
     networks:
       - consultio1
       - nexus360_internal
@@ -36,6 +36,7 @@ services:
     image: ghcr.io/fluowai/wootech-crm-api:latest
     environment:
       NODE_ENV: "production"
+      RUN_BACKGROUND_WORKERS: "true"
       PORT: "10000"
       FRONTEND_URL: "https://woocrm.wootech.com.br"
       CORS_ORIGINS: "https://woocrm.wootech.com.br,https://www.woocrm.wootech.com.br"
@@ -54,12 +55,12 @@ services:
       DIRECT_URL: "postgresql://postgres:Q8YvwfX28WWhW3dz@db.ywvhfgvlnbigfmerilcq.supabase.co:5432/postgres?sslmode=require&schema=public"
       SUPABASE_DB_URL: "postgresql://postgres.ywvhfgvlnbigfmerilcq:Q8YvwfX28WWhW3dz@aws-1-sa-east-1.pooler.supabase.com:6543/postgres?sslmode=require"
       PGSSLMODE: "require"
-      JWT_SECRET: "MTluDh9gIwUTonk9op8kRc3B/cYihNKj2RYPL8+0D1F6iCykx2shnfvPJLmJsJ/cn0z81JFY52G5os0hFjokuQ=="
+      JWT_SECRET: "${JWT_SECRET:?JWT_SECRET obrigatorio}"
       SUPABASE_URL: "https://ywvhfgvlnbigfmerilcq.supabase.co"
       SUPABASE_REST_URL: "https://ywvhfgvlnbigfmerilcq.supabase.co/rest/v1"
-      SUPABASE_ANON_KEY: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Inl3dmhmZ3ZsbmJpZ2ZtZXJpbGNxIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzc1MDYyOTEsImV4cCI6MjA5MzA4MjI5MX0.2FezfFHWhx7aXYKCTORnvDXeEDfshzHvzyiA9DMP5vs"
-      SUPABASE_SERVICE_ROLE_KEY: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Inl3dmhmZ3ZsbmJpZ2ZtZXJpbGNxIiwicm9sZSI6InNlcnZpY2Vfcm9sZSIsImlhdCI6MTc3NzUwNjI5MSwiZXhwIjoyMDkzMDgyMjkxfQ.wIihcD0zm4rqQwvur7Smzy3-5sc0YJgTWwSQR5u47AE"
-      SUPABASE_JWT_SECRET: "MTluDh9gIwUTonk9op8kRc3B/cYihNKj2RYPL8+0D1F6iCykx2shnfvPJLmJsJ/cn0z81JFY52G5os0hFjokuQ=="
+      SUPABASE_ANON_KEY: "${SUPABASE_ANON_KEY:?SUPABASE_ANON_KEY obrigatoria}"
+      SUPABASE_SERVICE_ROLE_KEY: "${SUPABASE_SERVICE_ROLE_KEY:?SUPABASE_SERVICE_ROLE_KEY obrigatoria}"
+      SUPABASE_JWT_SECRET: "${JWT_SECRET:?JWT_SECRET obrigatorio}"
       MINIO_ENDPOINT: "${MINIO_ENDPOINT}"
       MINIO_PORT: "${MINIO_PORT:-443}"
       MINIO_USE_SSL: "${MINIO_USE_SSL:-true}"
@@ -83,7 +84,7 @@ services:
       ASAAS_WEBHOOK_SECRET: "${ASAAS_WEBHOOK_SECRET:-}"
       STRIPE_WEBHOOK_SECRET: "${STRIPE_WEBHOOK_SECRET:-}"
       WHATSAPP_BRIDGE_URL: "${WHATSAPP_BRIDGE_URL:-http://whatsapp-bridge:8091}"
-      WHATSAPP_BRIDGE_SECRET: "${WHATSAPP_BRIDGE_SECRET:-}"
+      WHATSAPP_BRIDGE_SECRET: "${WHATSAPP_BRIDGE_SECRET:?WHATSAPP_BRIDGE_SECRET obrigatorio}"
       GOOGLE_MAPS_SCRAPER_URL: "http://google-maps-scraper:8080"
       GOOGLE_MAPS_SCRAPER_CONCURRENCY: "${GOOGLE_MAPS_SCRAPER_CONCURRENCY:-2}"
       GOOGLE_MAPS_SCRAPER_JOB_TIMEOUT_MS: "${GOOGLE_MAPS_SCRAPER_JOB_TIMEOUT_MS:-240000}"
@@ -156,7 +157,7 @@ services:
     image: ghcr.io/fluowai/wootech-crm-whatsapp-bridge:latest
     environment:
       WHATSAPP_BRIDGE_ADDR: ":8091"
-      WHATSAPP_BRIDGE_SECRET: "${WHATSAPP_BRIDGE_SECRET:-dev-whatsapp-bridge-secret}"
+      WHATSAPP_BRIDGE_SECRET: "${WHATSAPP_BRIDGE_SECRET:?WHATSAPP_BRIDGE_SECRET obrigatorio}"
       WHATSAPP_BRIDGE_PUBLIC_URL: "${WHATSAPP_BRIDGE_PUBLIC_URL:-https://woocrm.wootech.com.br}"
       NEXUS_BACKEND_URL: "${NEXUS_BACKEND_URL:-http://backend:10000}"
     volumes:

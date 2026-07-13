@@ -764,11 +764,11 @@ export function crmRoutes(prisma: PrismaClient) {
 
       const openOpps = opportunities.filter(o => o.status === "OPEN");
       const wonOpps = opportunities.filter(o => o.status === "WON");
-      const openValue = openOpps.reduce((sum, o) => sum + (o.value || 0), 0);
-      const wonValue = wonOpps.reduce((sum, o) => sum + (o.value || 0), 0);
+      const openValue = openOpps.reduce((sum, o) => sum + Number(o.value || 0), 0);
+      const wonValue = wonOpps.reduce((sum, o) => sum + Number(o.value || 0), 0);
       const weightedForecast = openOpps.reduce((sum, o) => {
         const prob = o.stageObj?.probability || 10;
-        return sum + ((o.value || 0) * prob / 100);
+        return sum + (Number(o.value || 0) * prob / 100);
       }, 0);
       const monthlyRecurring = soldProducts
         .filter(p => !["cancelado", "churned", "inativo"].includes(p.status))
@@ -776,8 +776,8 @@ export function crmRoutes(prisma: PrismaClient) {
       const conversionRate = opportunities.length ? Math.round((wonOpps.length / opportunities.length) * 100) : 0;
       const criticalClients = healthScores.filter(s => s.riskLevel === "critical" || s.riskLevel === "high").length;
 
-      const topOpportunities = [...openOpps].sort((a, b) => (b.value || 0) - (a.value || 0)).slice(0, 8).map(o => ({
-        id: o.id, title: o.title, value: o.value, stage: o.stageObj?.name || o.stage,
+      const topOpportunities = [...openOpps].sort((a, b) => Number(b.value || 0) - Number(a.value || 0)).slice(0, 8).map(o => ({
+        id: o.id, title: o.title, value: Number(o.value), stage: o.stageObj?.name || o.stage,
         score: o.score, recommendedAction: "Avaliar próxima ação",
       }));
 

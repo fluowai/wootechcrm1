@@ -1,10 +1,41 @@
+import sanitizeHtml from "sanitize-html";
+import { escapeHtml } from "../utils/security.js";
+
 export function generateContractHtml(template: string, data: Record<string, any>): string {
   let html = template;
   for (const [key, value] of Object.entries(data)) {
     const regex = new RegExp(`\\{\\{\\s*${key}\\s*\\}\\}`, "gi");
-    html = html.replace(regex, String(value ?? ""));
+    html = html.replace(regex, escapeHtml(value));
   }
-  return html;
+  return sanitizeHtml(html, {
+    allowedTags: [
+      "div", "span", "p", "br", "strong", "b", "em", "i", "u", "small",
+      "h1", "h2", "h3", "h4", "h5", "h6", "ul", "ol", "li", "table",
+      "thead", "tbody", "tfoot", "tr", "th", "td", "blockquote", "hr", "a",
+      "section", "article", "header", "footer",
+    ],
+    allowedAttributes: {
+      "*": ["class", "style"],
+      a: ["href", "target", "rel"],
+      th: ["colspan", "rowspan"],
+      td: ["colspan", "rowspan"],
+    },
+    allowedStyles: {
+      "*": {
+        color: [/^#[0-9a-f]{3,8}$/i, /^rgb\(/i, /^[a-z]+$/i],
+        "background-color": [/^#[0-9a-f]{3,8}$/i, /^rgb\(/i, /^[a-z]+$/i],
+        "font-size": [/^\d+(?:\.\d+)?(?:px|pt|rem|em|%)$/],
+        "font-weight": [/^(?:normal|bold|[1-9]00)$/],
+        "text-align": [/^(?:left|right|center|justify)$/],
+        margin: [/^[\d.\s-]+(?:px|pt|rem|em|%)?(?:\s+[\d.\s-]+(?:px|pt|rem|em|%)?)*$/],
+        padding: [/^[\d.\s-]+(?:px|pt|rem|em|%)?(?:\s+[\d.\s-]+(?:px|pt|rem|em|%)?)*$/],
+      },
+    },
+    allowedSchemes: ["http", "https", "mailto", "tel"],
+    transformTags: {
+      a: (_tagName, attribs) => ({ tagName: "a", attribs: { ...attribs, rel: "noopener noreferrer" } }),
+    },
+  });
 }
 
 export function formatCnpj(value: string): string {

@@ -138,7 +138,7 @@ export class MissionScheduler {
       const filtered = await this.filterAgent.run(mission.id);
       if (!filtered) throw new Error("Falha na filtragem");
 
-      let allLeadIds = [...capturedLeadIds];
+      const allLeadIds = [...capturedLeadIds];
 
       // Se o pipeline legado rodou (ProspectLead), converte aprovados para CapturedLead e matricula
       if (capturedLeadIds.length === 0) {

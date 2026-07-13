@@ -480,7 +480,7 @@ NEXUS_BACKEND_URL=http://localhost:10000
 RUN_DB_PUSH=false|true        # Auto-migrate database
 RUN_SEED=false|true           # Auto-seed data
 SEED_ADMIN_EMAIL=admin@nexus360.com
-SEED_ADMIN_PASSWORD=Admin@2024!
+SEED_ADMIN_PASSWORD=<senha-aleatoria-forte-armazenada-no-cofre>
 `
 
 ---

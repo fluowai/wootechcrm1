@@ -8,12 +8,13 @@ import rateLimit from "express-rate-limit";
 import path from "path";
 import { fileURLToPath } from "url";
 import { prisma } from "./lib/prisma.js";
-import { authenticateToken } from "./middleware/auth.js";
+import { authenticateToken, requireRole } from "./middleware/auth.js";
 import { resolveTenant } from "./middleware/tenant.js";
+import { enforceAccountState } from "./middleware/accountState.js";
 import { findTenantDomainStatus, findTenantHostContext, findTenantSlugContext, normalizeRequestHost } from "./utils/tenantHost.js";
 import { syncVerifiedTraefikDomains } from "./services/traefikDomainConfig.js";
-import { MissionScheduler } from "./services/prospect/MissionScheduler.js";
 import { emitAutomationEvent } from "./workers/automationWorker.js";
+import { startBackgroundWorkers } from "./workers/backgroundWorkers.js";
 import { logger } from "./utils/logger.js";
 import { cache } from "./utils/cache.js";
 
@@ -339,10 +340,10 @@ app.get("/api/domain/context", async (req, res, next) => {
 
 
 // Propostas Públicas
-app.get("/api/public/proposals/:slug", async (req, res, next) => {
+app.get("/api/public/proposals/:token", async (req, res, next) => {
   try {
     const proposal = await prisma.proposal.findUnique({
-      where: { slug: req.params.slug },
+      where: { publicToken: req.params.token },
       include: { 
         organization: { select: { name: true } },
         client: { select: { corporateName: true, tradeName: true } }
@@ -355,28 +356,49 @@ app.get("/api/public/proposals/:slug", async (req, res, next) => {
   }
 });
 
-app.post("/api/public/proposals/:slug/accept", async (req, res, next) => {
+app.post("/api/public/proposals/:token/accept", async (req, res, next) => {
   const { cnpj, corporateName, phone, email } = req.body;
   try {
-    const proposal = await prisma.proposal.findUnique({ where: { slug: req.params.slug } });
-    if (!proposal) return res.status(404).json({ error: "Proposta não encontrada" });
-
-    await prisma.proposal.update({ where: { id: proposal.id }, data: { status: 'accepted' } });
-    emitAutomationEvent("proposal.accepted", { organizationId: proposal.organizationId, proposalId: proposal.id });
-
-    if (proposal.leadId) {
-      await prisma.$transaction(async (tx) => {
-        await tx.lead.update({ where: { id: proposal.leadId! }, data: { status: 'fechado' } });
-        await tx.client.create({
-          data: {
-            corporateName: corporateName || "Cliente via Proposta",
-            cnpj, email: email || "", phone: phone || "",
-            organizationId: proposal.organizationId, status: 'onboarding'
-          }
-        });
-      });
+    if (!corporateName || typeof corporateName !== "string") {
+      return res.status(400).json({ error: "Nome ou razão social é obrigatório" });
     }
-    res.json({ success: true, message: "Proposta aceita com sucesso!" });
+
+    const result = await prisma.$transaction(async (tx) => {
+      const proposal = await tx.proposal.findUnique({ where: { publicToken: req.params.token } });
+      if (!proposal) return { kind: "not_found" as const };
+
+      const changed = await tx.proposal.updateMany({
+        where: { id: proposal.id, status: { not: "accepted" } },
+        data: { status: "accepted" },
+      });
+      if (changed.count === 0) return { kind: "already_accepted" as const, proposal };
+
+      await tx.proposalStatusHistory.create({
+        data: { proposalId: proposal.id, fromStatus: proposal.status, toStatus: "accepted", metadata: { source: "public_link" } },
+      });
+
+      if (proposal.leadId) {
+        const lead = await tx.lead.findFirst({ where: { id: proposal.leadId, organizationId: proposal.organizationId } });
+        if (lead) {
+          await tx.lead.update({ where: { id: lead.id }, data: { status: "fechado" } });
+          if (!proposal.clientId) {
+            const client = await tx.client.create({
+              data: {
+                corporateName: corporateName.trim(), cnpj: cnpj || null, email: email || "", phone: phone || "",
+                organizationId: proposal.organizationId, status: "onboarding",
+              },
+            });
+            await tx.proposal.update({ where: { id: proposal.id }, data: { clientId: client.id } });
+          }
+        }
+      }
+      return { kind: "accepted" as const, proposal };
+    });
+
+    if (result.kind === "not_found") return res.status(404).json({ error: "Proposta não encontrada" });
+    if (result.kind === "already_accepted") return res.json({ success: true, alreadyAccepted: true, message: "Proposta já aceita." });
+    emitAutomationEvent("proposal.accepted", { organizationId: result.proposal.organizationId, proposalId: result.proposal.id });
+    res.json({ success: true, alreadyAccepted: false, message: "Proposta aceita com sucesso!" });
   } catch (error) {
     next(error);
   }
@@ -397,7 +419,6 @@ app.use("/api/auth", authLimiter, authRoutes(prisma));
 
 // ==================== ROTAS PROTEGIDAS (Tenant Isolated) ====================
 const protectedRoutes = [
-  { path: "/api/admin", router: adminRoutes },
   { path: "/api/org", router: orgSettingsRoutes },
   { path: "/api/clients", router: clientRoutes },
   { path: "/api/ai", router: aiRoutes },
@@ -448,19 +469,23 @@ const protectedRoutes = [
   { path: "/api/experience", router: experienceRoutes },
   { path: "/api/qualification", router: qualificationRoutes },
   { path: "/api/whatsapp/calls", router: whatsappCallRoutes },
-  { path: "/api/admin/storage", router: adminStorageRoutes },
   { path: "/api/closing", router: closingRoutes },
   { path: "/api", router: quizRoutes },
 ];
 
 // Rotas Administrativas de Planos
-app.use("/api/admin/plans", authenticateToken, adminPlansRoutes(prisma));
+app.use("/api/admin/plans", authenticateToken, enforceTenantDomain, resolveTenant, enforceAccountState(prisma), requireRole("SUPER_ADMIN"), adminPlansRoutes(prisma));
 
 // Rotas Administrativas de Whitelabel Sync
-app.use("/api/admin/whitelabel-sync", authenticateToken, adminWhitelabelSyncRoutes(prisma));
+app.use("/api/admin/whitelabel-sync", authenticateToken, enforceTenantDomain, resolveTenant, enforceAccountState(prisma), requireRole("SUPER_ADMIN"), adminWhitelabelSyncRoutes(prisma));
+
+// Toda a superfície administrativa é protegida no ponto de montagem, evitando
+// que uma rota nova fique exposta por esquecer uma checagem local de papel.
+app.use("/api/admin/storage", authenticateToken, enforceTenantDomain, resolveTenant, enforceAccountState(prisma), requireRole("SUPER_ADMIN"), adminStorageRoutes(prisma));
+app.use("/api/admin", authenticateToken, enforceTenantDomain, resolveTenant, enforceAccountState(prisma), requireRole("SUPER_ADMIN"), adminRoutes(prisma));
 
 protectedRoutes.forEach(route => {
-  app.use(route.path, authenticateToken, enforceTenantDomain, resolveTenant, route.router(prisma));
+  app.use(route.path, authenticateToken, enforceTenantDomain, resolveTenant, enforceAccountState(prisma), route.router(prisma));
 });
 
 // Rotas Externas / Portais
@@ -482,26 +507,11 @@ app.use(errorHandler);
 const PORT = process.env.PORT || 10000;
 
 // Inicialização dos Serviços em Background (Agentes)
-const missionScheduler = new MissionScheduler(prisma);
-missionScheduler.start();
+const runEmbeddedWorkers = process.env.RUN_BACKGROUND_WORKERS === "true"
+  || (process.env.NODE_ENV !== "production" && process.env.RUN_BACKGROUND_WORKERS !== "false");
+const backgroundWorkers = runEmbeddedWorkers ? startBackgroundWorkers(prisma) : null;
 
 // Workers de Automação e Follow-up
-import { AutomationWorker } from "./workers/automationWorker.js";
-import { FollowUpWorker } from "./workers/followUpWorker.js";
-import { SdrAgentWorker } from "./workers/sdrAgentWorker.js";
-import { ProspectingDispatchWorker } from "./workers/prospectingDispatchWorker.js";
-import { SmartFollowUpWorker } from "./workers/smartFollowUpWorker.js";
-
-const automationWorker = new AutomationWorker(prisma);
-automationWorker.start();
-const followUpWorker = new FollowUpWorker(prisma);
-followUpWorker.start();
-const prospectingDispatchWorker = new ProspectingDispatchWorker(prisma);
-prospectingDispatchWorker.start();
-const sdrAgentWorker = new SdrAgentWorker(prisma);
-sdrAgentWorker.start();
-const smartFollowUpWorker = new SmartFollowUpWorker(prisma);
-smartFollowUpWorker.start();
 
 // Socket.io para eventos em tempo real
 import { createServer } from "http";
@@ -528,12 +538,7 @@ export function gracefulShutdown(exitCode = 0) {
   logger.info("Server", "Iniciando shutdown graceful...");
   serverInstance.close();
 
-  missionScheduler.stop();
-  automationWorker.stop();
-  followUpWorker.stop();
-  prospectingDispatchWorker.stop();
-  sdrAgentWorker.stop();
-  smartFollowUpWorker.stop();
+  backgroundWorkers?.stop();
 
   prisma.$disconnect().catch(() => {});
   cache.disconnect().catch(() => {});

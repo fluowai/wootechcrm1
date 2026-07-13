@@ -1,6 +1,7 @@
 import { PrismaClient } from "@prisma/client";
 import { createHmac } from "crypto";
 import { logger } from "../utils/logger.js";
+import { safeExternalFetch } from "../utils/externalUrl.js";
 
 function signPayload(payload: string, secret: string): string {
   return createHmac("sha256", secret).update(payload).digest("hex");
@@ -23,12 +24,12 @@ async function deliver(prisma: PrismaClient, webhookId: string, eventId: string,
   try {
     const controller = new AbortController();
     const timeout = setTimeout(() => controller.abort(), 10_000);
-    const res = await fetch(url, {
+    const res = await safeExternalFetch(url, {
       method: "POST",
       headers,
       body,
       signal: controller.signal,
-    });
+    }, 0);
     clearTimeout(timeout);
     statusCode = res.status;
     responseBody = await res.text().catch(() => "");
