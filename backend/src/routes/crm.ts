@@ -772,7 +772,7 @@ export function crmRoutes(prisma: PrismaClient) {
       }, 0);
       const monthlyRecurring = soldProducts
         .filter(p => !["cancelado", "churned", "inativo"].includes(p.status))
-        .reduce((sum, p) => sum + (p.monthlyValue || 0), 0);
+        .reduce((sum, p) => sum + Number(p.monthlyValue || 0), 0);
       const conversionRate = opportunities.length ? Math.round((wonOpps.length / opportunities.length) * 100) : 0;
       const criticalClients = healthScores.filter(s => s.riskLevel === "critical" || s.riskLevel === "high").length;
 

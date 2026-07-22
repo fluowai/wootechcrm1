@@ -99,7 +99,7 @@ function estimatedCost(model: any, tokensIn: number, tokensOut: number) {
   return Number((input + output).toFixed(6));
 }
 
-function planAiSettings(planFeatures: Prisma.JsonValue | null | undefined) {
+function planAiSettings(planFeatures: any | null | undefined) {
   const features = typeof planFeatures === "object" && planFeatures && !Array.isArray(planFeatures)
     ? planFeatures as Record<string, any>
     : {};
@@ -456,7 +456,7 @@ export async function recordAiUsage(prisma: PrismaClient, input: AiUsageInput) {
       durationMs: input.durationMs,
       status: input.status,
       errorMessage: input.errorMessage?.slice(0, 1000),
-      metadata: input.metadata as Prisma.InputJsonValue | undefined,
+      metadata: input.metadata as any | undefined,
     },
   });
 

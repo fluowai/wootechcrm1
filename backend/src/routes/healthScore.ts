@@ -32,7 +32,7 @@ export function healthScoreRoutes(prisma: PrismaClient) {
     const clientMap = new Map(clients.map((client) => [client.id, client]));
 
     return scores.map((score) => {
-      const client = clientMap.get(score.clientId);
+      const client = clientMap.get(score.clientId) as any;
       const payload = parseHealthPayload(score.flags);
       return {
         ...score,
@@ -101,7 +101,7 @@ export function healthScoreRoutes(prisma: PrismaClient) {
       const hasCompletedProject = projectStatuses.some((status) => status === "concluido");
       const activeProjects = projectStatuses.filter((status) => status === "execucao" || status === "planejamento").length;
       const activeProducts = client.soldProducts.filter((product) => !["cancelado", "churned", "inativo"].includes(product.status));
-      const monthlyRecurring = activeProducts.reduce((sum, product) => sum + (product.monthlyValue || 0), 0);
+      const monthlyRecurring = activeProducts.reduce((sum, product) => sum + Number(product.monthlyValue || 0), 0);
       const delayedDemands = client.demands.filter((demand) => demand.status !== "done" && demand.dueDate && demand.dueDate < now).length;
       const urgentDemands = client.demands.filter((demand) => demand.priority === "high" || demand.priority === "urgent").length;
 

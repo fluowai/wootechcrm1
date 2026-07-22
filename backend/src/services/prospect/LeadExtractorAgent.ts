@@ -1,4 +1,5 @@
-import { PrismaClient, ProspectMission } from "@prisma/client";
+import { PrismaClient } from "@prisma/client";
+type ProspectMission = any;
 
 export interface LeadSourceProvider {
   extract(niche: string, city: string, state: string, quantity: number): Promise<any[]>;

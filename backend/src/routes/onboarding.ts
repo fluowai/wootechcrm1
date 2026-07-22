@@ -181,7 +181,7 @@ export function onboardingRoutes(prisma: PrismaClient) {
           businessName: response.businessName,
           businessType: response.businessType,
           targetAudience: response.targetAudience,
-          averageTicket: response.averageTicket,
+          averageTicket: Number(response.averageTicket),
           salesCycle: response.salesCycle,
           needsMeeting: response.needsMeeting,
           needsProposal: response.needsProposal,

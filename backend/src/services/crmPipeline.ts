@@ -1,4 +1,6 @@
-import { PrismaClient, Pipeline, PipelineStage } from "@prisma/client";
+import { PrismaClient } from "@prisma/client";
+type Pipeline = any;
+type PipelineStage = any;
 
 const DEFAULT_SALES_STAGES = [
   { name: "Lead recebido", order: 0, probability: 10, isDefault: true, color: "#6366F1" },

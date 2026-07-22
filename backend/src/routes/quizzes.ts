@@ -616,7 +616,7 @@ export function quizRoutes(prisma: PrismaClient) {
         qualified: submissions.filter((s) => s.qualified).length,
         unqualified: submissions.filter((s) => s.qualified === false).length,
         avgScore: submissions.length > 0
-          ? Math.round(submissions.reduce((sum, s) => sum + (s.percentage || 0), 0) / submissions.length)
+          ? Math.round(submissions.reduce((sum, s) => sum + Number(s.percentage || 0), 0) / submissions.length)
           : 0,
       };
 

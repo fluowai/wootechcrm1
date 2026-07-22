@@ -98,19 +98,19 @@ export function reportsRoutes(prisma: PrismaClient) {
         : [];
 
       const leadMap = new Map(leads.map((lead) => [lead.id, lead]));
-      const callsByDate = callActivities.reduce<Record<string, number>>((acc, activity) => {
+      const callsByDate = callActivities.reduce((acc, activity) => {
         const key = dateKey(activity.createdAt);
         acc[key] = (acc[key] || 0) + 1;
         return acc;
-      }, {});
-      const returnsByDate = scheduledEvents.reduce<Record<string, number>>((acc, event) => {
+      }, {} as Record<string, number>);
+      const returnsByDate = scheduledEvents.reduce((acc, event) => {
         const key = dateKey(event.startDate);
         acc[key] = (acc[key] || 0) + 1;
         return acc;
-      }, {});
+      }, {} as Record<string, number>);
 
       const scheduledReturns = scheduledEvents.map((event) => {
-        const lead = event.leadId ? leadMap.get(event.leadId) : null;
+        const lead = (event.leadId ? leadMap.get(event.leadId) : null) as any;
         return {
           id: event.id,
           leadId: event.leadId,
@@ -125,7 +125,7 @@ export function reportsRoutes(prisma: PrismaClient) {
       });
 
       const baseLeads = calledLeadIds.map((leadId) => {
-        const lead = leadMap.get(leadId);
+        const lead = leadMap.get(leadId) as any;
         const firstCall = callActivities.find((activity) => activity.contactId === leadId);
         const scheduled = scheduledReturns.find((event) => event.leadId === leadId);
         return {

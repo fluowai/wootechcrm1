@@ -44,7 +44,7 @@ export async function runGovernedAiText(prisma: PrismaClient, input: GovernedTex
       message: input.message,
       context: input.context,
       model: allowed.model.modelId,
-      temperature: input.temperature ?? allowed.agent?.temperature,
+      temperature: input.temperature ?? (allowed.agent?.temperature ? Number(allowed.agent.temperature) : undefined),
       maxTokens: input.maxTokens || allowed.agent?.maxTokens,
     });
 

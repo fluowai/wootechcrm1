@@ -34,11 +34,11 @@ export function dashboardRoutes(prisma: PrismaClient) {
         safeDashboardValue("invoices", { _sum: { total: null } }, () => prisma.invoice.aggregate({ where: { organizationId: orgId, status: 'paga' }, _sum: { total: true } })),
         safeDashboardValue("creatives", 0, () => prisma.creative.count({ where: { organizationId: orgId } })),
         safeDashboardValue("chartData", [], () =>
-          prisma.$queryRawUnsafe<Array<{ date: Date; leads: bigint; conv: bigint }>>(
+          (prisma.$queryRawUnsafe(
             `SELECT DATE(l."createdAt") as date, COUNT(*) FILTER (WHERE l.status = 'qualificado' OR l.status = 'fechado') as conv,
              COUNT(*) as leads FROM "Lead" l WHERE l."organizationId" = $1 AND l."createdAt" >= $2 GROUP BY DATE(l."createdAt") ORDER BY date ASC`,
             orgId, sevenDaysAgo
-          ).then((rows) =>
+          ) as Promise<any>).then((rows: any) =>
             rows.map((r) => ({
               name: dayLabels[new Date(r.date).getDay()] || "N/A",
               leads: Number(r.leads),

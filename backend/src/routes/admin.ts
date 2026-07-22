@@ -128,11 +128,11 @@ export function adminRoutes(prisma: PrismaClient) {
             const params: any[] = [];
             if (orgId) params.push(String(orgId));
             params.push(sevenDaysAgo);
-            const rows = await prisma.$queryRawUnsafe<Array<{ date: Date; leads: bigint; conv: bigint }>>(
+            const rows = (await prisma.$queryRawUnsafe(
               `SELECT DATE(l."createdAt") as date, COUNT(*) FILTER (WHERE l.status = 'qualificado' OR l.status = 'fechado') as conv,
                COUNT(*) as leads FROM "Lead" l WHERE 1=1 ${orgFilter} AND l."createdAt" >= $${params.length} GROUP BY DATE(l."createdAt") ORDER BY date ASC`,
               ...params
-            );
+            )) as any;
             return rows.map((r) => ({
               name: dayLabels[new Date(r.date).getDay()] || "N/A",
               leads: Number(r.leads),

@@ -1,4 +1,5 @@
-import { PrismaClient, ProspectLead } from "@prisma/client";
+import { PrismaClient } from "@prisma/client";
+type ProspectLead = any;
 
 export class LeadValidatorAgent {
   private prisma: PrismaClient;
