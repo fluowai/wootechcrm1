@@ -19,7 +19,7 @@ export const errorHandler = (err: AppError, req: Request, res: Response, _next: 
 
   // Prisma errors can cross module or worker boundaries where `instanceof`
   // is unreliable. The documented Pxxxx code is the stable discriminator.
-  const isKnownPrismaError = err instanceof Prisma.PrismaClientKnownRequestError
+  const isKnownPrismaError = (err as any).name === 'PrismaClientKnownRequestError'
     || /^P\d{4}$/.test(err.code || '');
 
   if (isKnownPrismaError) {
@@ -63,19 +63,6 @@ export const errorHandler = (err: AppError, req: Request, res: Response, _next: 
     if (err.code === 'P2025') {
       return res.status(404).json({
         success: false,
-        error: 'Registro não encontrado no banco de dados.',
-        code: 'DB_NOT_FOUND'
-      });
-    }
-  }
-
-  if (err instanceof Prisma.PrismaClientValidationError) {
-    return res.status(400).json({
-      success: false,
-      error: 'Dados inválidos enviados na requisição.',
-      code: 'VALIDATION_ERROR'
-    });
-  }
 
   if (err.name === 'ValidationError') {
     return res.status(400).json({
