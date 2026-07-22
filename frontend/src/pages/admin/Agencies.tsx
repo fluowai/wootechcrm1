@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { useNavigate, useLocation, Link } from "react-router-dom";
+import { useLocation, Link } from "react-router-dom";
 import { 
   Building2, 
   Plus, 
@@ -23,7 +23,6 @@ import { apiFetch } from "../../lib/api";
 import { generateSecurePassword } from "../../lib/securePassword";
 
 export default function AdminAgencies() {
-  const navigate = useNavigate();
   const location = useLocation();
   const [agencies, setAgencies] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);

@@ -33,7 +33,7 @@ jobs:
       - name: Set up Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: 20
+          node-version: 24
           cache: npm
           cache-dependency-path: |
             backend/package-lock.json
@@ -54,7 +54,7 @@ jobs:
         run: npm run prisma:generate --prefix backend
 
       - name: TypeScript typecheck backend
-        run: npx tsc --noEmit --prefix backend
+        run: npx tsc --noEmit
         working-directory: backend
 
       - name: TypeScript typecheck frontend
