@@ -1,0 +1,43 @@
+# Gitleaks configuration for WooTech CRM
+# Skips files that are meant to contain examples/placeholders
+
+[allowlist]
+  description = "Global allowlist"
+  paths = [
+    '''\.env\.example$''',
+    '''\.env\.portainer\.example$''',
+    '''README\.md$''',
+    '''RELATORIO_.*\.md$''',
+    '''ARCHITECTURE_.*\.md$''',
+    '''SECURITY_.*\.md$''',
+    '''DELIVERABLES\.md$''',
+    '''DETAILED_.*\.md$''',
+    '''metadata\.json$''',
+    '''package\.json$''',
+    '''package-lock\.json$''',
+    '''go\.sum$''',
+  ]
+
+[[rules]]
+  id = "jwt-secret-hardcoded"
+  description = "Hardcoded JWT secret"
+  regex = '''(?i)(jwt[_-]?secret|supabase[_-]?jwt[_-]?secret)\s*[:=]\s*['"]?[A-Za-z0-9+/=_-]{20,}['"]?'''
+  tags = ["jwt", "secret"]
+
+[[rules]]
+  id = "password-hardcoded"
+  description = "Hardcoded password in config"
+  regex = '''(?i)(password|senha|passwd)\s*[:=]\s*['"](?!(CHANGE_ME|example|placeholder|changeme|password|admin123|your-))[^'"]{8,}['"]'''
+  tags = ["password"]
+
+[[rules]]
+  id = "api-key-hardcoded"
+  description = "Hardcoded API key"
+  regex = '''(?i)(api[_-]?key|apikey)\s*[:=]\s*['"]?[A-Za-z0-9_-]{20,}['"]?'''
+  tags = ["api-key"]
+
+[[rules]]
+  id = "bridge-secret-hardcoded"
+  description = "Hardcoded WhatsApp bridge secret"
+  regex = '''(?i)(bridge[_-]?secret|whatsapp[_-]?bridge[_-]?secret)\s*[:=]\s*['"]?(?!CHANGE_ME|dev-)[A-Za-z0-9+/=_-]{10,}['"]?'''
+  tags = ["secret"]

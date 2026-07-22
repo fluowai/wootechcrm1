@@ -6,11 +6,11 @@ services:
     environment:
       VITE_API_URL: "same-origin"
       VITE_LIVEKIT_URL: ""
-      VITE_PANEL_URL: "https://woocrm.wootech.com.br"
-      VITE_SUPABASE_URL: "${SUPABASE_URL:-}"
-      VITE_SUPABASE_ANON_KEY: "${SUPABASE_ANON_KEY:-}"
+      VITE_PANEL_URL: "https://crm.wootech.com.br"
+      VITE_SUPABASE_URL: "https://ywvhfgvlnbigfmerilcq.supabase.co"
+      VITE_SUPABASE_ANON_KEY: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Inl3dmhmZ3ZsbmJpZ2ZtZXJpbGNxIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzc1MDYyOTEsImV4cCI6MjA5MzA4MjI5MX0.2FezfFHWhx7aXYKCTORnvDXeEDfshzHvzyiA9DMP5vs"
     networks:
-      - consultio1
+      - wootech1
       - nexus360_internal
     deploy:
       replicas: 1
@@ -18,91 +18,60 @@ services:
         condition: any
       labels:
         - "traefik.enable=true"
-        - "traefik.docker.network=consultio1"
-        - "traefik.http.routers.nexus360_frontend.rule=HostRegexp(`.+`)"
-        - "traefik.http.routers.nexus360_frontend.ruleSyntax=v3"
+        - "traefik.docker.network=wootech1"
+        - "traefik.http.routers.nexus360_frontend.rule=Host(`crm.wootech.com.br`)"
         - "traefik.http.routers.nexus360_frontend.entrypoints=websecure"
         - "traefik.http.routers.nexus360_frontend.tls.certresolver=letsencryptresolver"
-        - "traefik.http.routers.nexus360_frontend.priority=1"
+        - "traefik.http.routers.nexus360_frontend.priority=10"
         - "traefik.http.routers.nexus360_frontend.service=nexus360_frontend"
-        - "traefik.http.routers.nexus360_custom_static.rule=Host(`crm.consultio.com.br`) || Host(`crm.tgamkt.com`) || Host(`wootech.com.br`) || Host(`woocrm.wootech.com.br`)"
-        - "traefik.http.routers.nexus360_custom_static.entrypoints=websecure"
-        - "traefik.http.routers.nexus360_custom_static.tls.certresolver=letsencryptresolver"
-        - "traefik.http.routers.nexus360_custom_static.priority=200"
-        - "traefik.http.routers.nexus360_custom_static.service=nexus360_frontend"
-        - "traefik.http.routers.nexus360_wootech_crm.rule=Host(`woocrm.wootech.com.br`)"
-        - "traefik.http.routers.nexus360_wootech_crm.entrypoints=websecure"
-        - "traefik.http.routers.nexus360_wootech_crm.tls.certresolver=letsencryptresolver"
-        - "traefik.http.routers.nexus360_wootech_crm.tls.domains[0].main=woocrm.wootech.com.br"
-        - "traefik.http.routers.nexus360_wootech_crm.priority=300"
-        - "traefik.http.routers.nexus360_wootech_crm.service=nexus360_frontend"
         - "traefik.http.services.nexus360_frontend.loadbalancer.server.port=80"
 
   api:
     image: ghcr.io/fluowai/wootech-crm-api:latest
     environment:
-      NODE_ENV: production
-      RUN_BACKGROUND_WORKERS: "true"
-      PORT: 10000
-      FRONTEND_URL: "https://woocrm.wootech.com.br"
-      CORS_ORIGINS: "${CORS_ORIGINS:-https://woocrm.wootech.com.br,https://www.woocrm.wootech.com.br}"
-      WHITELABEL_DOCKER_IP: "${WHITELABEL_DOCKER_IP:-207.58.153.219}"
-      WHITELABEL_CNAME_TARGET: "${WHITELABEL_CNAME_TARGET:-woocrm.wootech.com.br}"
-      TRAEFIK_SYNC_MODE: "${TRAEFIK_SYNC_MODE:-docker-service}"
-      TRAEFIK_DYNAMIC_DIR: "/traefik/dynamic"
-      TRAEFIK_FRONTEND_URL: "${TRAEFIK_FRONTEND_URL:-http://nexus360_frontend:80}"
-      TRAEFIK_API_URL: "${TRAEFIK_API_URL:-http://nexus360_api:10000}"
-      TRAEFIK_CERT_RESOLVER: "${TRAEFIK_CERT_RESOLVER:-letsencryptresolver}"
-      TRAEFIK_ROUTER_SERVICE: "${TRAEFIK_ROUTER_SERVICE:-nexus360_frontend}"
-      TRAEFIK_ROUTER_LABEL_PREFIX: "${TRAEFIK_ROUTER_LABEL_PREFIX:-nexus360_custom}"
-      TRAEFIK_DOCKER_NETWORK: "${TRAEFIK_DOCKER_NETWORK:-consultio1}"
+      NODE_ENV: "production"
+      PORT: "10000"
+      FRONTEND_URL: "https://crm.wootech.com.br"
+      CORS_ORIGINS: "https://crm.wootech.com.br,https://www.crm.wootech.com.br"
+      WHITELABEL_DOCKER_IP: "207.58.153.219"
+      WHITELABEL_CNAME_TARGET: "crm.wootech.com.br"
+      TRAEFIK_SYNC_MODE: "docker-service"
+      TRAEFIK_FRONTEND_URL: "http://nexus360_frontend:80"
+      TRAEFIK_API_URL: "http://nexus360_api:10000"
+      TRAEFIK_CERT_RESOLVER: "letsencryptresolver"
+      TRAEFIK_ROUTER_SERVICE: "nexus360_frontend"
+      TRAEFIK_ROUTER_LABEL_PREFIX: "nexus360_custom"
+      TRAEFIK_DOCKER_NETWORK: "wootech1"
       DOCKER_SOCKET_PATH: "/var/run/docker.sock"
-      DATABASE_URL: "${DATABASE_URL:?DATABASE_URL obrigatoria nas Environment variables da stack}"
-      DIRECT_URL: "${DIRECT_URL:?DIRECT_URL obrigatoria nas Environment variables da stack}"
-      SUPABASE_DB_URL: "${DATABASE_URL:?DATABASE_URL obrigatoria nas Environment variables da stack}"
-      PGSSLMODE: "require"
-      JWT_SECRET: "${JWT_SECRET:?JWT_SECRET obrigatorio nas Environment variables da stack}"
-      SUPABASE_URL: "${SUPABASE_URL:-}"
-      SUPABASE_REST_URL: "${SUPABASE_URL:-}/rest/v1"
-      SUPABASE_ANON_KEY: "${SUPABASE_ANON_KEY:-}"
-      SUPABASE_SERVICE_ROLE_KEY: "${SUPABASE_SERVICE_ROLE_KEY:-}"
-      SUPABASE_JWT_SECRET: "${JWT_SECRET:?JWT_SECRET obrigatorio nas Environment variables da stack}"
-      GEMINI_API_KEY: "${GEMINI_API_KEY:-}"
-      GROQ_API_KEY: "${GROQ_API_KEY:-}"
-      AI_CORE_URL: "${AI_CORE_URL:-http://litellm:4000/v1}"
-      AI_CORE_API_KEY: "${AI_CORE_API_KEY:-}"
-      AI_CORE_DEFAULT_MODEL: "${AI_CORE_DEFAULT_MODEL:-qwen-local}"
-      LITELLM_MASTER_KEY: "${LITELLM_MASTER_KEY:-}"
-      SERPER_API_KEY: "${SERPER_API_KEY:-}"
-      SERPAPI_API_KEY: "${SERPAPI_API_KEY:-}"
-      SERP_API_KEY: "${SERP_API_KEY:-}"
-      OUTSCRAPER_API_KEY: "${OUTSCRAPER_API_KEY:-}"
-      OUTSCRAPER_KEY: "${OUTSCRAPER_KEY:-}"
-      MUAC_API_KEY: "${MUAC_API_KEY:-}"
-      TOGETHER_API_KEY: "${TOGETHER_API_KEY:-}"
-      LIVEKIT_API_KEY: "${LIVEKIT_API_KEY:-}"
-      LIVEKIT_API_SECRET: "${LIVEKIT_API_SECRET:-}"
-      LIVEKIT_URL: "${LIVEKIT_URL:-}"
-      BILLING_WEBHOOK_SECRET: "${BILLING_WEBHOOK_SECRET:-}"
-      ASAAS_WEBHOOK_SECRET: "${ASAAS_WEBHOOK_SECRET:-}"
-      STRIPE_WEBHOOK_SECRET: "${STRIPE_WEBHOOK_SECRET:-}"
-      WHATSAPP_BRIDGE_URL: "${WHATSAPP_BRIDGE_URL:-http://whatsapp-bridge:8091}"
-      WHATSAPP_BRIDGE_SECRET: "${WHATSAPP_BRIDGE_SECRET}"
+
       GOOGLE_MAPS_SCRAPER_URL: "http://google-maps-scraper:8080"
-      GOOGLE_MAPS_SCRAPER_CONCURRENCY: "${GOOGLE_MAPS_SCRAPER_CONCURRENCY:-2}"
-      GOOGLE_MAPS_SCRAPER_JOB_TIMEOUT_MS: "${GOOGLE_MAPS_SCRAPER_JOB_TIMEOUT_MS:-240000}"
+      GOOGLE_MAPS_SCRAPER_CONCURRENCY: "2"
+      GOOGLE_MAPS_SCRAPER_JOB_TIMEOUT_MS: "240000"
+
+      DATABASE_URL: "postgresql://postgres.ywvhfgvlnbigfmerilcq:Q8YvwfX28WWhW3dz@aws-1-sa-east-1.pooler.supabase.com:6543/postgres?pgbouncer=true&sslmode=require&statement_cache_size=0"
+      DIRECT_URL: "postgresql://postgres:Q8YvwfX28WWhW3dz@db.ywvhfgvlnbigfmerilcq.supabase.co:5432/postgres?sslmode=require&schema=public"
+      SUPABASE_DB_URL: "postgresql://postgres.ywvhfgvlnbigfmerilcq:Q8YvwfX28WWhW3dz@aws-1-sa-east-1.pooler.supabase.com:6543/postgres?pgbouncer=true&sslmode=require&statement_cache_size=0"
+      PGSSLMODE: "require"
+
+      JWT_SECRET: "MTluDh9gIwUTonk9op8kRc3B/cYihNKj2RYPL8+0D1F6iCykx2shnfvPJLmJsJ/cn0z81JFY52G5os0hFjokuQ=="
+
+      SUPABASE_URL: "https://ywvhfgvlnbigfmerilcq.supabase.co"
+      SUPABASE_REST_URL: "https://ywvhfgvlnbigfmerilcq.supabase.co/rest/v1"
+      SUPABASE_ANON_KEY: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Inl3dmhmZ3ZsbmJpZ2ZtZXJpbGNxIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzc1MDYyOTEsImV4cCI6MjA5MzA4MjI5MX0.2FezfFHWhx7aXYKCTORnvDXeEDfshzHvzyiA9DMP5vs"
+      SUPABASE_SERVICE_ROLE_KEY: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Inl3dmhmZ3ZsbmJpZ2ZtZXJpbGNxIiwicm9sZSI6InNlcnZpY2Vfcm9sZSIsImlhdCI6MTc3NzUwNjI5MSwiZXhwIjoyMDkzMDgyMjkxfQ.wIihcD0zm4rqQwvur7Smzy3-5sc0YJgTWwSQR5u47AE"
+      SUPABASE_JWT_SECRET: "MTluDh9gIwUTonk9op8kRc3B/cYihNKj2RYPL8+0D1F6iCykx2shnfvPJLmJsJ/cn0z81JFY52G5os0hFjokuQ=="
+
+      WHATSAPP_BRIDGE_URL: "http://whatsapp-bridge:8091"
+      WHATSAPP_BRIDGE_SECRET: "${WHATSAPP_BRIDGE_SECRET:-dev-whatsapp-bridge-secret}"
+
     volumes:
-      - type: volume
-        source: traefik_dynamic
-        target: /traefik/dynamic
-      - type: bind
-        source: /var/run/docker.sock
-        target: /var/run/docker.sock
+      - /var/run/docker.sock:/var/run/docker.sock
     networks:
-      consultio1:
+      wootech1:
       nexus360_internal:
         aliases:
           - backend
+          - nexus360_api
     deploy:
       replicas: 1
       placement:
@@ -117,34 +86,16 @@ services:
         order: stop-first
       labels:
         - "traefik.enable=true"
-        - "traefik.docker.network=consultio1"
-        - "traefik.http.routers.nexus360_api.rule=HostRegexp(`.+`) && (PathPrefix(`/api`) || PathPrefix(`/lp`))"
-        - "traefik.http.routers.nexus360_api.ruleSyntax=v3"
+        - "traefik.docker.network=wootech1"
+        - "traefik.http.routers.nexus360_api.rule=Host(`crm.wootech.com.br`) && (PathPrefix(`/api`) || PathPrefix(`/lp`))"
         - "traefik.http.routers.nexus360_api.entrypoints=websecure"
         - "traefik.http.routers.nexus360_api.tls.certresolver=letsencryptresolver"
-        - "traefik.http.routers.nexus360_api.priority=10"
+        - "traefik.http.routers.nexus360_api.priority=20"
         - "traefik.http.routers.nexus360_api.service=nexus360_api"
-        - "traefik.http.routers.nexus360_custom_static_api.rule=(Host(`crm.consultio.com.br`) || Host(`crm.tgamkt.com`) || Host(`wootech.com.br`) || Host(`woocrm.wootech.com.br`)) && (PathPrefix(`/api`) || PathPrefix(`/lp`))"
-        - "traefik.http.routers.nexus360_custom_static_api.entrypoints=websecure"
-        - "traefik.http.routers.nexus360_custom_static_api.tls.certresolver=letsencryptresolver"
-        - "traefik.http.routers.nexus360_custom_static_api.priority=210"
-        - "traefik.http.routers.nexus360_custom_static_api.service=nexus360_api"
-        - "traefik.http.routers.nexus360_wootech_landing.rule=Host(`wootech.com.br`)"
-        - "traefik.http.routers.nexus360_wootech_landing.entrypoints=websecure"
-        - "traefik.http.routers.nexus360_wootech_landing.tls.certresolver=letsencryptresolver"
-        - "traefik.http.routers.nexus360_wootech_landing.tls.domains[0].main=wootech.com.br"
-        - "traefik.http.routers.nexus360_wootech_landing.priority=300"
-        - "traefik.http.routers.nexus360_wootech_landing.service=nexus360_api"
-        - "traefik.http.routers.nexus360_wootech_crm_api.rule=Host(`woocrm.wootech.com.br`) && (PathPrefix(`/api`) || PathPrefix(`/lp`))"
-        - "traefik.http.routers.nexus360_wootech_crm_api.entrypoints=websecure"
-        - "traefik.http.routers.nexus360_wootech_crm_api.tls.certresolver=letsencryptresolver"
-        - "traefik.http.routers.nexus360_wootech_crm_api.tls.domains[0].main=woocrm.wootech.com.br"
-        - "traefik.http.routers.nexus360_wootech_crm_api.priority=310"
-        - "traefik.http.routers.nexus360_wootech_crm_api.service=nexus360_api"
         - "traefik.http.services.nexus360_api.loadbalancer.server.port=10000"
 
   google-maps-scraper:
-    image: ghcr.io/fluowai/wootech-crm-google-maps-scraper:b9065f7f57a2445c2b9e2130450491a4294102e6
+    image: ghcr.io/fluowai/wootech-crm-google-maps-scraper:latest
     command:
       - "-web"
       - "-addr"
@@ -152,9 +103,9 @@ services:
       - "-data-folder"
       - "/gmapsdata"
       - "-c"
-      - "${GOOGLE_MAPS_SCRAPER_WORKERS:-2}"
+      - "2"
       - "-browser-pool-size"
-      - "${GOOGLE_MAPS_SCRAPER_BROWSER_POOL:-1}"
+      - "1"
     volumes:
       - google_maps_scraper_data:/gmapsdata
     networks:
@@ -172,9 +123,9 @@ services:
     image: ghcr.io/fluowai/wootech-crm-whatsapp-bridge:latest
     environment:
       WHATSAPP_BRIDGE_ADDR: ":8091"
-      WHATSAPP_BRIDGE_SECRET: "${WHATSAPP_BRIDGE_SECRET:?WHATSAPP_BRIDGE_SECRET obrigatorio}"
-      WHATSAPP_BRIDGE_PUBLIC_URL: "${WHATSAPP_BRIDGE_PUBLIC_URL:-https://woocrm.wootech.com.br}"
-      NEXUS_BACKEND_URL: "${NEXUS_BACKEND_URL:-http://backend:10000}"
+      WHATSAPP_BRIDGE_SECRET: "${WHATSAPP_BRIDGE_SECRET:-dev-whatsapp-bridge-secret}"
+      WHATSAPP_BRIDGE_PUBLIC_URL: "https://crm.wootech.com.br"
+      NEXUS_BACKEND_URL: "http://backend:10000"
     volumes:
       - whatsapp_bridge_data:/app/data
     networks:
@@ -187,17 +138,14 @@ services:
         condition: any
 
 volumes:
-  traefik_dynamic:
-    name: traefik_dynamic
   google_maps_scraper_data:
     name: nexus360_google_maps_scraper_data
   whatsapp_bridge_data:
     name: nexus360_whatsapp_bridge_data
 
 networks:
-  consultio1:
+  wootech1:
     external: true
-    name: consultio1
   nexus360_internal:
     driver: overlay
     attachable: true

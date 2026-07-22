@@ -1,0 +1,18 @@
+# Pre-commit hooks for WooTech CRM
+# Install: pip install pre-commit && pre-commit install
+# Or use with: npx lefthook install
+
+repos:
+  - repo: https://github.com/gitleaks/gitleaks
+    rev: v8.21.2
+    hooks:
+      - id: gitleaks
+
+  - repo: local
+    hooks:
+      - id: no-secrets-in-compose
+        name: Check for hardcoded secrets in docker-stack files
+        entry: bash -c 'grep -rn "JWT_SECRET\|SEED_ADMIN_PASSWORD\|WHATSAPP_BRIDGE_SECRET\|SUPABASE_JWT_SECRET" docker-stack*.yml stack*.yml 2>/dev/null && echo "ERROR: Hardcoded secrets found in compose files! Use environment variables instead." && exit 1 || exit 0'
+        language: system
+        files: '(docker-stack|stack).*\.(yml|yaml)$'
+        types: [yaml]

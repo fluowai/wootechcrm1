@@ -54,9 +54,9 @@ services:
       GOOGLE_MAPS_SCRAPER_CONCURRENCY: "2"
       GOOGLE_MAPS_SCRAPER_JOB_TIMEOUT_MS: "240000"
 
-      DATABASE_URL: "postgresql://postgres.ywvhfgvlnbigfmerilcq:Q8YvwfX28WWhW3dz@aws-1-sa-east-1.pooler.supabase.com:6543/postgres?pgbouncer=true&sslmode=require&statement_cache_size=0"
-      DIRECT_URL: "postgresql://postgres:Q8YvwfX28WWhW3dz@db.ywvhfgvlnbigfmerilcq.supabase.co:5432/postgres?sslmode=require&schema=public"
-      SUPABASE_DB_URL: "postgresql://postgres.ywvhfgvlnbigfmerilcq:Q8YvwfX28WWhW3dz@aws-1-sa-east-1.pooler.supabase.com:6543/postgres?pgbouncer=true&sslmode=require&statement_cache_size=0"
+      DATABASE_URL: "${DATABASE_URL:?DATABASE_URL obrigatoria}"
+      DIRECT_URL: "${DIRECT_URL:?DIRECT_URL obrigatoria}"
+      SUPABASE_DB_URL: "${DATABASE_URL:?DATABASE_URL obrigatoria}"
       PGSSLMODE: "require"
 
       JWT_SECRET: "${JWT_SECRET:?JWT_SECRET obrigatorio}"
@@ -137,7 +137,7 @@ services:
       WHATSAPP_BRIDGE_SECRET: "${WHATSAPP_BRIDGE_SECRET:?WHATSAPP_BRIDGE_SECRET obrigatorio}"
       WHATSAPP_BRIDGE_PUBLIC_URL: "https://woocrm.wootech.com.br"
       NEXUS_BACKEND_URL: "http://backend:10000"
-      DATABASE_URL: "postgresql://postgres:Q8YvwfX28WWhW3dz@db.ywvhfgvlnbigfmerilcq.supabase.co:5432/postgres?sslmode=require&schema=public"
+      DATABASE_URL: "${DIRECT_URL:?DIRECT_URL obrigatoria}"
     volumes:
       - whatsapp_bridge_data:/app/data
     networks:

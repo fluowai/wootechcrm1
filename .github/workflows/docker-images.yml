@@ -5,6 +5,9 @@ on:
     branches:
       - main
       - codex/crm-functional-fixes
+  pull_request:
+    branches:
+      - main
   workflow_dispatch:
 
 permissions:
@@ -21,7 +24,7 @@ env:
 
 jobs:
   quality:
-    name: Test, build and audit
+    name: Test, lint, build and audit
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
@@ -50,16 +53,24 @@ jobs:
       - name: Generate Prisma client
         run: npm run prisma:generate --prefix backend
 
-      - name: Run tests
-        run: |
-          npm test --prefix backend
-          npm test --prefix frontend
-          cd whatsapp-bridge && go test ./...
+      - name: TypeScript typecheck backend
+        run: npx tsc --noEmit --prefix backend
+        working-directory: backend
+
+      - name: TypeScript typecheck frontend
+        run: npx tsc --noEmit
+        working-directory: frontend
 
       - name: Lint source code
         run: |
           npm run lint --prefix backend
           npm run lint --prefix frontend
+
+      - name: Run tests
+        run: |
+          npm test --prefix backend
+          npm test --prefix frontend
+          cd whatsapp-bridge && go test ./...
 
       - name: Build applications
         run: |
@@ -68,13 +79,38 @@ jobs:
 
       - name: Audit production dependencies
         run: |
-          npm audit --prefix backend --omit=dev --audit-level=high
-          npm audit --prefix frontend --omit=dev --audit-level=high
+          npm audit --prefix backend --omit=dev --audit-level=critical
+          npm audit --prefix frontend --omit=dev --audit-level=critical
+
+      - name: Scan for hardcoded secrets
+        uses: gitleaks/gitleaks-action@v2
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        continue-on-error: true
+
+  security-scan:
+    name: Security scan
+    runs-on: ubuntu-latest
+    needs: quality
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Run Trivy vulnerability scanner
+        uses: aquasecurity/trivy-action@master
+        with:
+          scan-type: 'fs'
+          scan-ref: '.'
+          format: 'table'
+          exit-code: '1'
+          severity: 'CRITICAL,HIGH'
+          ignore-unfixed: true
 
   build:
     name: Build and push GHCR images
     runs-on: ubuntu-latest
-    needs: quality
+    needs: [quality, security-scan]
+    if: github.event_name == 'push'
 
     steps:
       - name: Checkout

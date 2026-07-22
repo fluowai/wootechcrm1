@@ -60,9 +60,9 @@ services:
       GOOGLE_MAPS_SCRAPER_CONCURRENCY: "2"
       GOOGLE_MAPS_SCRAPER_JOB_TIMEOUT_MS: "240000"
 
-      DATABASE_URL: "postgresql://postgres.ywvhfgvlnbigfmerilcq:Q8YvwfX28WWhW3dz@aws-1-sa-east-1.pooler.supabase.com:6543/postgres?pgbouncer=true&sslmode=require&statement_cache_size=0"
-      DIRECT_URL: "postgresql://postgres:Q8YvwfX28WWhW3dz@db.ywvhfgvlnbigfmerilcq.supabase.co:5432/postgres?sslmode=require&schema=public"
-      SUPABASE_DB_URL: "postgresql://postgres.ywvhfgvlnbigfmerilcq:Q8YvwfX28WWhW3dz@aws-1-sa-east-1.pooler.supabase.com:6543/postgres?pgbouncer=true&sslmode=require&statement_cache_size=0"
+      DATABASE_URL: "${DATABASE_URL:?DATABASE_URL obrigatoria}"
+      DIRECT_URL: "${DIRECT_URL:?DIRECT_URL obrigatoria}"
+      SUPABASE_DB_URL: "${DATABASE_URL:?DATABASE_URL obrigatoria}"
       PGSSLMODE: "require"
 
       JWT_SECRET: "${JWT_SECRET:?JWT_SECRET obrigatorio}"

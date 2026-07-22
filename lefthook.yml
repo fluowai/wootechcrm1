@@ -1,0 +1,18 @@
+# Lefthook - Git hooks manager (Node.js alternative to pre-commit)
+# Install: npm install -g lefthook && lefthook install
+# Or: npx lefthook install
+
+pre-commit:
+  commands:
+    gitleaks:
+      run: npx gitleaks protect --staged --no-banner --verbose
+      stage_fixed: false
+
+    no-secrets-compose:
+      run: |
+        if grep -rn "JWT_SECRET\|SEED_ADMIN_PASSWORD\|WHATSAPP_BRIDGE_SECRET\|SUPABASE_JWT_SECRET" docker-stack*.yml stack*.yml 2>/dev/null; then
+          echo "ERROR: Hardcoded secrets found in compose files!"
+          echo "Use environment variables or Portainer secrets instead."
+          exit 1
+        fi
+      stage_fixed: false

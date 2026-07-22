@@ -2,6 +2,22 @@ import { Router } from "express";
 import { PrismaClient } from "@prisma/client";
 import { AuthRequest } from "../middleware/auth.js";
 import { auditFromRequest } from "../utils/auditLogger.js";
+import { signMediaUrl } from "../utils/security.js";
+
+const MAX_FILE_URL_LENGTH = 2048;
+
+function validateFileUrl(fileUrl: string | undefined): string | null {
+  if (!fileUrl || typeof fileUrl !== "string") return null;
+  if (fileUrl.length > MAX_FILE_URL_LENGTH) return null;
+  let parsed: URL;
+  try {
+    parsed = new URL(fileUrl);
+  } catch {
+    return null;
+  }
+  if (parsed.protocol !== "http:" && parsed.protocol !== "https:") return null;
+  return fileUrl;
+}
 
 export function omnichannelRoutes(prisma: PrismaClient) {
   const router = Router();
@@ -282,6 +298,8 @@ export function omnichannelRoutes(prisma: PrismaClient) {
       const { content, type, fileUrl, isPrivate } = req.body;
       if (!content && !fileUrl) return res.status(400).json({ error: "Conteúdo ou arquivo é obrigatório" });
 
+      const safeFileUrl = validateFileUrl(fileUrl);
+
       const message = await prisma.message.create({
         data: {
           conversationId: req.params.id,
@@ -289,7 +307,7 @@ export function omnichannelRoutes(prisma: PrismaClient) {
           senderType: isPrivate ? "USER" : "USER",
           content: content || null,
           type: type || "text",
-          fileUrl: fileUrl || null,
+          fileUrl: safeFileUrl,
           isPrivate: !!isPrivate,
           metadata: { source: "nexus_web" },
         },

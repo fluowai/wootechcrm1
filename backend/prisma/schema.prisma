@@ -12,21 +12,21 @@ datasource db {
 }
 
 model Agency {
-  id            String   @id @default(uuid())
-  name          String
-  slug          String   @unique
-  domain        String?  @unique
-  logoUrl       String?
-  faviconUrl    String?
-  primaryColor  String?  @default("#3B82F6")
+  id             String  @id @default(uuid())
+  name           String
+  slug           String  @unique
+  domain         String? @unique
+  logoUrl        String?
+  faviconUrl     String?
+  primaryColor   String? @default("#3B82F6")
   secondaryColor String? @default("#1E40AF")
-  
+
   whiteLabelConfig Json? // Configurações específicas de marca, emails, etc.
   settings         Json?
 
-  organizations    Organization[]
-  users            User[]
-  plans            AgencyPlan[]
+  organizations Organization[]
+  users         User[]
+  plans         AgencyPlan[]
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -34,29 +34,29 @@ model Agency {
 }
 
 model Organization {
-  id        String   @id @default(uuid())
-  name      String
-  type      String   @default("CLIENT") // CLIENT | WHITELABEL
-  slug      String?  @unique
-  domain    String?
-  plan      String   @default("Free")
-  planId    String?
-  planObj   Plan?    @relation(fields: [planId], references: [id])
-  subscriptionStatus String   @default("TRIAL") // TRIAL, ACTIVE, PAST_DUE, SUSPENDED, CANCELED, EXPIRED
+  id                 String    @id @default(uuid())
+  name               String
+  type               String    @default("CLIENT") // CLIENT | WHITELABEL
+  slug               String?   @unique
+  domain             String?
+  plan               String    @default("Free")
+  planId             String?
+  planObj            Plan?     @relation(fields: [planId], references: [id])
+  subscriptionStatus String    @default("TRIAL") // TRIAL, ACTIVE, PAST_DUE, SUSPENDED, CANCELED, EXPIRED
   trialEndsAt        DateTime?
   currentPeriodEnd   DateTime?
-  isActive           Boolean  @default(true)
+  isActive           Boolean   @default(true)
 
   // White Label e Agency Hierarchy
-  agencyId           String?
-  agency             Agency?  @relation(fields: [agencyId], references: [id])
-  
-  whiteLabelConfig   Json?
-  limitsUsage        Json?
-  settings           Json?
+  agencyId String?
+  agency   Agency? @relation(fields: [agencyId], references: [id])
 
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  whiteLabelConfig Json?
+  limitsUsage      Json?
+  settings         Json?
+
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
   deletedAt DateTime?
 
   // Controle de Versão e Lançamento
@@ -68,74 +68,74 @@ model Organization {
   auditLogs         AuditLog[]
   snapshots         Snapshot[]
 
-  geminiKey  String?
-  groqKey    String?
-  serpApiKey String?
-  serperApiKey String?
+  geminiKey     String?
+  groqKey       String?
+  serpApiKey    String?
+  serperApiKey  String?
   outscraperKey String?
-  aiProvider String  @default("gemini")
+  aiProvider    String  @default("gemini")
 
-  users             User[]
-  workspaces        Workspace[]
-  accessProfiles    AccessProfile[]
-  leads             Lead[]
-  projects          Project[]
-  clients           Client[]
-  opportunities     Opportunity[]
-  proposals         Proposal[]
-  pipelines         Pipeline[]
-  campaigns         Campaign[]
-  tasks             Task[]
-  invoices          Invoice[]
-  contracts         Contract[]
-  contractTemplates ContractTemplate[]
-  sequences         Sequence[]
-  creatives         Creative[]
-  products          Product[]
-  expenses          Expense[]
-  notifications     Notification[]
-  calendarEvents    CalendarEvent[]
-  adAccounts        AdAccount[]
-  adMetricSnapshots AdMetricSnapshot[]
-  adsInsights       AdsInsight[]
+  users              User[]
+  workspaces         Workspace[]
+  accessProfiles     AccessProfile[]
+  leads              Lead[]
+  projects           Project[]
+  clients            Client[]
+  opportunities      Opportunity[]
+  proposals          Proposal[]
+  pipelines          Pipeline[]
+  campaigns          Campaign[]
+  tasks              Task[]
+  invoices           Invoice[]
+  contracts          Contract[]
+  contractTemplates  ContractTemplate[]
+  sequences          Sequence[]
+  creatives          Creative[]
+  products           Product[]
+  expenses           Expense[]
+  notifications      Notification[]
+  calendarEvents     CalendarEvent[]
+  adAccounts         AdAccount[]
+  adMetricSnapshots  AdMetricSnapshot[]
+  adsInsights        AdsInsight[]
   adsRecommendations AdsRecommendation[]
   clientReportShares ClientReportShare[]
-  assets            Asset[]
-  assetFolders      AssetFolder[]
-  landingPages      LandingPage[]
-  quizzes           Quiz[]
-  automations       Automation[]
-  promptTemplates   PromptTemplate[]
-  generatedPrompts  GeneratedPrompt[]
-  domains           Domain[]
-  agendas           Agenda[]
-  
-  inboxes           Inbox[]
-  usageEvents       UsageEvent[]
-  aiAgents          AiAgent[]
-  aiEntitlements    AiEntitlement[]
-  aiUsageLedgers    AiUsageLedger[]
-  aiQuotaWindows    AiQuotaWindow[]
-  proposalTemplates ProposalTemplate[]
+  assets             Asset[]
+  assetFolders       AssetFolder[]
+  landingPages       LandingPage[]
+  quizzes            Quiz[]
+  automations        Automation[]
+  promptTemplates    PromptTemplate[]
+  generatedPrompts   GeneratedPrompt[]
+  domains            Domain[]
+  agendas            Agenda[]
+
+  inboxes                  Inbox[]
+  usageEvents              UsageEvent[]
+  aiAgents                 AiAgent[]
+  aiEntitlements           AiEntitlement[]
+  aiUsageLedgers           AiUsageLedger[]
+  aiQuotaWindows           AiQuotaWindow[]
+  proposalTemplates        ProposalTemplate[]
   onboardingGeneratedItems OnboardingGeneratedItem[]
-  quickReplies      QuickReply[]
-  automationLogs    AutomationLog[]
-  
-  leadCaptureSources    LeadCaptureSource[]
-  capturedLeads         CapturedLead[]
-  leadCaptureUsageLogs  LeadCaptureUsageLog[]
-  companyIdentityCandidates CompanyIdentityCandidate[]
-  companyIdentityAuditLogs  CompanyIdentityAuditLog[]
-  prospectingFunnels    ProspectingFunnel[]
-  prospectingRuns       ProspectingRun[]
-  prospectingDecisionMakers ProspectingDecisionMaker[]
+  quickReplies             QuickReply[]
+  automationLogs           AutomationLog[]
+
+  leadCaptureSources          LeadCaptureSource[]
+  capturedLeads               CapturedLead[]
+  leadCaptureUsageLogs        LeadCaptureUsageLog[]
+  companyIdentityCandidates   CompanyIdentityCandidate[]
+  companyIdentityAuditLogs    CompanyIdentityAuditLog[]
+  prospectingFunnels          ProspectingFunnel[]
+  prospectingRuns             ProspectingRun[]
+  prospectingDecisionMakers   ProspectingDecisionMaker[]
   prospectingDispatchAttempts ProspectingDispatchAttempt[]
-  prospectingOptOutContacts ProspectingOptOutContact[]
-  whatsappContactIdentities WhatsappContactIdentity[]
-  whatsappGroupParticipants WhatsappGroupParticipant[]
-  whatsappMentions WhatsappMention[]
-  whatsappConnectionLogs WhatsappConnectionLog[]
-  whatsappWebhookLogs WhatsappWebhookLog[]
+  prospectingOptOutContacts   ProspectingOptOutContact[]
+  whatsappContactIdentities   WhatsappContactIdentity[]
+  whatsappGroupParticipants   WhatsappGroupParticipant[]
+  whatsappMentions            WhatsappMention[]
+  whatsappConnectionLogs      WhatsappConnectionLog[]
+  whatsappWebhookLogs         WhatsappWebhookLog[]
 
   // Novos modelos para automação de agência
   serviceCatalog     ServiceCatalog[]
@@ -145,42 +145,42 @@ model Organization {
   clientHealthScores ClientHealthScore[]
 
   // SaaS Control (Super Admin -> Agency)
-  saasInvoices      SaaSInvoice[]
-  supportTickets    SupportTicket[]
+  saasInvoices   SaaSInvoice[]
+  supportTickets SupportTicket[]
 
   // WooTech Prospect AI
-  prospectMissions  ProspectMission[]
+  prospectMissions ProspectMission[]
 
   // Autonomus CRM: verticalização por tipo de negócio
-  businessType        String?  // B2B, B2C, SaaS, Consultoria, Indústria, E-commerce, Varejo, etc.
-  businessDescription String?  // Descrição livre do que o cliente vende
+  businessType        String? // B2B, B2C, SaaS, Consultoria, Indústria, E-commerce, Varejo, etc.
+  businessDescription String? // Descrição livre do que o cliente vende
 
-  onboardingResponse OnboardingResponse?
+  onboardingResponse     OnboardingResponse?
   organizationExperience OrganizationExperience?
-  organizationModules OrganizationModule[]
-  provisioningRuns ProvisioningRun[]
+  organizationModules    OrganizationModule[]
+  provisioningRuns       ProvisioningRun[]
 
-  customFields          CustomField[]
-  lostReasons           LostReason[]
-  wonReasons            WonReason[]
-  npsSurveys            NpsSurvey[]
-  renewalOpportunities  RenewalOpportunity[]
-  aiLogs                AiLog[]
+  customFields         CustomField[]
+  lostReasons          LostReason[]
+  wonReasons           WonReason[]
+  npsSurveys           NpsSurvey[]
+  renewalOpportunities RenewalOpportunity[]
+  aiLogs               AiLog[]
 
   // ACP v2.0
-  acpAccesses           AcpAccess[]
-  googleLocalAccesses   GoogleLocalAccess[]
-  googleLocalProfiles   GoogleLocalProfile[]
-  googleLocalScans      GoogleLocalScan[]
-  acpDiagnoses          AcpDiagnosis[]
-  acpIcps               AcpIcp[]
-  acpOffers             AcpOffer[]
-  acpAgentExecutions    AcpAgentExecution[]
-  acpObjections         AcpObjection[]
-  acpCompetitors        AcpCompetitor[]
-  acpQuarterlyPlans     AcpQuarterlyPlan[]
-  acpChurnSignals       AcpChurnSignal[]
-  agentQueueItems        AgentQueueItem[]
+  acpAccesses         AcpAccess[]
+  googleLocalAccesses GoogleLocalAccess[]
+  googleLocalProfiles GoogleLocalProfile[]
+  googleLocalScans    GoogleLocalScan[]
+  acpDiagnoses        AcpDiagnosis[]
+  acpIcps             AcpIcp[]
+  acpOffers           AcpOffer[]
+  acpAgentExecutions  AcpAgentExecution[]
+  acpObjections       AcpObjection[]
+  acpCompetitors      AcpCompetitor[]
+  acpQuarterlyPlans   AcpQuarterlyPlan[]
+  acpChurnSignals     AcpChurnSignal[]
+  agentQueueItems     AgentQueueItem[]
 
   // Whitelabel Sync Logs (Fase 3)
   whitelabelSyncLogs WhitelabelSyncLog[]
@@ -199,15 +199,15 @@ model Workspace {
   slug           String
   organizationId String
   organization   Organization @relation(fields: [organizationId], references: [id])
-  
-  settings       Json?
-  isActive       Boolean      @default(true)
-  
-  createdAt      DateTime     @default(now())
-  updatedAt      DateTime     @updatedAt
 
-  users          User[]
-  leads          Lead[]
+  settings Json?
+  isActive Boolean @default(true)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  users User[]
+  leads Lead[]
 
   @@unique([organizationId, slug])
 }
@@ -217,7 +217,7 @@ model AgencyPlan {
   agencyId  String
   agency    Agency   @relation(fields: [agencyId], references: [id])
   name      String
-  price     Decimal @db.Decimal(18, 2)
+  price     Decimal  @db.Decimal(18, 2)
   limits    Json
   features  Json
   isActive  Boolean  @default(true)
@@ -230,35 +230,35 @@ model Plan {
   name         String   @unique
   slug         String   @unique @default("free")
   description  String?
-  priceMonthly Float?
-  priceYearly  Float?
+  priceMonthly Decimal? @db.Decimal(18, 2)
+  priceYearly  Decimal? @db.Decimal(18, 2)
   isPublic     Boolean  @default(true)
   isActive     Boolean  @default(true)
-  
+
   // Limites Base
-  maxUsers        Int      @default(1)
-  maxContacts     Int      @default(100)
-  maxDeals        Int      @default(50)
-  maxPipelines    Int      @default(1)
-  maxAutomations  Int      @default(2)
-  maxLandingPages Int      @default(1)
-  maxInboxes      Int      @default(1)
-  maxMessages     Int      @default(500)
-  maxAIRequests   Int      @default(10) // Créditos de IA
-  maxLeads        Int      @default(100)
-  maxClients      Int      @default(10)
-  maxReports      Int      @default(5)
-  maxIntegrations Int      @default(2)
-  
+  maxUsers        Int @default(1)
+  maxContacts     Int @default(100)
+  maxDeals        Int @default(50)
+  maxPipelines    Int @default(1)
+  maxAutomations  Int @default(2)
+  maxLandingPages Int @default(1)
+  maxInboxes      Int @default(1)
+  maxMessages     Int @default(500)
+  maxAIRequests   Int @default(10) // Créditos de IA
+  maxLeads        Int @default(100)
+  maxClients      Int @default(10)
+  maxReports      Int @default(5)
+  maxIntegrations Int @default(2)
+
   // Features Disponíveis (JSON para flexibilidade ou booleanos)
-  features        Json?    // Ex: { "whiteLabel": false, "apiAccess": false }
-  
+  features Json? // Ex: { "whiteLabel": false, "apiAccess": false }
+
   organizations Organization[]
   subscriptions SaaSSubscription[]
   planFeatures  PlanFeature[]
-  
-  createdAt    DateTime @default(now())
-  updatedAt    DateTime @updatedAt
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 }
 
 model Module {
@@ -274,16 +274,16 @@ model Module {
 }
 
 model Feature {
-  id          String        @id @default(uuid())
-  moduleKey   String
-  module      Module        @relation(fields: [moduleKey], references: [key])
-  key         String        @unique // crm.export, ai.sdr, etc.
-  name        String
-  description String?
-  isActive    Boolean       @default(true)
+  id           String        @id @default(uuid())
+  moduleKey    String
+  module       Module        @relation(fields: [moduleKey], references: [key])
+  key          String        @unique // crm.export, ai.sdr, etc.
+  name         String
+  description  String?
+  isActive     Boolean       @default(true)
   planFeatures PlanFeature[]
-  createdAt   DateTime      @default(now())
-  updatedAt   DateTime      @updatedAt
+  createdAt    DateTime      @default(now())
+  updatedAt    DateTime      @updatedAt
 }
 
 model PlanFeature {
@@ -293,7 +293,7 @@ model PlanFeature {
   featureKey String
   feature    Feature @relation(fields: [featureKey], references: [key])
   isEnabled  Boolean @default(true)
-  limit      Int?    // Limite específico para esta feature (ex: 2 agentes de IA)
+  limit      Int? // Limite específico para esta feature (ex: 2 agentes de IA)
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -303,16 +303,16 @@ model PlanFeature {
 
 model Role {
   id             String           @id @default(uuid())
-  organizationId String?          // Se null, é uma role global (sistema)
+  organizationId String? // Se null, é uma role global (sistema)
   name           String
-  key            String           // owner, admin, manager, member, guest
+  key            String // owner, admin, manager, member, guest
   scope          String           @default("AGENCY") // PLATFORM, AGENCY, CLIENT
   isSystem       Boolean          @default(false)
   permissions    RolePermission[]
   users          User[]
   createdAt      DateTime         @default(now())
   updatedAt      DateTime         @updatedAt
-  
+
   @@unique([organizationId, key])
 }
 
@@ -328,12 +328,12 @@ model Permission {
 }
 
 model RolePermission {
-  id           String     @id @default(uuid())
-  roleId       String
-  role         Role       @relation(fields: [roleId], references: [id])
+  id            String     @id @default(uuid())
+  roleId        String
+  role          Role       @relation(fields: [roleId], references: [id])
   permissionKey String
-  permission   Permission @relation(fields: [permissionKey], references: [key])
-  isAllowed    Boolean    @default(true)
+  permission    Permission @relation(fields: [permissionKey], references: [key])
+  isAllowed     Boolean    @default(true)
 
   @@unique([roleId, permissionKey])
 }
@@ -355,8 +355,8 @@ model AuditLog {
   organizationId String?
   organization   Organization? @relation(fields: [organizationId], references: [id])
   userId         String?
-  action         String        // CREATE, UPDATE, DELETE, LOGIN, EXPORT
-  resource       String        // Lead, Client, Campaign
+  action         String // CREATE, UPDATE, DELETE, LOGIN, EXPORT
+  resource       String // Lead, Client, Campaign
   resourceId     String?
   metadata       Json?
   ip             String?
@@ -373,7 +373,7 @@ model Snapshot {
   organization   Organization @relation(fields: [organizationId], references: [id])
   name           String
   description    String?
-  data           Json         // Objeto serializado com pipelines, etapas, etc.
+  data           Json // Objeto serializado com pipelines, etapas, etc.
   isPublic       Boolean      @default(false)
   createdBy      String
   createdAt      DateTime     @default(now())
@@ -381,31 +381,31 @@ model Snapshot {
 }
 
 model SystemSettings {
-  id                String   @id @default("global")
-  crmPublic         Boolean  @default(false)
-  salesMachinePublic Boolean @default(false)
-  agentBuilderPublic Boolean @default(false)
-  updatedAt         DateTime @updatedAt
+  id                 String   @id @default("global")
+  crmPublic          Boolean  @default(false)
+  salesMachinePublic Boolean  @default(false)
+  agentBuilderPublic Boolean  @default(false)
+  updatedAt          DateTime @updatedAt
 }
 
 model SaaSSubscription {
-  id              String       @id @default(uuid())
-  organizationId  String
-  organization    Organization @relation(fields: [organizationId], references: [id])
-  planId          String?
-  plan            Plan?        @relation(fields: [planId], references: [id])
-  status          String       @default("TRIAL") // TRIAL, ACTIVE, PAST_DUE, SUSPENDED, CANCELED, EXPIRED
-  startDate       DateTime     @default(now())
-  endDate         DateTime?
-  trialEndsAt     DateTime?
+  id                 String       @id @default(uuid())
+  organizationId     String
+  organization       Organization @relation(fields: [organizationId], references: [id])
+  planId             String?
+  plan               Plan?        @relation(fields: [planId], references: [id])
+  status             String       @default("TRIAL") // TRIAL, ACTIVE, PAST_DUE, SUSPENDED, CANCELED, EXPIRED
+  startDate          DateTime     @default(now())
+  endDate            DateTime?
+  trialEndsAt        DateTime?
   currentPeriodStart DateTime?
-  currentPeriodEnd DateTime?
-  price           Decimal? @db.Decimal(18, 2)
-  billingCycle    String?      // MONTHLY, YEARLY
-  provider        String?      // Stripe, Asaas, etc.
-  providerSubId   String?
-  createdAt       DateTime     @default(now())
-  updatedAt       DateTime     @updatedAt
+  currentPeriodEnd   DateTime?
+  price              Decimal?     @db.Decimal(18, 2)
+  billingCycle       String? // MONTHLY, YEARLY
+  provider           String? // Stripe, Asaas, etc.
+  providerSubId      String?
+  createdAt          DateTime     @default(now())
+  updatedAt          DateTime     @updatedAt
 
   @@index([organizationId])
 }
@@ -414,7 +414,7 @@ model SaaSInvoice {
   id             String       @id @default(uuid())
   organizationId String
   organization   Organization @relation(fields: [organizationId], references: [id])
-  amount         Decimal @db.Decimal(18, 2)
+  amount         Decimal      @db.Decimal(18, 2)
   dueDate        DateTime
   paidAt         DateTime?
   status         String       @default("PENDING") // PENDING, PAID, CANCELLED
@@ -440,63 +440,63 @@ model SupportTicket {
 }
 
 model User {
-  id       String  @id @default(uuid())
-  email    String  @unique
-  phone    String?
-  phoneNormalized String? @unique
-  emailVerified Boolean @default(false)
-  phoneVerified Boolean @default(false)
+  id                String    @id @default(uuid())
+  email             String    @unique
+  phone             String?
+  phoneNormalized   String?   @unique
+  emailVerified     Boolean   @default(false)
+  phoneVerified     Boolean   @default(false)
   verifiedContactAt DateTime?
-  name     String?
-  password String
-  role     String  @default("USER") // SUPER_ADMIN, AGENCY_ADMIN, ORG_ADMIN, USER
-  status   String  @default("ACTIVE") // ACTIVE, INACTIVE, SUSPENDED
+  name              String?
+  password          String
+  role              String    @default("USER") // SUPER_ADMIN, AGENCY_ADMIN, ORG_ADMIN, USER
+  status            String    @default("ACTIVE") // ACTIVE, INACTIVE, SUSPENDED
 
   avatarUrl String?
 
-  agencyId       String?
-  agency         Agency?       @relation(fields: [agencyId], references: [id])
+  agencyId String?
+  agency   Agency? @relation(fields: [agencyId], references: [id])
 
   organizationId String?
   organization   Organization? @relation(fields: [organizationId], references: [id])
 
-  workspaceId    String?
-  workspace      Workspace?    @relation(fields: [workspaceId], references: [id])
+  workspaceId String?
+  workspace   Workspace? @relation(fields: [workspaceId], references: [id])
 
   managedLeads         Lead[]
   assignedTasks        Task[]
   managedClients       Client[]
   managedOpportunities Opportunity[]
   followUps            FollowUp[]
-  department           String?       @default("GERAL") // BDR, SDR, CLOSER, etc
+  department           String?               @default("GERAL") // BDR, SDR, CLOSER, etc
   calendarEvents       CalendarEvent[]
   leadCaptureSources   LeadCaptureSource[]
   leadCaptureUsageLogs LeadCaptureUsageLog[]
-  permissions Json? // Ex: { "leads": ["view", "edit"], "crm": ["manage_boards"] }
-  
-  accessProfileId      String?
-  accessProfile        AccessProfile? @relation(fields: [accessProfileId], references: [id])
-  
-  roleId               String?
-  roleObj              Role?          @relation(fields: [roleId], references: [id])
-  userPermissions      UserPermission[]
-  googleLocalAccesses  GoogleLocalAccess[] @relation("GoogleLocalAccessUser")
-  googleLocalGrants    GoogleLocalAccess[] @relation("GoogleLocalAccessGrantedBy")
-  googleLocalProfiles  GoogleLocalProfile[] @relation("GoogleLocalProfileCreatedBy")
-  googleLocalScans     GoogleLocalScan[] @relation("GoogleLocalScanCreatedBy")
-  
+  permissions          Json? // Ex: { "leads": ["view", "edit"], "crm": ["manage_boards"] }
+
+  accessProfileId String?
+  accessProfile   AccessProfile? @relation(fields: [accessProfileId], references: [id])
+
+  roleId              String?
+  roleObj             Role?                @relation(fields: [roleId], references: [id])
+  userPermissions     UserPermission[]
+  googleLocalAccesses GoogleLocalAccess[]  @relation("GoogleLocalAccessUser")
+  googleLocalGrants   GoogleLocalAccess[]  @relation("GoogleLocalAccessGrantedBy")
+  googleLocalProfiles GoogleLocalProfile[] @relation("GoogleLocalProfileCreatedBy")
+  googleLocalScans    GoogleLocalScan[]    @relation("GoogleLocalScanCreatedBy")
+
   conversations        Conversation[]
   refreshTokens        RefreshToken[]
   accountVerifications AccountVerification[]
-  
+
   // WooTech Prospect AI
-  prospectMissions       ProspectMission[]
-  prospectMissionsOwned  ProspectMission[] @relation("MissionSalesOwner")
-  
+  prospectMissions      ProspectMission[]
+  prospectMissionsOwned ProspectMission[] @relation("MissionSalesOwner")
+
   professionalExperiences ProfessionalExperience[]
 
-  createdAt            DateTime      @default(now())
-  updatedAt            DateTime      @updatedAt
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 
   @@index([organizationId])
   @@index([agencyId])
@@ -505,54 +505,54 @@ model User {
 }
 
 model AccessProfile {
-  id             String       @id @default(uuid())
-  name           String
-  description    String?
-  permissions    Json
-  
+  id          String  @id @default(uuid())
+  name        String
+  description String?
+  permissions Json
+
   organizationId String
   organization   Organization @relation(fields: [organizationId], references: [id])
-  
-  users          User[]
-  
-  createdAt      DateTime     @default(now())
-  updatedAt      DateTime     @updatedAt
+
+  users User[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 
   @@index([organizationId])
 }
 
 model Lead {
-  id     String  @id @default(uuid())
-  name   String
-  email  String
-  phone  String?
+  id       String  @id @default(uuid())
+  name     String
+  email    String
+  phone    String?
   whatsapp String?
-  cpf    String?
+  cpf      String?
   jobTitle String?
-  
-  birthDate DateTime?
-  status   String  @default("novo") // qualificado, desqualificado, etc.
-  value    Decimal @default(0) @db.Decimal(18, 2)
-  tags     String?
-  source   String?
-  channel  String?
-  notes    String? @db.Text
-  cnpj     String?
-  owners   String? @db.Text
-  managementTeam String? @db.Text
-  aiDiagnosis    String? @db.Text
 
-  temperature String  @default("COLD") // COLD, WARM, HOT
-  score       Int     @default(0)
-  
-  lgpdConsent Boolean @default(false)
+  birthDate      DateTime?
+  status         String    @default("novo") // qualificado, desqualificado, etc.
+  value          Decimal   @default(0) @db.Decimal(18, 2)
+  tags           String?
+  source         String?
+  channel        String?
+  notes          String?   @db.Text
+  cnpj           String?
+  owners         String?   @db.Text
+  managementTeam String?   @db.Text
+  aiDiagnosis    String?   @db.Text
+
+  temperature String @default("COLD") // COLD, WARM, HOT
+  score       Int    @default(0)
+
+  lgpdConsent Boolean   @default(false)
   lgpdDate    DateTime?
 
   organizationId String
   organization   Organization @relation(fields: [organizationId], references: [id])
 
-  workspaceId    String?
-  workspace      Workspace?    @relation(fields: [workspaceId], references: [id])
+  workspaceId String?
+  workspace   Workspace? @relation(fields: [workspaceId], references: [id])
 
   assignedToId String?
   assignedTo   User?   @relation(fields: [assignedToId], references: [id])
@@ -561,7 +561,7 @@ model Lead {
   client   Client? @relation(fields: [clientId], references: [id])
 
   pipelineId String?
-  pipeline   Pipeline? @relation(fields: [pipelineId], references: [id])
+  pipeline   Pipeline?      @relation(fields: [pipelineId], references: [id])
   stageId    String?
   stage      PipelineStage? @relation(fields: [stageId], references: [id])
 
@@ -569,9 +569,9 @@ model Lead {
   quizSubmissions QuizSubmission[]
   proposals       Proposal[]
   conversations   Conversation[]
-  
-  createdAt       DateTime         @default(now())
-  updatedAt       DateTime         @updatedAt
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 
   @@index([organizationId])
   @@index([assignedToId])
@@ -663,9 +663,9 @@ model Client {
   responsibleRole  String?
 
   // Status
-  status String @default("prospect") // prospect, onboarding, ativo, inativo, churned
-  renewalDate DateTime?
-  churnRisk   String   @default("LOW") // LOW, MEDIUM, HIGH, CRITICAL
+  status       String    @default("prospect") // prospect, onboarding, ativo, inativo, churned
+  renewalDate  DateTime?
+  churnRisk    String    @default("LOW") // LOW, MEDIUM, HIGH, CRITICAL
   lastNpsScore Int?
 
   // Origem (Raio-X)
@@ -683,18 +683,18 @@ model Client {
   assignedToId String?
   assignedTo   User?   @relation(fields: [assignedToId], references: [id])
 
-  opportunities Opportunity[]
-  proposals     Proposal[]
-  invoices      Invoice[]
-  contracts     Contract[]
-  soldProducts  SoldProduct[]
-  demands       Demand[]
-  projects      Project[]
-  leads         Lead[]
-  npsSurveys            NpsSurvey[]
-  renewalOpportunities  RenewalOpportunity[]
-  paymentTransactions   PaymentTransaction[]
-  checklistItems        CloserChecklistItem[]
+  opportunities        Opportunity[]
+  proposals            Proposal[]
+  invoices             Invoice[]
+  contracts            Contract[]
+  soldProducts         SoldProduct[]
+  demands              Demand[]
+  projects             Project[]
+  leads                Lead[]
+  npsSurveys           NpsSurvey[]
+  renewalOpportunities RenewalOpportunity[]
+  paymentTransactions  PaymentTransaction[]
+  checklistItems       CloserChecklistItem[]
 
   notes String?
   tags  String?
@@ -703,15 +703,15 @@ model Client {
   closerStatus String @default("pending") // pending_review, verified, contract_pending, contract_signed, payment_pending, payment_confirmed, onboarding
 
   // AI Context & History
-  aiContext        ClientAIContext?
-  aiGenerations    AIGeneration[]
-  generatedPrompts GeneratedPrompt[]
-  agentQueueItems  AgentQueueItem[]
-  adAccounts       AdAccount[]
-  adMetricSnapshots AdMetricSnapshot[]
-  adsInsights      AdsInsight[]
+  aiContext          ClientAIContext?
+  aiGenerations      AIGeneration[]
+  generatedPrompts   GeneratedPrompt[]
+  agentQueueItems    AgentQueueItem[]
+  adAccounts         AdAccount[]
+  adMetricSnapshots  AdMetricSnapshot[]
+  adsInsights        AdsInsight[]
   adsRecommendations AdsRecommendation[]
-  reportShares     ClientReportShare[]
+  reportShares       ClientReportShare[]
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -752,32 +752,32 @@ model AgentQueueItem {
   clientId       String
   client         Client       @relation(fields: [clientId], references: [id], onDelete: Cascade)
 
-  agentId        String
-  agentName      String
-  phase          String?
-  category       String?
-  autonomy       String       @default("semi_autonomo")
-  actionType     String
-  title          String
-  description    String?      @db.Text
-  input          Json?
-  output         Json?
-  result         Json?
-  status         String       @default("queued") // queued, running, completed, failed, needs_approval, skipped
-  priority       Int          @default(50)
-  attempts       Int          @default(0)
-  maxAttempts    Int          @default(3)
-  dependsOnId    String?
-  lockedAt       DateTime?
-  scheduledAt    DateTime?
-  startedAt      DateTime?
-  completedAt    DateTime?
-  failedAt       DateTime?
-  error          String?      @db.Text
-  metadata       Json?
+  agentId     String
+  agentName   String
+  phase       String?
+  category    String?
+  autonomy    String    @default("semi_autonomo")
+  actionType  String
+  title       String
+  description String?   @db.Text
+  input       Json?
+  output      Json?
+  result      Json?
+  status      String    @default("queued") // queued, running, completed, failed, needs_approval, skipped
+  priority    Int       @default(50)
+  attempts    Int       @default(0)
+  maxAttempts Int       @default(3)
+  dependsOnId String?
+  lockedAt    DateTime?
+  scheduledAt DateTime?
+  startedAt   DateTime?
+  completedAt DateTime?
+  failedAt    DateTime?
+  error       String?   @db.Text
+  metadata    Json?
 
-  createdAt      DateTime     @default(now())
-  updatedAt      DateTime     @updatedAt
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 
   @@index([organizationId])
   @@index([clientId])
@@ -792,27 +792,27 @@ model Opportunity {
   description String?
 
   // Pipeline context
-  pipelineId  String?
-  pipeline    Pipeline? @relation(fields: [pipelineId], references: [id])
-  stageId     String?
-  stageObj    PipelineStage? @relation(fields: [stageId], references: [id])
-  
+  pipelineId String?
+  pipeline   Pipeline?      @relation(fields: [pipelineId], references: [id])
+  stageId    String?
+  stageObj   PipelineStage? @relation(fields: [stageId], references: [id])
+
   stage       String @default("qualificacao") // Legacy / fallback
   probability Int    @default(10)
 
-  value          Decimal @default(0) @db.Decimal(18, 2)
+  value          Decimal  @default(0) @db.Decimal(18, 2)
   estimatedValue Decimal? @db.Decimal(18, 2)
 
   expectedCloseDate DateTime?
   closedAt          DateTime?
 
-  status      String  @default("OPEN") // OPEN, WON, LOST, FROZEN
-  lostReason  String?
+  status       String  @default("OPEN") // OPEN, WON, LOST, FROZEN
+  lostReason   String?
   lostReasonId String?
   wonReasonId  String?
-  
-  temperature String  @default("COLD") // COLD, WARM, HOT
-  score       Int     @default(0)
+
+  temperature String @default("COLD") // COLD, WARM, HOT
+  score       Int    @default(0)
 
   organizationId String
   organization   Organization @relation(fields: [organizationId], references: [id])
@@ -825,13 +825,13 @@ model Opportunity {
 
   nextActionAt      DateTime?
   lastInteractionAt DateTime?
-  
-  objections  Json?
+
+  objections   Json?
   customFields Json?
 
-  tasks       Task[]
-  proposals   Proposal[]
-  
+  tasks     Task[]
+  proposals Proposal[]
+
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
@@ -843,33 +843,33 @@ model Opportunity {
 }
 
 model Proposal {
-  id              String   @id @default(uuid())
-  title           String
-  slug            String   @unique
-  publicToken     String   @unique @default(uuid())
-  status          String   @default("draft")
-  
-  clientId        String?
-  client          Client?  @relation(fields: [clientId], references: [id])
-  
-  leadId          String?
-  lead            Lead?    @relation(fields: [leadId], references: [id])
-  
-  opportunityId   String?
-  opportunity     Opportunity? @relation(fields: [opportunityId], references: [id])
-  
-  organizationId  String
-  organization    Organization @relation(fields: [organizationId], references: [id])
+  id          String @id @default(uuid())
+  title       String
+  slug        String @unique
+  publicToken String @unique @default(uuid())
+  status      String @default("draft")
 
-  logoUrl         String?
-  footerText      String?
-  
-  content         Json     
-  items           ProposalItem[]
-  statusHistory   ProposalStatusHistory[]
-  
-  createdAt       DateTime @default(now())
-  updatedAt       DateTime @updatedAt
+  clientId String?
+  client   Client? @relation(fields: [clientId], references: [id])
+
+  leadId String?
+  lead   Lead?   @relation(fields: [leadId], references: [id])
+
+  opportunityId String?
+  opportunity   Opportunity? @relation(fields: [opportunityId], references: [id])
+
+  organizationId String
+  organization   Organization @relation(fields: [organizationId], references: [id])
+
+  logoUrl    String?
+  footerText String?
+
+  content       Json
+  items         ProposalItem[]
+  statusHistory ProposalStatusHistory[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 
   @@index([organizationId])
   @@index([slug])
@@ -901,10 +901,10 @@ model Campaign {
 
   budget         Decimal @default(0) @db.Decimal(18, 2)
   spent          Decimal @default(0) @db.Decimal(18, 2)
-  impressions    Int   @default(0)
-  clicks         Int   @default(0)
-  leadsGenerated Int   @default(0)
-  conversions    Int   @default(0)
+  impressions    Int     @default(0)
+  clicks         Int     @default(0)
+  leadsGenerated Int     @default(0)
+  conversions    Int     @default(0)
   revenue        Decimal @default(0) @db.Decimal(18, 2)
 
   utmSource   String?
@@ -942,7 +942,7 @@ model Task {
   opportunity   Opportunity? @relation(fields: [opportunityId], references: [id])
   proposalId    String?
   projectId     String?
-  project       Project? @relation(fields: [projectId], references: [id])
+  project       Project?     @relation(fields: [projectId], references: [id])
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -989,9 +989,9 @@ model SoldProduct {
   client   Client @relation(fields: [clientId], references: [id])
 
   name            String
-  setupValue      Float  @default(0)
-  monthlyValue    Float  @default(0)
-  commissionValue Float  @default(0)
+  setupValue      Decimal @default(0) @db.Decimal(18, 2)
+  monthlyValue    Decimal @default(0) @db.Decimal(18, 2)
+  commissionValue Decimal @default(0) @db.Decimal(18, 2)
 
   paymentMethod String?
   billingDay    Int?
@@ -1012,28 +1012,28 @@ model SoldProduct {
 }
 
 model Contract {
-  id             String            @id @default(uuid())
-  clientId       String
-  client         Client            @relation(fields: [clientId], references: [id])
-  organizationId String
-  organization   Organization      @relation(fields: [organizationId], references: [id])
-  soldProductId  String?
-  soldProduct    SoldProduct?      @relation(fields: [soldProductId], references: [id])
-  templateId     String?
-  template       ContractTemplate? @relation(fields: [templateId], references: [id])
-  status         String            @default("draft") // draft, sent, signed, active, expired
-  contractData   Json? // Variáveis usadas no contrato
-  aiComparison   String? // Comparação da IA se múltiplos modelos foram analisados
-  fileUrl        String?
-  invoices       Invoice[]
-  signatures     ContractSignature[]
+  id                  String               @id @default(uuid())
+  clientId            String
+  client              Client               @relation(fields: [clientId], references: [id])
+  organizationId      String
+  organization        Organization         @relation(fields: [organizationId], references: [id])
+  soldProductId       String?
+  soldProduct         SoldProduct?         @relation(fields: [soldProductId], references: [id])
+  templateId          String?
+  template            ContractTemplate?    @relation(fields: [templateId], references: [id])
+  status              String               @default("draft") // draft, sent, signed, active, expired
+  contractData        Json? // Variáveis usadas no contrato
+  aiComparison        String? // Comparação da IA se múltiplos modelos foram analisados
+  fileUrl             String?
+  invoices            Invoice[]
+  signatures          ContractSignature[]
   paymentTransactions PaymentTransaction[]
-  signedAt       DateTime?
-  expiresAt      DateTime?
-  createdAt      DateTime          @default(now())
-  updatedAt      DateTime          @updatedAt
-  title          String?
-  contractNumber String?           @unique
+  signedAt            DateTime?
+  expiresAt           DateTime?
+  createdAt           DateTime             @default(now())
+  updatedAt           DateTime             @updatedAt
+  title               String?
+  contractNumber      String?              @unique
 
   @@index([organizationId])
   @@index([clientId])
@@ -1119,7 +1119,7 @@ model Product {
   description String?
   sku         String? @unique
   category    String?
-  unitPrice   Float   @default(0)
+  unitPrice   Decimal @default(0) @db.Decimal(18, 2)
   unit        String?
   stock       Int     @default(0)
   minStock    Int     @default(0)
@@ -1137,7 +1137,7 @@ model Product {
 model Expense {
   id            String    @id @default(uuid())
   description   String
-  amount        Decimal @db.Decimal(18, 2)
+  amount        Decimal   @db.Decimal(18, 2)
   category      String
   date          DateTime  @default(now())
   status        String    @default("pendente")
@@ -1206,18 +1206,18 @@ model CalendarEvent {
 }
 
 model AdAccount {
-  id              String    @id @default(uuid())
-  accountId       String
-  accountName     String
-  platform        String
-  accountStatus   String    @default("active")
-  accessToken     String?
-  refreshToken    String?
-  tokenExpiry     DateTime?
-  accountCurrency String?
-  accountTimezone String?
-  dailySpendLimit Float     @default(0)
-  currentSpend    Float     @default(0)
+  id               String    @id @default(uuid())
+  accountId        String
+  accountName      String
+  platform         String
+  accountStatus    String    @default("active")
+  accessToken      String?
+  refreshToken     String?
+  tokenExpiry      DateTime?
+  accountCurrency  String?
+  accountTimezone  String?
+  dailySpendLimit  Decimal   @default(0) @db.Decimal(18, 2)
+  currentSpend     Decimal   @default(0) @db.Decimal(18, 2)
   lastSyncedAt     DateTime?
   syncStatus       String    @default("pending")
   syncError        String?   @db.Text
@@ -1228,16 +1228,16 @@ model AdAccount {
   clientId       String?
   client         Client?      @relation(fields: [clientId], references: [id], onDelete: SetNull)
 
-  campaigns CampaignAd[]
-  creatives AdCreative[]
-  audiences CustomAudience[]
+  campaigns       CampaignAd[]
+  creatives       AdCreative[]
+  audiences       CustomAudience[]
   metricSnapshots AdMetricSnapshot[]
-  insights AdsInsight[]
+  insights        AdsInsight[]
   recommendations AdsRecommendation[]
 
+  @@unique([organizationId, platform, accountId])
   @@index([organizationId])
   @@index([clientId])
-  @@unique([organizationId, platform, accountId])
 }
 
 model CampaignAd {
@@ -1251,8 +1251,8 @@ model CampaignAd {
   startDate       DateTime?
   endDate         DateTime?
   budgetType      String    @default("daily")
-  budgetAmount    Float     @default(0)
-  spendAmount     Float     @default(0)
+  budgetAmount    Decimal   @default(0) @db.Decimal(18, 2)
+  spendAmount     Decimal   @default(0) @db.Decimal(18, 2)
   locations       String?
   ageMin          Int       @default(18)
   ageMax          Int       @default(65)
@@ -1261,9 +1261,9 @@ model CampaignAd {
   pixelId         String?
   conversionEvent String?
 
-  adAccountId String
-  adAccount   AdAccount @relation(fields: [adAccountId], references: [id])
-  adSets      AdSet[]
+  adAccountId     String
+  adAccount       AdAccount          @relation(fields: [adAccountId], references: [id])
+  adSets          AdSet[]
   metricSnapshots AdMetricSnapshot[]
 
   createdAt DateTime @default(now())
@@ -1277,7 +1277,7 @@ model AdSet {
   status       String  @default("active")
   targeting    String?
   budgetType   String  @default("daily")
-  budgetAmount Float   @default(0)
+  budgetAmount Decimal @default(0) @db.Decimal(18, 2)
 
   campaignAdId String
   campaignAd   CampaignAd @relation(fields: [campaignAdId], references: [id])
@@ -1299,7 +1299,7 @@ model Ad {
   adSet       AdSet       @relation(fields: [adSetId], references: [id])
   impressions Int         @default(0)
   clicks      Int         @default(0)
-  spend       Float       @default(0)
+  spend       Decimal     @default(0) @db.Decimal(18, 2)
   conversions Int         @default(0)
 
   createdAt DateTime @default(now())
@@ -1348,34 +1348,34 @@ model CustomAudience {
 }
 
 model AdMetricSnapshot {
-  id             String   @id @default(uuid())
+  id             String       @id @default(uuid())
   organizationId String
   organization   Organization @relation(fields: [organizationId], references: [id], onDelete: Cascade)
   clientId       String?
-  client         Client?  @relation(fields: [clientId], references: [id], onDelete: SetNull)
+  client         Client?      @relation(fields: [clientId], references: [id], onDelete: SetNull)
   adAccountId    String
-  adAccount      AdAccount @relation(fields: [adAccountId], references: [id], onDelete: Cascade)
+  adAccount      AdAccount    @relation(fields: [adAccountId], references: [id], onDelete: Cascade)
   campaignAdId   String?
-  campaignAd     CampaignAd? @relation(fields: [campaignAdId], references: [id], onDelete: SetNull)
+  campaignAd     CampaignAd?  @relation(fields: [campaignAdId], references: [id], onDelete: SetNull)
 
-  platform       String
-  entityType     String   @default("account")
-  entityId       String
-  entityName     String?
-  date           DateTime
-  currency       String?
-  impressions    Int      @default(0)
-  clicks         Int      @default(0)
-  spend          Float    @default(0)
-  conversions    Float    @default(0)
-  conversionValue Float   @default(0)
-  leads          Int      @default(0)
-  ctr            Float    @default(0)
-  cpc            Float    @default(0)
-  cpm            Float    @default(0)
-  cpa            Float    @default(0)
-  roas           Float    @default(0)
-  raw            Json?
+  platform        String
+  entityType      String   @default("account")
+  entityId        String
+  entityName      String?
+  date            DateTime
+  currency        String?
+  impressions     Int      @default(0)
+  clicks          Int      @default(0)
+  spend           Decimal  @default(0) @db.Decimal(18, 2)
+  conversions     Decimal  @default(0) @db.Decimal(18, 6)
+  conversionValue Decimal  @default(0) @db.Decimal(18, 2)
+  leads           Int      @default(0)
+  ctr             Decimal  @default(0) @db.Decimal(18, 6)
+  cpc             Decimal  @default(0) @db.Decimal(18, 6)
+  cpm             Decimal  @default(0) @db.Decimal(18, 6)
+  cpa             Decimal  @default(0) @db.Decimal(18, 2)
+  roas            Decimal  @default(0) @db.Decimal(18, 6)
+  raw             Json?
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -1388,22 +1388,22 @@ model AdMetricSnapshot {
 }
 
 model AdsInsight {
-  id             String   @id @default(uuid())
+  id             String       @id @default(uuid())
   organizationId String
   organization   Organization @relation(fields: [organizationId], references: [id], onDelete: Cascade)
   clientId       String?
-  client         Client?  @relation(fields: [clientId], references: [id], onDelete: SetNull)
+  client         Client?      @relation(fields: [clientId], references: [id], onDelete: SetNull)
   adAccountId    String?
-  adAccount      AdAccount? @relation(fields: [adAccountId], references: [id], onDelete: SetNull)
+  adAccount      AdAccount?   @relation(fields: [adAccountId], references: [id], onDelete: SetNull)
 
-  agentId        String   @default("ads_performance")
-  agentName      String   @default("Agente Performance Ads")
-  periodStart    DateTime
-  periodEnd      DateTime
-  summary        String   @db.Text
-  severity       String   @default("medium")
-  status         String   @default("open")
-  metrics        Json?
+  agentId     String   @default("ads_performance")
+  agentName   String   @default("Agente Performance Ads")
+  periodStart DateTime
+  periodEnd   DateTime
+  summary     String   @db.Text
+  severity    String   @default("medium")
+  status      String   @default("open")
+  metrics     Json?
 
   recommendations AdsRecommendation[]
 
@@ -1417,24 +1417,24 @@ model AdsInsight {
 }
 
 model AdsRecommendation {
-  id             String   @id @default(uuid())
+  id             String       @id @default(uuid())
   organizationId String
   organization   Organization @relation(fields: [organizationId], references: [id], onDelete: Cascade)
   clientId       String?
-  client         Client?  @relation(fields: [clientId], references: [id], onDelete: SetNull)
+  client         Client?      @relation(fields: [clientId], references: [id], onDelete: SetNull)
   adAccountId    String?
-  adAccount      AdAccount? @relation(fields: [adAccountId], references: [id], onDelete: SetNull)
+  adAccount      AdAccount?   @relation(fields: [adAccountId], references: [id], onDelete: SetNull)
   insightId      String?
-  insight        AdsInsight? @relation(fields: [insightId], references: [id], onDelete: SetNull)
+  insight        AdsInsight?  @relation(fields: [insightId], references: [id], onDelete: SetNull)
 
-  title          String
-  description    String   @db.Text
-  actionType     String
-  impact         String   @default("medium")
-  effort         String   @default("medium")
-  status         String   @default("suggested")
-  estimatedLift  Float?
-  metadata       Json?
+  title         String
+  description   String   @db.Text
+  actionType    String
+  impact        String   @default("medium")
+  effort        String   @default("medium")
+  status        String   @default("suggested")
+  estimatedLift Decimal? @db.Decimal(18, 6)
+  metadata      Json?
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -1445,18 +1445,18 @@ model AdsRecommendation {
 }
 
 model ClientReportShare {
-  id             String   @id @default(uuid())
+  id             String       @id @default(uuid())
   organizationId String
   organization   Organization @relation(fields: [organizationId], references: [id], onDelete: Cascade)
   clientId       String
-  client         Client   @relation(fields: [clientId], references: [id], onDelete: Cascade)
+  client         Client       @relation(fields: [clientId], references: [id], onDelete: Cascade)
 
-  token          String   @unique
-  title          String?
-  isActive       Boolean  @default(true)
-  expiresAt      DateTime?
-  lastViewedAt   DateTime?
-  settings       Json?
+  token        String    @unique
+  title        String?
+  isActive     Boolean   @default(true)
+  expiresAt    DateTime?
+  lastViewedAt DateTime?
+  settings     Json?
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -1522,7 +1522,7 @@ model LandingPage {
   status          String       @default("draft")
   views           Int          @default(0)
   submissions     Int          @default(0)
-  conversionRate  Float        @default(0)
+  conversionRate  Decimal      @default(0) @db.Decimal(18, 6)
   domain          String?
   customDomain    String?
   metaTitle       String?
@@ -1532,12 +1532,12 @@ model LandingPage {
   organizationId  String
   organization    Organization @relation(fields: [organizationId], references: [id])
 
-  sections       Json?    // Structured section data for Puck Editor
-  wizardData     Json?    // Original wizard input (company, offer, audience data)
-  theme          Json?    // Theme config: colors, fonts, spacing
-  tracking       Json?    // Analytics: GA4, Meta Pixel, conversion events
-  formFields     Json?    // Custom form fields configuration
-  publishedAt    DateTime?
+  sections    Json? // Structured section data for Puck Editor
+  wizardData  Json? // Original wizard input (company, offer, audience data)
+  theme       Json? // Theme config: colors, fonts, spacing
+  tracking    Json? // Analytics: GA4, Meta Pixel, conversion events
+  formFields  Json? // Custom form fields configuration
+  publishedAt DateTime?
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -1578,34 +1578,34 @@ model LPForm {
 }
 
 model Quiz {
-  id             String           @id @default(uuid())
+  id             String       @id @default(uuid())
   name           String
-  slug           String           @unique
+  slug           String       @unique
   description    String?
-  status         String           @default("draft") // draft, pending_approval, approved, published
-  isActive       Boolean          @default(true)
+  status         String       @default("draft") // draft, pending_approval, approved, published
+  isActive       Boolean      @default(true)
   organizationId String
-  organization   Organization     @relation(fields: [organizationId], references: [id])
+  organization   Organization @relation(fields: [organizationId], references: [id])
 
-  quizType       String?          // qualification, assessment, recommendation, diagnostic
-  scoringType    String?          // points, segments, binary
-  passScore      Int?
-  aiGenerated    Boolean          @default(false)
-  aiPrompt       String?          @db.Text
+  quizType    String? // qualification, assessment, recommendation, diagnostic
+  scoringType String? // points, segments, binary
+  passScore   Int?
+  aiGenerated Boolean @default(false)
+  aiPrompt    String? @db.Text
 
-  tracking       Json?            // GA4, Meta Pixel config
-  leadCapture    Json?            // Contact fields to capture (name, email, phone)
-  scoringRules   Json?            // Per-answer score mapping
+  tracking     Json? // GA4, Meta Pixel config
+  leadCapture  Json? // Contact fields to capture (name, email, phone)
+  scoringRules Json? // Per-answer score mapping
 
   metaTitle       String?
   metaDescription String?
   metaImage       String?
 
-  questions      QuizQuestion[]
-  submissions    QuizSubmission[]
-  publishedAt    DateTime?
-  createdAt      DateTime         @default(now())
-  updatedAt      DateTime         @updatedAt
+  questions   QuizQuestion[]
+  submissions QuizSubmission[]
+  publishedAt DateTime?
+  createdAt   DateTime         @default(now())
+  updatedAt   DateTime         @updatedAt
 
   @@index([organizationId])
   @@index([slug])
@@ -1617,7 +1617,7 @@ model QuizQuestion {
   quiz      Quiz     @relation(fields: [quizId], references: [id], onDelete: Cascade)
   order     Int
   text      String
-  type      String   // text, multiple_choice, multiple_select, rating, email, phone
+  type      String // text, multiple_choice, multiple_select, rating, email, phone
   options   Json?
   points    Int      @default(1)
   required  Boolean  @default(true)
@@ -1627,11 +1627,11 @@ model QuizQuestion {
 }
 
 model QuizSubmission {
-  id           String   @id @default(uuid())
-  quizId       String
-  quiz         Quiz     @relation(fields: [quizId], references: [id], onDelete: Cascade)
-  leadId       String?
-  lead         Lead?    @relation(fields: [leadId], references: [id])
+  id     String  @id @default(uuid())
+  quizId String
+  quiz   Quiz    @relation(fields: [quizId], references: [id], onDelete: Cascade)
+  leadId String?
+  lead   Lead?   @relation(fields: [leadId], references: [id])
 
   contactName  String?
   contactEmail String?
@@ -1639,9 +1639,9 @@ model QuizSubmission {
   answers      Json
   score        Int?
   maxScore     Int?
-  percentage   Float?
+  percentage   Decimal? @db.Decimal(18, 6)
   qualified    Boolean?
-  metadata     Json?    // UTM params, IP, userAgent
+  metadata     Json? // UTM params, IP, userAgent
   createdAt    DateTime @default(now())
 
   @@index([quizId])
@@ -1667,7 +1667,7 @@ model Automation {
 model GlobalPlan {
   id        String   @id @default(uuid())
   name      String
-  price     Decimal @db.Decimal(18, 2)
+  price     Decimal  @db.Decimal(18, 2)
   interval  String   @default("monthly") // monthly, yearly
   features  Json // Array of string features
   isActive  Boolean  @default(true)
@@ -1737,8 +1737,8 @@ model GeneratedPrompt {
   status           String       @default("completed")
   modelProvider    String?
   modelName        String?
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
+  createdAt        DateTime     @default(now())
+  updatedAt        DateTime     @updatedAt
 
   @@index([organizationId])
   @@index([clientId])
@@ -1763,47 +1763,47 @@ model LeadCaptureSource {
   organization   Organization @relation(fields: [organizationId], references: [id])
   userId         String?
   user           User?        @relation(fields: [userId], references: [id])
-  
+
   provider       String
   query          String
   niche          String?
   keyword        String?
   city           String?
   state          String?
-  country        String       @default("Brasil")
+  country        String  @default("Brasil")
   neighborhood   String?
-  requestedLimit Int          @default(100)
-  totalFound     Int          @default(0)
-  totalImported  Int          @default(0)
-  status         String       @default("processing") // processing, completed, failed
+  requestedLimit Int     @default(100)
+  totalFound     Int     @default(0)
+  totalImported  Int     @default(0)
+  status         String  @default("processing") // processing, completed, failed
   errorMessage   String?
-  
-  rawRequest     Json?
-  rawResponse    Json?
-  
-  capturedLeads  CapturedLead[]
-  usageLogs      LeadCaptureUsageLog[]
 
-  createdAt      DateTime     @default(now())
-  updatedAt      DateTime     @updatedAt
+  rawRequest  Json?
+  rawResponse Json?
+
+  capturedLeads CapturedLead[]
+  usageLogs     LeadCaptureUsageLog[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 
   @@index([organizationId])
 }
 
 model CapturedLead {
-  id             String            @id @default(uuid())
+  id             String             @id @default(uuid())
   organizationId String
-  organization   Organization      @relation(fields: [organizationId], references: [id])
+  organization   Organization       @relation(fields: [organizationId], references: [id])
   sourceId       String?
   source         LeadCaptureSource? @relation(fields: [sourceId], references: [id])
-  
-  provider       String
-  externalId     String
-  placeId        String?
 
-  businessName   String
-  category       String?
-  businessType   String?
+  provider   String
+  externalId String
+  placeId    String?
+
+  businessName String
+  category     String?
+  businessType String?
 
   phone           String?
   phoneNormalized String?
@@ -1831,20 +1831,20 @@ model CapturedLead {
   googleMapsUrl String?
   searchUrl     String?
 
-  hasPhone    Boolean @default(false)
-  hasWebsite  Boolean @default(false)
-  hasEmail    Boolean @default(false)
-  hasSocial   Boolean @default(false)
+  hasPhone   Boolean @default(false)
+  hasWebsite Boolean @default(false)
+  hasEmail   Boolean @default(false)
+  hasSocial  Boolean @default(false)
 
   // AI & Scoring
-  scoreOpportunity   Int     @default(0)
-  opportunityLevel   String? // Baixa, Média, Alta, Prioridade
-  aiDiagnosis        String? @db.Text
-  aiWeaknesses       Json?
-  aiOpportunities    Json?
-  coldCallScript     String? @db.Text
-  whatsappMessage    String? @db.Text
-  suggestedOffer     String? @db.Text
+  scoreOpportunity Int     @default(0)
+  opportunityLevel String? // Baixa, Média, Alta, Prioridade
+  aiDiagnosis      String? @db.Text
+  aiWeaknesses     Json?
+  aiOpportunities  Json?
+  coldCallScript   String? @db.Text
+  whatsappMessage  String? @db.Text
+  suggestedOffer   String? @db.Text
 
   // CRM Sync
   crmStatus     String  @default("novo")
@@ -1852,25 +1852,25 @@ model CapturedLead {
   crmLeadId     String?
   responsibleId String?
 
-  notes         String? @db.Text
-  cnpj          String?
-  cnpjStatus    String  @default("unverified") // unverified, validated, rejected, needs_review
-  cnpjMatchScore Int?
-  cnpjMatchReason String? @db.Text
-  matchedLegalName String?
-  matchedTradeName String?
-  matchedCity String?
-  matchedState String?
-  matchedAddress String?
-  cnpjSourceUrl String?
-  owners         String? @db.Text
-  managementTeam String? @db.Text
-  rawData        Json?
+  notes              String?                      @db.Text
+  cnpj               String?
+  cnpjStatus         String                       @default("unverified") // unverified, validated, rejected, needs_review
+  cnpjMatchScore     Int?
+  cnpjMatchReason    String?                      @db.Text
+  matchedLegalName   String?
+  matchedTradeName   String?
+  matchedCity        String?
+  matchedState       String?
+  matchedAddress     String?
+  cnpjSourceUrl      String?
+  owners             String?                      @db.Text
+  managementTeam     String?                      @db.Text
+  rawData            Json?
   identityCandidates CompanyIdentityCandidate[]
   identityAuditLogs  CompanyIdentityAuditLog[]
-  prospectingRuns ProspectingRun[]
-  decisionMakers ProspectingDecisionMaker[]
-  dispatchAttempts ProspectingDispatchAttempt[]
+  prospectingRuns    ProspectingRun[]
+  decisionMakers     ProspectingDecisionMaker[]
+  dispatchAttempts   ProspectingDispatchAttempt[]
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -1895,16 +1895,16 @@ model CompanyIdentityCandidate {
   address        String?
   registryStatus String?
 
-  source         String
-  sourceUrl      String?
-  evidence       Json?
-  rawData        Json?
+  source    String
+  sourceUrl String?
+  evidence  Json?
+  rawData   Json?
 
-  score          Int          @default(0)
-  status         String       @default("candidate") // candidate, accepted, rejected
-  rejectionReason String?     @db.Text
+  score           Int     @default(0)
+  status          String  @default("candidate") // candidate, accepted, rejected
+  rejectionReason String? @db.Text
 
-  createdAt      DateTime     @default(now())
+  createdAt DateTime @default(now())
 
   @@index([organizationId])
   @@index([capturedLeadId])
@@ -1919,15 +1919,15 @@ model CompanyIdentityAuditLog {
   capturedLeadId String
   capturedLead   CapturedLead @relation(fields: [capturedLeadId], references: [id], onDelete: Cascade)
 
-  action         String
-  decision       String
-  selectedCnpj   String?
-  score          Int?
-  reason         String       @db.Text
-  input          Json?
-  candidates     Json?
+  action       String
+  decision     String
+  selectedCnpj String?
+  score        Int?
+  reason       String  @db.Text
+  input        Json?
+  candidates   Json?
 
-  createdAt      DateTime     @default(now())
+  createdAt DateTime @default(now())
 
   @@index([organizationId])
   @@index([capturedLeadId])
@@ -1938,107 +1938,107 @@ model ProspectingFunnel {
   organizationId String
   organization   Organization @relation(fields: [organizationId], references: [id])
 
-  name           String
-  description    String?      @db.Text
-  channel        String       @default("WHATSAPP")
-  status         String       @default("active") // active, paused, archived
-  objective      String?      @db.Text
+  name               String
+  description        String? @db.Text
+  channel            String  @default("WHATSAPP")
+  status             String  @default("active") // active, paused, archived
+  objective          String? @db.Text
   qualificationRules Json?
   handoffRules       Json?
   safetyRules        Json?
-  isDefault      Boolean      @default(false)
+  isDefault          Boolean @default(false)
 
-  stages         ProspectingFunnelStage[]
-  runs           ProspectingRun[]
+  stages ProspectingFunnelStage[]
+  runs   ProspectingRun[]
 
-  createdAt      DateTime     @default(now())
-  updatedAt      DateTime     @updatedAt
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 
-  @@index([organizationId])
   @@unique([organizationId, name])
+  @@index([organizationId])
 }
 
 model ProspectingFunnelStage {
-  id             String             @id @default(uuid())
-  funnelId       String
-  funnel         ProspectingFunnel  @relation(fields: [funnelId], references: [id], onDelete: Cascade)
+  id       String            @id @default(uuid())
+  funnelId String
+  funnel   ProspectingFunnel @relation(fields: [funnelId], references: [id], onDelete: Cascade)
 
-  name           String
-  order          Int                @default(0)
-  agentKey       String
-  agentName      String
-  goal           String             @db.Text
-  prompt         String             @db.Text
+  name            String
+  order           Int     @default(0)
+  agentKey        String
+  agentName       String
+  goal            String  @db.Text
+  prompt          String  @db.Text
   successCriteria Json?
-  nextAction     String?
-  maxMessages    Int                @default(3)
-  isHumanHandoff Boolean            @default(false)
+  nextAction      String?
+  maxMessages     Int     @default(3)
+  isHumanHandoff  Boolean @default(false)
 
-  runs           ProspectingRun[]
+  runs ProspectingRun[]
 
-  createdAt      DateTime           @default(now())
-  updatedAt      DateTime           @updatedAt
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 
   @@index([funnelId])
 }
 
 model ProspectingRun {
-  id             String                   @id @default(uuid())
+  id             String       @id @default(uuid())
   organizationId String
-  organization   Organization             @relation(fields: [organizationId], references: [id])
+  organization   Organization @relation(fields: [organizationId], references: [id])
 
-  funnelId       String
-  funnel         ProspectingFunnel        @relation(fields: [funnelId], references: [id])
-  stageId        String?
-  stage          ProspectingFunnelStage?  @relation(fields: [stageId], references: [id])
+  funnelId String
+  funnel   ProspectingFunnel       @relation(fields: [funnelId], references: [id])
+  stageId  String?
+  stage    ProspectingFunnelStage? @relation(fields: [stageId], references: [id])
 
   capturedLeadId String?
-  capturedLead   CapturedLead?            @relation(fields: [capturedLeadId], references: [id])
+  capturedLead   CapturedLead? @relation(fields: [capturedLeadId], references: [id])
   crmLeadId      String?
 
-  status         String                   @default("queued") // queued, active, qualified, nurturing, human_handoff, lost, stopped
-  channel        String                   @default("WHATSAPP")
-  leadName       String
-  leadPhone      String?
-  leadSnapshot   Json?
-  score          Int                      @default(0)
-  qualification  Json?
-  firstMessage   String?                  @db.Text
-  lastAiSummary  String?                  @db.Text
-  nextAction     String?
-  lastContactAt  DateTime?
-  qualifiedAt    DateTime?
-  handedOffAt    DateTime?
+  status        String    @default("queued") // queued, active, qualified, nurturing, human_handoff, lost, stopped
+  channel       String    @default("WHATSAPP")
+  leadName      String
+  leadPhone     String?
+  leadSnapshot  Json?
+  score         Int       @default(0)
+  qualification Json?
+  firstMessage  String?   @db.Text
+  lastAiSummary String?   @db.Text
+  nextAction    String?
+  lastContactAt DateTime?
+  qualifiedAt   DateTime?
+  handedOffAt   DateTime?
 
-  createdAt      DateTime                 @default(now())
-  updatedAt      DateTime                 @updatedAt
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 
   dispatchAttempts ProspectingDispatchAttempt[]
 
+  @@unique([funnelId, capturedLeadId])
   @@index([organizationId])
   @@index([funnelId])
   @@index([stageId])
   @@index([capturedLeadId])
-  @@unique([funnelId, capturedLeadId])
 }
 
 model LeadCaptureUsageLog {
-  id             String            @id @default(uuid())
+  id             String             @id @default(uuid())
   organizationId String
-  organization   Organization      @relation(fields: [organizationId], references: [id])
+  organization   Organization       @relation(fields: [organizationId], references: [id])
   userId         String?
-  user           User?             @relation(fields: [userId], references: [id])
+  user           User?              @relation(fields: [userId], references: [id])
   sourceId       String?
   source         LeadCaptureSource? @relation(fields: [sourceId], references: [id])
 
-  provider      String
-  query         String?
+  provider       String
+  query          String?
   requestedLimit Int?
   returnedCount  Int?
   importedCount  Int?
-  estimatedCost  Float? @default(0)
-  status        String @default("success")
-  errorMessage  String?
+  estimatedCost  Decimal? @default(0) @db.Decimal(18, 6)
+  status         String   @default("success")
+  errorMessage   String?
 
   createdAt DateTime @default(now())
 
@@ -2052,57 +2052,57 @@ model Pipeline {
   type           String       @default("SALES") // SALES, SUCCESS, RETENTION
   organizationId String
   organization   Organization @relation(fields: [organizationId], references: [id])
-  
-  stages         PipelineStage[]
-  opportunities  Opportunity[]
-  leads          Lead[]
-  
-  isActive       Boolean      @default(true)
-  createdAt      DateTime     @default(now())
-  updatedAt      DateTime     @updatedAt
+
+  stages        PipelineStage[]
+  opportunities Opportunity[]
+  leads         Lead[]
+
+  isActive  Boolean  @default(true)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 
   @@index([organizationId])
 }
 
 model PipelineStage {
-  id             String       @id @default(uuid())
-  name           String
-  order          Int          @default(0)
-  color          String?
-  description    String?
-  
-  pipelineId     String
-  pipeline       Pipeline     @relation(fields: [pipelineId], references: [id], onDelete: Cascade)
-  
-  opportunities  Opportunity[]
-  leads          Lead[]
-  
+  id          String  @id @default(uuid())
+  name        String
+  order       Int     @default(0)
+  color       String?
+  description String?
+
+  pipelineId String
+  pipeline   Pipeline @relation(fields: [pipelineId], references: [id], onDelete: Cascade)
+
+  opportunities Opportunity[]
+  leads         Lead[]
+
   // Regras de Negócio
-  sla            Int?         // SLA em horas
-  probability    Int?         @default(0)
-  isDefault      Boolean      @default(false)
-  requiredFields Json?        // Array de nomes de campos obrigatórios
-  checklist      Json?        // Itens que o vendedor deve marcar
-  
+  sla            Int? // SLA em horas
+  probability    Int?    @default(0)
+  isDefault      Boolean @default(false)
+  requiredFields Json? // Array de nomes de campos obrigatórios
+  checklist      Json? // Itens que o vendedor deve marcar
+
   // Automação (Simplificada aqui, integrada com o módulo de automação)
   automationConfig Json?
-  
-  createdAt      DateTime     @default(now())
-  updatedAt      DateTime     @updatedAt
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 
   @@index([pipelineId])
 }
 
 model Agenda {
-  id             String         @id @default(uuid())
+  id             String          @id @default(uuid())
   name           String
   color          String?
-  type           String         @default("GERAL") // SDR, BDR, CLOSER, GERAL
+  type           String          @default("GERAL") // SDR, BDR, CLOSER, GERAL
   organizationId String
-  organization   Organization   @relation(fields: [organizationId], references: [id])
+  organization   Organization    @relation(fields: [organizationId], references: [id])
   events         CalendarEvent[]
-  createdAt      DateTime       @default(now())
-  updatedAt      DateTime       @updatedAt
+  createdAt      DateTime        @default(now())
+  updatedAt      DateTime        @updatedAt
 
   @@index([organizationId])
 }
@@ -2110,22 +2110,22 @@ model Agenda {
 // ==================== NOVOS MODELOS (Automação de Agência) ====================
 
 model ServiceCatalog {
-  id             String       @id @default(uuid())
-  name           String
-  description    String?
-  category       String?
-  type           String       @default("service")
-  setupValue     Float        @default(0)
-  monthlyValue   Float        @default(0)
-  commissionValue Float       @default(0)
-  estimatedHours Int?
-  deliveryDays   Int?
-  requiresApproval Boolean    @default(false)
-  isActive       Boolean      @default(true)
-  organizationId String
-  organization   Organization @relation(fields: [organizationId], references: [id])
-  createdAt      DateTime     @default(now())
-  updatedAt      DateTime     @updatedAt
+  id               String       @id @default(uuid())
+  name             String
+  description      String?
+  category         String?
+  type             String       @default("service")
+  setupValue       Decimal      @default(0) @db.Decimal(18, 2)
+  monthlyValue     Decimal      @default(0) @db.Decimal(18, 2)
+  commissionValue  Decimal      @default(0) @db.Decimal(18, 2)
+  estimatedHours   Int?
+  deliveryDays     Int?
+  requiresApproval Boolean      @default(false)
+  isActive         Boolean      @default(true)
+  organizationId   String
+  organization     Organization @relation(fields: [organizationId], references: [id])
+  createdAt        DateTime     @default(now())
+  updatedAt        DateTime     @updatedAt
 
   @@index([organizationId])
 }
@@ -2160,16 +2160,16 @@ model Deliverable {
 }
 
 model Approval {
-  id             String       @id @default(uuid())
-  status         String       @default("pending")
-  comment        String?
+  id               String    @id @default(uuid())
+  status           String    @default("pending")
+  comment          String?
   requestedChanges String?
-  requestedToId  String?
-  approvedById   String?
-  approvedAt     DateTime?
-  deliverableId  String
-  createdAt      DateTime     @default(now())
-  updatedAt      DateTime     @updatedAt
+  requestedToId    String?
+  approvedById     String?
+  approvedAt       DateTime?
+  deliverableId    String
+  createdAt        DateTime  @default(now())
+  updatedAt        DateTime  @updatedAt
 
   @@index([deliverableId])
   @@index([status])
@@ -2181,8 +2181,8 @@ model TimeEntry {
   date           DateTime     @default(now())
   duration       Int
   billable       Boolean      @default(true)
-  hourlyRate     Float        @default(0)
-  totalValue     Float        @default(0)
+  hourlyRate     Decimal      @default(0) @db.Decimal(18, 2)
+  totalValue     Decimal      @default(0) @db.Decimal(18, 2)
   approvalStatus String       @default("pending")
   userId         String
   projectId      String?
@@ -2227,7 +2227,7 @@ model ClientHealthScore {
   lastContactAt  DateTime?
   paymentsInDay  Boolean      @default(true)
   npsResponse    Int?
-  engagementRate Float        @default(0)
+  engagementRate Decimal      @default(0) @db.Decimal(18, 6)
   projectStatus  String       @default("good")
   riskLevel      String       @default("low")
   flags          String?
@@ -2250,63 +2250,63 @@ model Inbox {
   name           String
   organizationId String
   organization   Organization @relation(fields: [organizationId], references: [id])
-  
-  channels       Channel[]
-  conversations  Conversation[]
-  sla            InboxSla?
-  
-  createdAt      DateTime     @default(now())
-  updatedAt      DateTime     @updatedAt
+
+  channels      Channel[]
+  conversations Conversation[]
+  sla           InboxSla?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 
   @@index([organizationId])
 }
 
 model Channel {
-  id             String       @id @default(uuid())
-  type           String       // WHATSAPP, INSTAGRAM, MESSENGER, WEBCHAT, EMAIL
-  provider       String       // WOOAPI, META, SMTP
-  identifier     String       // Número de telefone, email, etc.
-  config         Json?
-  
-  inboxId        String
-  inbox          Inbox        @relation(fields: [inboxId], references: [id])
-  
-  isActive       Boolean      @default(true)
-  createdAt      DateTime     @default(now())
-  updatedAt      DateTime     @updatedAt
+  id         String @id @default(uuid())
+  type       String // WHATSAPP, INSTAGRAM, MESSENGER, WEBCHAT, EMAIL
+  provider   String // WOOAPI, META, SMTP
+  identifier String // Número de telefone, email, etc.
+  config     Json?
 
-  conversations  Conversation[]
-  dispatchAttempts ProspectingDispatchAttempt[]
+  inboxId String
+  inbox   Inbox  @relation(fields: [inboxId], references: [id])
+
+  isActive  Boolean  @default(true)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  conversations             Conversation[]
+  dispatchAttempts          ProspectingDispatchAttempt[]
   whatsappContactIdentities WhatsappContactIdentity[]
   whatsappGroupParticipants WhatsappGroupParticipant[]
-  whatsappConnectionLogs WhatsappConnectionLog[]
+  whatsappConnectionLogs    WhatsappConnectionLog[]
 }
 
 model Conversation {
-  id             String       @id @default(uuid())
-  subject        String?
-  status         String       @default("open") // open, pending, closed, snoozed
-  priority       String       @default("medium")
-  
-  inboxId        String
-  inbox          Inbox        @relation(fields: [inboxId], references: [id])
-  
-  channelId      String
-  channel        Channel      @relation(fields: [channelId], references: [id])
-  
-  contactId      String?      // Relacionado ao Lead ou Cliente (será unificado no futuro se necessário)
-  leadId         String?
-  lead           Lead?        @relation(fields: [leadId], references: [id])
-  
-  assignedToId   String?
-  assignedTo     User?        @relation(fields: [assignedToId], references: [id])
-  
-  messages       Message[]
+  id       String  @id @default(uuid())
+  subject  String?
+  status   String  @default("open") // open, pending, closed, snoozed
+  priority String  @default("medium")
+
+  inboxId String
+  inbox   Inbox  @relation(fields: [inboxId], references: [id])
+
+  channelId String
+  channel   Channel @relation(fields: [channelId], references: [id])
+
+  contactId String? // Relacionado ao Lead ou Cliente (será unificado no futuro se necessário)
+  leadId    String?
+  lead      Lead?   @relation(fields: [leadId], references: [id])
+
+  assignedToId String?
+  assignedTo   User?   @relation(fields: [assignedToId], references: [id])
+
+  messages                Message[]
   whatsappContactIdentity WhatsappContactIdentity?
-  groupParticipants WhatsappGroupParticipant[]
-  lastMessageAt  DateTime     @default(now())
-  createdAt      DateTime     @default(now())
-  updatedAt      DateTime     @updatedAt
+  groupParticipants       WhatsappGroupParticipant[]
+  lastMessageAt           DateTime                   @default(now())
+  createdAt               DateTime                   @default(now())
+  updatedAt               DateTime                   @updatedAt
 
   @@index([inboxId])
   @@index([channelId])
@@ -2318,19 +2318,19 @@ model Message {
   id             String       @id @default(uuid())
   conversationId String
   conversation   Conversation @relation(fields: [conversationId], references: [id])
-  
-  senderId       String?      // Se for usuário interno
-  senderType     String       // USER, CONTACT, SYSTEM, AI
-  
-  content        String?      @db.Text
-  type           String       @default("text") // text, image, audio, video, document, location
-  fileUrl        String?
-  
-  metadata       Json?
-  isPrivate      Boolean      @default(false) // Notas internas
-  mentions       WhatsappMention[]
-  
-  createdAt      DateTime     @default(now())
+
+  senderId   String? // Se for usuário interno
+  senderType String // USER, CONTACT, SYSTEM, AI
+
+  content String? @db.Text
+  type    String  @default("text") // text, image, audio, video, document, location
+  fileUrl String?
+
+  metadata  Json?
+  isPrivate Boolean           @default(false) // Notas internas
+  mentions  WhatsappMention[]
+
+  createdAt DateTime @default(now())
 
   @@index([conversationId])
 }
@@ -2342,18 +2342,18 @@ model ProspectingDecisionMaker {
   capturedLeadId String
   capturedLead   CapturedLead @relation(fields: [capturedLeadId], references: [id], onDelete: Cascade)
 
-  name           String
-  firstName      String?
-  role           String?
-  source         String       @default("manual")
-  sourceUrl      String?
-  priority       Int          @default(99)
-  confidenceScore Int         @default(0)
-  evidence       Json?
-  isSelected     Boolean      @default(false)
+  name            String
+  firstName       String?
+  role            String?
+  source          String  @default("manual")
+  sourceUrl       String?
+  priority        Int     @default(99)
+  confidenceScore Int     @default(0)
+  evidence        Json?
+  isSelected      Boolean @default(false)
 
-  createdAt      DateTime     @default(now())
-  updatedAt      DateTime     @updatedAt
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 
   @@index([organizationId])
   @@index([capturedLeadId])
@@ -2361,27 +2361,27 @@ model ProspectingDecisionMaker {
 }
 
 model ProspectingDispatchAttempt {
-  id             String       @id @default(uuid())
+  id             String         @id @default(uuid())
   organizationId String
-  organization   Organization @relation(fields: [organizationId], references: [id])
+  organization   Organization   @relation(fields: [organizationId], references: [id])
   runId          String
   run            ProspectingRun @relation(fields: [runId], references: [id], onDelete: Cascade)
   capturedLeadId String?
-  capturedLead   CapturedLead? @relation(fields: [capturedLeadId], references: [id])
+  capturedLead   CapturedLead?  @relation(fields: [capturedLeadId], references: [id])
   channelId      String?
-  channel        Channel?     @relation(fields: [channelId], references: [id])
+  channel        Channel?       @relation(fields: [channelId], references: [id])
   consultantId   String?
 
-  phone          String?
-  displayPhone   String?
-  message        String       @db.Text
-  status         String       @default("queued")
-  reason         String?      @db.Text
+  phone           String?
+  displayPhone    String?
+  message         String    @db.Text
+  status          String    @default("queued")
+  reason          String?   @db.Text
   bridgeMessageId String?
-  metadata       Json?
-  sentAt         DateTime?
+  metadata        Json?
+  sentAt          DateTime?
 
-  createdAt      DateTime     @default(now())
+  createdAt DateTime @default(now())
 
   @@index([organizationId])
   @@index([runId])
@@ -2398,41 +2398,41 @@ model ProspectingOptOutContact {
   phone          String
   displayPhone   String?
   reason         String?
-  source         String       @default("whatsapp")
+  source         String  @default("whatsapp")
   conversationId String?
   messageId      String?
   metadata       Json?
 
-  createdAt      DateTime     @default(now())
+  createdAt DateTime @default(now())
 
   @@unique([organizationId, phone])
   @@index([organizationId])
 }
 
 model WhatsappContactIdentity {
-  id             String       @id @default(uuid())
+  id             String        @id @default(uuid())
   organizationId String
-  organization   Organization @relation(fields: [organizationId], references: [id])
+  organization   Organization  @relation(fields: [organizationId], references: [id])
   channelId      String?
-  channel        Channel?     @relation(fields: [channelId], references: [id])
-  conversationId String?      @unique
+  channel        Channel?      @relation(fields: [channelId], references: [id])
+  conversationId String?       @unique
   conversation   Conversation? @relation(fields: [conversationId], references: [id])
 
-  jid            String
-  rawJid         String?
-  phone          String?
-  displayPhone   String?
-  savedName      String?
-  pushName       String?
-  leadName       String?
-  displayName    String?
+  jid               String
+  rawJid            String?
+  phone             String?
+  displayPhone      String?
+  savedName         String?
+  pushName          String?
+  leadName          String?
+  displayName       String?
   profilePictureUrl String?
-  isGroup        Boolean      @default(false)
-  metadata       Json?
-  lastSeenAt     DateTime?
+  isGroup           Boolean   @default(false)
+  metadata          Json?
+  lastSeenAt        DateTime?
 
-  createdAt      DateTime     @default(now())
-  updatedAt      DateTime     @updatedAt
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 
   @@unique([organizationId, jid])
   @@index([organizationId])
@@ -2448,22 +2448,22 @@ model WhatsappGroupParticipant {
   conversationId String
   conversation   Conversation @relation(fields: [conversationId], references: [id], onDelete: Cascade)
 
-  groupJid       String
-  jid            String
-  rawJid         String?
-  phone          String?
-  displayPhone   String?
-  name           String?
-  pushName       String?
-  displayName    String?
-  pictureUrl     String?
-  isAdmin        Boolean      @default(false)
-  isSuperAdmin   Boolean      @default(false)
-  metadata       Json?
-  lastSeenAt     DateTime?
+  groupJid     String
+  jid          String
+  rawJid       String?
+  phone        String?
+  displayPhone String?
+  name         String?
+  pushName     String?
+  displayName  String?
+  pictureUrl   String?
+  isAdmin      Boolean   @default(false)
+  isSuperAdmin Boolean   @default(false)
+  metadata     Json?
+  lastSeenAt   DateTime?
 
-  createdAt      DateTime     @default(now())
-  updatedAt      DateTime     @updatedAt
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 
   @@unique([organizationId, groupJid, jid])
   @@index([organizationId])
@@ -2478,15 +2478,15 @@ model WhatsappMention {
   messageId      String
   message        Message      @relation(fields: [messageId], references: [id], onDelete: Cascade)
 
-  mentionedJid   String
-  rawJid         String?
-  phone          String?
-  displayPhone   String?
-  displayName    String?
-  label          String?
-  metadata       Json?
+  mentionedJid String
+  rawJid       String?
+  phone        String?
+  displayPhone String?
+  displayName  String?
+  label        String?
+  metadata     Json?
 
-  createdAt      DateTime     @default(now())
+  createdAt DateTime @default(now())
 
   @@index([organizationId])
   @@index([messageId])
@@ -2500,12 +2500,12 @@ model WhatsappConnectionLog {
   channelId      String?
   channel        Channel?     @relation(fields: [channelId], references: [id])
 
-  event          String
-  status         String?
-  message        String?      @db.Text
-  metadata       Json?
+  event    String
+  status   String?
+  message  String? @db.Text
+  metadata Json?
 
-  createdAt      DateTime     @default(now())
+  createdAt DateTime @default(now())
 
   @@index([organizationId])
   @@index([channelId])
@@ -2513,18 +2513,18 @@ model WhatsappConnectionLog {
 }
 
 model WhatsappWebhookLog {
-  id             String       @id @default(uuid())
+  id             String        @id @default(uuid())
   organizationId String?
   organization   Organization? @relation(fields: [organizationId], references: [id])
   channelId      String?
   eventType      String
-  direction      String       @default("inbound")
-  status         String       @default("received")
+  direction      String        @default("inbound")
+  status         String        @default("received")
   payload        Json?
   result         Json?
-  errorMessage   String?      @db.Text
+  errorMessage   String?       @db.Text
 
-  createdAt      DateTime     @default(now())
+  createdAt DateTime @default(now())
 
   @@index([organizationId])
   @@index([channelId])
@@ -2533,27 +2533,27 @@ model WhatsappWebhookLog {
 }
 
 model WhatsAppCall {
-  id             String    @id @default(uuid())
+  id             String @id @default(uuid())
   organizationId String
 
-  channelId      String?
+  channelId String?
 
   callBridgeId   String?
   conversationId String?
   leadId         String?
 
-  direction      String    // outgoing, incoming
-  state          String    // ringing, connected, ended, failed, missed
-  toJid          String?
-  fromJid        String?
-  duration       Int       @default(0)
-  errorMessage   String?   @db.Text
-  metadata       Json?
+  direction    String // outgoing, incoming
+  state        String // ringing, connected, ended, failed, missed
+  toJid        String?
+  fromJid      String?
+  duration     Int     @default(0)
+  errorMessage String? @db.Text
+  metadata     Json?
 
-  startedAt      DateTime?
-  endedAt        DateTime?
-  createdAt      DateTime  @default(now())
-  updatedAt      DateTime  @updatedAt
+  startedAt DateTime?
+  endedAt   DateTime?
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
 
   @@index([organizationId])
   @@index([channelId])
@@ -2565,31 +2565,31 @@ model WhatsAppCall {
 // ==================== SEGURANÇA E AUTH ====================
 
 model RefreshToken {
-  id        String   @id @default(uuid())
-  token     String   @unique
+  id        String    @id @default(uuid())
+  token     String    @unique
   userId    String
-  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  user      User      @relation(fields: [userId], references: [id], onDelete: Cascade)
   expiresAt DateTime
   revokedAt DateTime?
   ip        String?
   userAgent String?
-  createdAt DateTime @default(now())
+  createdAt DateTime  @default(now())
 
   @@index([userId])
   @@index([token])
 }
 
 model AccountVerification {
-  id         String   @id @default(uuid())
+  id         String    @id @default(uuid())
   userId     String
-  user       User     @relation(fields: [userId], references: [id], onDelete: Cascade)
-  channel    String   // EMAIL | PHONE
+  user       User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  channel    String // EMAIL | PHONE
   target     String
   codeHash   String
-  attempts   Int      @default(0)
+  attempts   Int       @default(0)
   expiresAt  DateTime
   consumedAt DateTime?
-  createdAt  DateTime @default(now())
+  createdAt  DateTime  @default(now())
 
   @@index([userId, channel])
   @@index([expiresAt])
@@ -2599,19 +2599,19 @@ model AccountVerification {
 // ==================== TIMELINE E HISTÓRICO ====================
 
 model Activity {
-  id             String       @id @default(uuid())
+  id             String @id @default(uuid())
   organizationId String
-  type           String       // CALL, EMAIL, WHATSAPP, MEETING, NOTE, STAGE_CHANGE, TASK, SYSTEM
+  type           String // CALL, EMAIL, WHATSAPP, MEETING, NOTE, STAGE_CHANGE, TASK, SYSTEM
   description    String
   metadata       Json?
-  
-  userId         String?
-  contactId      String?      // Lead ID
-  companyId      String?      // Client ID
-  dealId         String?      // Opportunity ID
-  taskId         String?
-  
-  createdAt      DateTime     @default(now())
+
+  userId    String?
+  contactId String? // Lead ID
+  companyId String? // Client ID
+  dealId    String? // Opportunity ID
+  taskId    String?
+
+  createdAt DateTime @default(now())
 
   @@index([organizationId])
   @@index([contactId])
@@ -2621,34 +2621,34 @@ model Activity {
 }
 
 model DealStageHistory {
-  id             String       @id @default(uuid())
-  dealId         String
-  fromStageId    String?
-  toStageId      String
-  fromStageName  String?
-  toStageName    String
-  movedById      String?
-  duration       Int?         // Tempo em minutos na etapa anterior
-  metadata       Json?
-  createdAt      DateTime     @default(now())
+  id            String   @id @default(uuid())
+  dealId        String
+  fromStageId   String?
+  toStageId     String
+  fromStageName String?
+  toStageName   String
+  movedById     String?
+  duration      Int? // Tempo em minutos na etapa anterior
+  metadata      Json?
+  createdAt     DateTime @default(now())
 
   @@index([dealId])
   @@index([toStageId])
 }
 
 model Note {
-  id             String       @id @default(uuid())
+  id             String  @id @default(uuid())
   organizationId String
-  content        String       @db.Text
-  isPinned       Boolean      @default(false)
-  
-  userId         String?
-  contactId      String?
-  companyId      String?
-  dealId         String?
-  
-  createdAt      DateTime     @default(now())
-  updatedAt      DateTime     @updatedAt
+  content        String  @db.Text
+  isPinned       Boolean @default(false)
+
+  userId    String?
+  contactId String?
+  companyId String?
+  dealId    String?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 
   @@index([organizationId])
   @@index([contactId])
@@ -2659,26 +2659,26 @@ model Note {
 // ==================== TAGS ====================
 
 model Tag {
-  id             String       @id @default(uuid())
+  id             String   @id @default(uuid())
   name           String
   color          String?
   organizationId String
-  createdAt      DateTime     @default(now())
+  createdAt      DateTime @default(now())
 
-  taggables      Taggable[]
+  taggables Taggable[]
 
   @@unique([organizationId, name])
   @@index([organizationId])
 }
 
 model Taggable {
-  id             String       @id @default(uuid())
-  tagId          String
-  tag            Tag          @relation(fields: [tagId], references: [id], onDelete: Cascade)
-  taggableId     String
-  taggableType   String       // CONTACT, COMPANY, DEAL, CONVERSATION
-  
-  createdAt      DateTime     @default(now())
+  id           String @id @default(uuid())
+  tagId        String
+  tag          Tag    @relation(fields: [tagId], references: [id], onDelete: Cascade)
+  taggableId   String
+  taggableType String // CONTACT, COMPANY, DEAL, CONVERSATION
+
+  createdAt DateTime @default(now())
 
   @@unique([tagId, taggableId, taggableType])
   @@index([taggableId, taggableType])
@@ -2687,53 +2687,53 @@ model Taggable {
 // ==================== WEBHOOKS E API ====================
 
 model Webhook {
-  id             String         @id @default(uuid())
-  organizationId String
-  url            String
-  secret         String?
-  events         Json           // Array de eventos: ["contact.created", "deal.won", ...]
-  isActive       Boolean        @default(true)
-  failCount      Int            @default(0)
+  id              String    @id @default(uuid())
+  organizationId  String
+  url             String
+  secret          String?
+  events          Json // Array de eventos: ["contact.created", "deal.won", ...]
+  isActive        Boolean   @default(true)
+  failCount       Int       @default(0)
   lastTriggeredAt DateTime?
-  
-  webhookEvents  WebhookEvent[]
-  
-  createdAt      DateTime       @default(now())
-  updatedAt      DateTime       @updatedAt
+
+  webhookEvents WebhookEvent[]
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 
   @@index([organizationId])
 }
 
 model WebhookEvent {
-  id          String   @id @default(uuid())
-  webhookId   String
-  webhook     Webhook  @relation(fields: [webhookId], references: [id], onDelete: Cascade)
-  event       String   // contact.created, deal.won, etc.
-  payload     Json
-  statusCode  Int?
-  response    String?  @db.Text
-  attempts    Int      @default(1)
-  status      String   @default("pending") // pending, success, failed
-  
-  createdAt   DateTime @default(now())
+  id         String  @id @default(uuid())
+  webhookId  String
+  webhook    Webhook @relation(fields: [webhookId], references: [id], onDelete: Cascade)
+  event      String // contact.created, deal.won, etc.
+  payload    Json
+  statusCode Int?
+  response   String? @db.Text
+  attempts   Int     @default(1)
+  status     String  @default("pending") // pending, success, failed
+
+  createdAt DateTime @default(now())
 
   @@index([webhookId])
   @@index([event])
 }
 
 model ApiKey {
-  id             String       @id @default(uuid())
+  id             String    @id @default(uuid())
   organizationId String
   name           String
-  key            String       @unique
-  prefix         String       // Primeiros 8 chars para identificação (ex: "nxk_abc1")
-  scopes         Json?        // ["contacts.read", "deals.write", ...]
+  key            String    @unique
+  prefix         String // Primeiros 8 chars para identificação (ex: "nxk_abc1")
+  scopes         Json? // ["contacts.read", "deals.write", ...]
   lastUsedAt     DateTime?
   expiresAt      DateTime?
-  isActive       Boolean      @default(true)
-  
-  createdAt      DateTime     @default(now())
-  updatedAt      DateTime     @updatedAt
+  isActive       Boolean   @default(true)
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 
   @@index([organizationId])
   @@index([key])
@@ -2746,12 +2746,12 @@ model UsageEvent {
   id             String       @id @default(uuid())
   organizationId String
   organization   Organization @relation(fields: [organizationId], references: [id])
-  
-  feature        String       // leads.create, messages.sent, ai.tokens
-  quantity       Int          @default(1)
-  metadata       Json?
-  
-  createdAt      DateTime     @default(now())
+
+  feature  String // leads.create, messages.sent, ai.tokens
+  quantity Int    @default(1)
+  metadata Json?
+
+  createdAt DateTime @default(now())
 
   @@index([organizationId])
   @@index([feature])
@@ -2762,102 +2762,102 @@ model UsageEvent {
 // ==========================================
 
 model ProspectMission {
-  id                      String    @id @default(uuid())
-  organizationId          String
-  organization            Organization @relation(fields: [organizationId], references: [id])
-  userId                  String
-  user                    User      @relation(fields: [userId], references: [id])
-  name                    String
-  niche                   String
-  city                    String
-  state                   String
-  country                 String
-  leadQuantity            Int
-  executionDate           DateTime
-  executionTime           String
-  recurrence              String    @default("unica") // unica, diaria, semanal, quinzenal, mensal
-  dailyMessageLimit       Int       @default(50)
-  messageIntervalMinutes  Int       @default(15)
-  minScore                Int       @default(50)
-  initialApproach         String    @db.Text
-  salesOwnerId            String?
-  salesOwner              User?     @relation("MissionSalesOwner", fields: [salesOwnerId], references: [id])
-  calendarId              String?   
-  status                  String    @default("agendada") // agendada, em_execucao, pausada, concluida, erro, cancelada
-  
-  missionResult           Json?     // Resultado: IDs dos CapturedLead + ProspectLead criados
+  id                     String       @id @default(uuid())
+  organizationId         String
+  organization           Organization @relation(fields: [organizationId], references: [id])
+  userId                 String
+  user                   User         @relation(fields: [userId], references: [id])
+  name                   String
+  niche                  String
+  city                   String
+  state                  String
+  country                String
+  leadQuantity           Int
+  executionDate          DateTime
+  executionTime          String
+  recurrence             String       @default("unica") // unica, diaria, semanal, quinzenal, mensal
+  dailyMessageLimit      Int          @default(50)
+  messageIntervalMinutes Int          @default(15)
+  minScore               Int          @default(50)
+  initialApproach        String       @db.Text
+  salesOwnerId           String?
+  salesOwner             User?        @relation("MissionSalesOwner", fields: [salesOwnerId], references: [id])
+  calendarId             String?
+  status                 String       @default("agendada") // agendada, em_execucao, pausada, concluida, erro, cancelada
 
-  createdAt               DateTime  @default(now())
-  updatedAt               DateTime  @updatedAt
+  missionResult Json? // Resultado: IDs dos CapturedLead + ProspectLead criados
 
-  leads                   ProspectLead[]
-  messages                ProspectOutreachMessage[]
-  conversations           ProspectConversation[]
-  appointments            ProspectAppointment[]
-  logs                    ProspectAgentLog[]
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  leads         ProspectLead[]
+  messages      ProspectOutreachMessage[]
+  conversations ProspectConversation[]
+  appointments  ProspectAppointment[]
+  logs          ProspectAgentLog[]
 
   @@index([organizationId])
 }
 
 model ProspectLead {
-  id                  String    @id @default(uuid())
-  missionId           String
-  mission             ProspectMission @relation(fields: [missionId], references: [id])
-  companyName         String
-  category            String?
-  phone               String?
-  whatsapp            String?
-  website             String?
-  instagram           String?
-  address             String?
-  city                String?
-  state               String?
-  country             String?
-  latitude            Float?
-  longitude           Float?
-  googleRating        Float?
-  googleReviewsCount  Int?
-  openingHours        Json?
-  googleMapsUrl       String?
-  dataSource          String?
-  captureDate         DateTime  @default(now())
-  status              String    @default("captado")
+  id                 String          @id @default(uuid())
+  missionId          String
+  mission            ProspectMission @relation(fields: [missionId], references: [id])
+  companyName        String
+  category           String?
+  phone              String?
+  whatsapp           String?
+  website            String?
+  instagram          String?
+  address            String?
+  city               String?
+  state              String?
+  country            String?
+  latitude           Float?
+  longitude          Float?
+  googleRating       Float?
+  googleReviewsCount Int?
+  openingHours       Json?
+  googleMapsUrl      String?
+  dataSource         String?
+  captureDate        DateTime        @default(now())
+  status             String          @default("captado")
 
-  createdAt           DateTime  @default(now())
-  updatedAt           DateTime  @updatedAt
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 
-  validation          ProspectValidation?
-  dossier             ProspectDossier?
-  messages            ProspectOutreachMessage[]
-  conversations       ProspectConversation[]
-  appointment         ProspectAppointment?
-  logs                ProspectAgentLog[]
+  validation    ProspectValidation?
+  dossier       ProspectDossier?
+  messages      ProspectOutreachMessage[]
+  conversations ProspectConversation[]
+  appointment   ProspectAppointment?
+  logs          ProspectAgentLog[]
 
   @@index([missionId])
 }
 
 model ProspectBlockedContact {
-  id                  String    @id @default(uuid())
-  organizationId      String
-  phone               String
-  reason              String?
-  createdAt           DateTime  @default(now())
+  id             String   @id @default(uuid())
+  organizationId String
+  phone          String
+  reason         String?
+  createdAt      DateTime @default(now())
 
   @@unique([organizationId, phone])
 }
 
 model ProspectLearningMetric {
-  id                  String    @id @default(uuid())
-  organizationId      String
-  niche               String
-  city                String
-  approachType        String
-  leadsContacted      Int       @default(0)
-  responsesReceived   Int       @default(0)
-  appointmentsBooked  Int       @default(0)
-  responseRate        Float     @default(0)
-  bookingRate         Float     @default(0)
-  createdAt           DateTime  @default(now())
+  id                 String   @id @default(uuid())
+  organizationId     String
+  niche              String
+  city               String
+  approachType       String
+  leadsContacted     Int      @default(0)
+  responsesReceived  Int      @default(0)
+  appointmentsBooked Int      @default(0)
+  responseRate       Decimal  @default(0) @db.Decimal(18, 6)
+  bookingRate        Decimal  @default(0) @db.Decimal(18, 6)
+  createdAt          DateTime @default(now())
 
   @@index([organizationId])
 }
@@ -2869,73 +2869,73 @@ model OnboardingResponse {
   organizationId String       @unique
   organization   Organization @relation(fields: [organizationId], references: [id])
 
-  businessName      String
-  businessType      String       // SERVICO, PRODUTO, CONSULTORIA, TREINAMENTO, ASSINATURA, B2B
-  targetAudience    String       // B2B, B2C, AMBOS
-  averageTicket     Float?
-  salesCycle        String?      // CURTO, MEDIO, LONGO
-  needsMeeting      Boolean      @default(false)
-  needsProposal     Boolean      @default(false)
-  needsContract     Boolean      @default(false)
-  hasRecurrence     Boolean      @default(false)
+  businessName   String
+  businessType   String // SERVICO, PRODUTO, CONSULTORIA, TREINAMENTO, ASSINATURA, B2B
+  targetAudience String // B2B, B2C, AMBOS
+  averageTicket  Decimal? @db.Decimal(18, 2)
+  salesCycle     String? // CURTO, MEDIO, LONGO
+  needsMeeting   Boolean  @default(false)
+  needsProposal  Boolean  @default(false)
+  needsContract  Boolean  @default(false)
+  hasRecurrence  Boolean  @default(false)
 
-  leadChannels      Json         // ["WHATSAPP", "INSTAGRAM", "SITE", "INDICACAO", etc]
-  hasSdr            Boolean      @default(false)
-  hasCloser         Boolean      @default(false)
-  hasPostSales      Boolean      @default(false)
+  leadChannels Json // ["WHATSAPP", "INSTAGRAM", "SITE", "INDICACAO", etc]
+  hasSdr       Boolean @default(false)
+  hasCloser    Boolean @default(false)
+  hasPostSales Boolean @default(false)
 
-  painPoints        String?      @db.Text
-  biggestProblem    String?      @db.Text
+  painPoints     String? @db.Text
+  biggestProblem String? @db.Text
 
-  deliveryProcess   String?      @db.Text
-  hasOnboarding     Boolean      @default(false)
-  hasChecklist      Boolean      @default(false)
-  hasRenewal        Boolean      @default(false)
-  hasUpsell         Boolean      @default(false)
+  deliveryProcess String? @db.Text
+  hasOnboarding   Boolean @default(false)
+  hasChecklist    Boolean @default(false)
+  hasRenewal      Boolean @default(false)
+  hasUpsell       Boolean @default(false)
 
-  rawAnswers        Json         // Todas as respostas originais
-  recommendedTemplate String?    // Template recomendado pela IA
-  aiDiagnosis       Json?        // Diagnóstico completo da IA
-  appliedAt         DateTime?
+  rawAnswers          Json // Todas as respostas originais
+  recommendedTemplate String? // Template recomendado pela IA
+  aiDiagnosis         Json? // Diagnóstico completo da IA
+  appliedAt           DateTime?
 
-  createdAt         DateTime     @default(now())
-  updatedAt         DateTime     @updatedAt
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 }
 
 model BusinessTemplate {
-  id            String   @id @default(uuid())
-  name          String
-  slug          String   @unique
-  description   String?
-  isActive      Boolean  @default(true)
+  id          String  @id @default(uuid())
+  name        String
+  slug        String  @unique
+  description String?
+  isActive    Boolean @default(true)
 
-  pipelineConfig Json    // Pipeline stages com nomes, cores, probabilidades
-  customFields  Json     // Campos recomendados
-  tasks         Json     // Tarefas padrão
-  scripts       Json     // Scripts de atendimento
-  playbook      Json     // Playbook comercial
+  pipelineConfig Json // Pipeline stages com nomes, cores, probabilidades
+  customFields   Json // Campos recomendados
+  tasks          Json // Tarefas padrão
+  scripts        Json // Scripts de atendimento
+  playbook       Json // Playbook comercial
 
-  createdAt     DateTime @default(now())
-  updatedAt     DateTime @updatedAt
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 }
 
 // ==================== EXPERIENCIA MODULAR ====================
 
 model ExperienceBlueprint {
-  id          String   @id @default(uuid())
-  slug        String   @unique
+  id          String  @id @default(uuid())
+  slug        String  @unique
   name        String
   description String?
   vertical    String
-  version     Int      @default(1)
-  isActive    Boolean  @default(true)
+  version     Int     @default(1)
+  isActive    Boolean @default(true)
 
-  config      Json
+  config Json
 
   organizationExperiences OrganizationExperience[]
 
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 
   @@index([vertical])
   @@index([isActive])
@@ -2946,23 +2946,23 @@ model OrganizationExperience {
   organizationId String       @unique
   organization   Organization @relation(fields: [organizationId], references: [id], onDelete: Cascade)
 
-  blueprintId    String?
-  template       ExperienceBlueprint? @relation(fields: [blueprintId], references: [id])
+  blueprintId String?
+  template    ExperienceBlueprint? @relation(fields: [blueprintId], references: [id])
 
-  vertical       String
-  label          String
-  status         String       @default("active") // draft, active, archived
-  source         String       @default("onboarding") // onboarding, manual, ai, template
-  version        Int          @default(1)
+  vertical String
+  label    String
+  status   String @default("active") // draft, active, archived
+  source   String @default("onboarding") // onboarding, manual, ai, template
+  version  Int    @default(1)
 
-  answers        Json?
-  blueprint      Json
-  moduleKeys     Json
-  vocabulary     Json?
+  answers    Json?
+  blueprint  Json
+  moduleKeys Json
+  vocabulary Json?
 
-  appliedAt      DateTime?
-  createdAt      DateTime     @default(now())
-  updatedAt      DateTime     @updatedAt
+  appliedAt DateTime?
+  createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
 
   @@index([vertical])
   @@index([status])
@@ -2973,13 +2973,13 @@ model OrganizationModule {
   organizationId String
   organization   Organization @relation(fields: [organizationId], references: [id], onDelete: Cascade)
 
-  moduleKey      String
-  isEnabled      Boolean      @default(true)
-  source         String       @default("experience") // experience, plan, manual
-  settings       Json?
+  moduleKey String
+  isEnabled Boolean @default(true)
+  source    String  @default("experience") // experience, plan, manual
+  settings  Json?
 
-  createdAt      DateTime     @default(now())
-  updatedAt      DateTime     @updatedAt
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 
   @@unique([organizationId, moduleKey])
   @@index([organizationId])
@@ -2991,19 +2991,19 @@ model ProvisioningRun {
   organizationId String
   organization   Organization @relation(fields: [organizationId], references: [id], onDelete: Cascade)
 
-  userId         String?
-  source         String       @default("onboarding")
-  status         String       @default("running") // running, success, failed
+  userId String?
+  source String  @default("onboarding")
+  status String  @default("running") // running, success, failed
 
-  input          Json?
-  output         Json?
-  createdItems   Json?
-  errorMessage   String?      @db.Text
+  input        Json?
+  output       Json?
+  createdItems Json?
+  errorMessage String? @db.Text
 
-  startedAt      DateTime     @default(now())
-  finishedAt     DateTime?
-  createdAt      DateTime     @default(now())
-  updatedAt      DateTime     @updatedAt
+  startedAt  DateTime  @default(now())
+  finishedAt DateTime?
+  createdAt  DateTime  @default(now())
+  updatedAt  DateTime  @updatedAt
 
   @@index([organizationId])
   @@index([status])
@@ -3016,34 +3016,34 @@ model CustomField {
   organizationId String
   organization   Organization @relation(fields: [organizationId], references: [id])
 
-  name           String
-  key            String
-  type           String       // TEXT, NUMBER, DATE, SELECT, MULTI_SELECT, BOOLEAN
-  options        Json?        // Para SELECT/MULTI_SELECT
-  model          String       // LEAD, OPPORTUNITY, CLIENT
-  isRequired     Boolean      @default(false)
-  order          Int          @default(0)
-  isActive       Boolean      @default(true)
+  name       String
+  key        String
+  type       String // TEXT, NUMBER, DATE, SELECT, MULTI_SELECT, BOOLEAN
+  options    Json? // Para SELECT/MULTI_SELECT
+  model      String // LEAD, OPPORTUNITY, CLIENT
+  isRequired Boolean @default(false)
+  order      Int     @default(0)
+  isActive   Boolean @default(true)
 
-  values         CustomFieldValue[]
+  values CustomFieldValue[]
 
-  createdAt      DateTime     @default(now())
-  updatedAt      DateTime     @updatedAt
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 
   @@unique([organizationId, key, model])
   @@index([organizationId])
 }
 
 model CustomFieldValue {
-  id             String       @id @default(uuid())
-  fieldId        String
-  field          CustomField  @relation(fields: [fieldId], references: [id], onDelete: Cascade)
+  id      String      @id @default(uuid())
+  fieldId String
+  field   CustomField @relation(fields: [fieldId], references: [id], onDelete: Cascade)
 
-  recordId       String       // ID do registro (lead_id, opportunity_id, client_id)
-  value          String       @db.Text
+  recordId String // ID do registro (lead_id, opportunity_id, client_id)
+  value    String @db.Text
 
-  createdAt      DateTime     @default(now())
-  updatedAt      DateTime     @updatedAt
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 
   @@unique([fieldId, recordId])
   @@index([recordId])
@@ -3056,10 +3056,10 @@ model LostReason {
   organizationId String
   organization   Organization @relation(fields: [organizationId], references: [id])
 
-  name           String
-  isActive       Boolean      @default(true)
+  name     String
+  isActive Boolean @default(true)
 
-  createdAt      DateTime     @default(now())
+  createdAt DateTime @default(now())
 
   @@unique([organizationId, name])
   @@index([organizationId])
@@ -3070,10 +3070,10 @@ model WonReason {
   organizationId String
   organization   Organization @relation(fields: [organizationId], references: [id])
 
-  name           String
-  isActive       Boolean      @default(true)
+  name     String
+  isActive Boolean @default(true)
 
-  createdAt      DateTime     @default(now())
+  createdAt DateTime @default(now())
 
   @@unique([organizationId, name])
   @@index([organizationId])
@@ -3086,14 +3086,14 @@ model NpsSurvey {
   organizationId String
   organization   Organization @relation(fields: [organizationId], references: [id])
 
-  clientId       String
-  client         Client       @relation(fields: [clientId], references: [id])
+  clientId String
+  client   Client @relation(fields: [clientId], references: [id])
 
-  score          Int          // 0-10
-  comment        String?      @db.Text
-  respondedAt    DateTime     @default(now())
+  score       Int // 0-10
+  comment     String?  @db.Text
+  respondedAt DateTime @default(now())
 
-  createdAt      DateTime     @default(now())
+  createdAt DateTime @default(now())
 
   @@index([organizationId])
   @@index([clientId])
@@ -3104,19 +3104,19 @@ model RenewalOpportunity {
   organizationId String
   organization   Organization @relation(fields: [organizationId], references: [id])
 
-  clientId       String
-  client         Client       @relation(fields: [clientId], references: [id])
+  clientId String
+  client   Client @relation(fields: [clientId], references: [id])
 
-  type           String       // RENEWAL, UPSELL, CROSS_SELL, REACTIVATION
-  value          Decimal      @default(0) @db.Decimal(18, 2)
-  status         String       @default("OPEN") // OPEN, WON, LOST
-  expectedDate   DateTime?
+  type         String // RENEWAL, UPSELL, CROSS_SELL, REACTIVATION
+  value        Decimal   @default(0) @db.Decimal(18, 2)
+  status       String    @default("OPEN") // OPEN, WON, LOST
+  expectedDate DateTime?
 
-  assignedToId   String?
-  notes          String?      @db.Text
+  assignedToId String?
+  notes        String? @db.Text
 
-  createdAt      DateTime     @default(now())
-  updatedAt      DateTime     @updatedAt
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 
   @@index([organizationId])
   @@index([clientId])
@@ -3125,53 +3125,53 @@ model RenewalOpportunity {
 // ==================== LOGS DE IA ====================
 
 model AiLog {
-  id             String   @id @default(uuid())
+  id             String       @id @default(uuid())
   organizationId String
   organization   Organization @relation(fields: [organizationId], references: [id])
   userId         String?
 
-  agentType      String   // "diagnosis", "sdr", "proposal", "retention"
-  prompt         String   @db.Text
-  response       String   @db.Text
-  model          String
-  tokensIn       Int      @default(0)
-  tokensOut      Int      @default(0)
-  durationMs     Int      @default(0)
-  success        Boolean  @default(true)
-  errorMessage   String?
+  agentType    String // "diagnosis", "sdr", "proposal", "retention"
+  prompt       String  @db.Text
+  response     String  @db.Text
+  model        String
+  tokensIn     Int     @default(0)
+  tokensOut    Int     @default(0)
+  durationMs   Int     @default(0)
+  success      Boolean @default(true)
+  errorMessage String?
 
-  createdAt      DateTime @default(now())
+  createdAt DateTime @default(now())
 
   @@index([organizationId])
   @@index([agentType])
 }
 
 model AiModel {
-  id             String   @id @default(uuid())
-  name           String
-  displayName    String
-  provider       String   @default("local")
-  runtime        String   @default("ollama")
-  modelId        String   @unique
-  contextWindow  Int      @default(8192)
-  inputCostPer1k Float    @default(0)
-  outputCostPer1k Float   @default(0)
-  creditCost     Int      @default(1)
-  capabilities   Json?
-  metadata       Json?
-  status         String   @default("active") // active, disabled, degraded
-  healthStatus   String   @default("unknown") // healthy, unhealthy, unknown
-  lastHealthAt   DateTime?
-  isSelfHosted   Boolean  @default(true)
-  isDefault      Boolean  @default(false)
+  id              String    @id @default(uuid())
+  name            String
+  displayName     String
+  provider        String    @default("local")
+  runtime         String    @default("ollama")
+  modelId         String    @unique
+  contextWindow   Int       @default(8192)
+  inputCostPer1k  Decimal   @default(0) @db.Decimal(18, 6)
+  outputCostPer1k Decimal   @default(0) @db.Decimal(18, 6)
+  creditCost      Int       @default(1)
+  capabilities    Json?
+  metadata        Json?
+  status          String    @default("active") // active, disabled, degraded
+  healthStatus    String    @default("unknown") // healthy, unhealthy, unknown
+  lastHealthAt    DateTime?
+  isSelfHosted    Boolean   @default(true)
+  isDefault       Boolean   @default(false)
 
-  agents         AiAgent[] @relation("PrimaryAiModel")
-  fallbackAgents AiAgent[] @relation("FallbackAiModel")
+  agents         AiAgent[]       @relation("PrimaryAiModel")
+  fallbackAgents AiAgent[]       @relation("FallbackAiModel")
   entitlements   AiEntitlement[]
   usageLedgers   AiUsageLedger[]
 
-  createdAt      DateTime @default(now())
-  updatedAt      DateTime @updatedAt
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 
   @@index([provider])
   @@index([runtime])
@@ -3190,16 +3190,16 @@ model AiAgent {
   model           AiModel?      @relation("PrimaryAiModel", fields: [modelId], references: [id])
   fallbackModelId String?
   fallbackModel   AiModel?      @relation("FallbackAiModel", fields: [fallbackModelId], references: [id])
-  temperature     Float         @default(0.4)
+  temperature     Decimal       @default(0.4) @db.Decimal(18, 6)
   maxTokens       Int           @default(2048)
   tools           Json?
   status          String        @default("active")
 
-  entitlements    AiEntitlement[]
-  usageLedgers    AiUsageLedger[]
+  entitlements AiEntitlement[]
+  usageLedgers AiUsageLedger[]
 
-  createdAt       DateTime      @default(now())
-  updatedAt       DateTime      @updatedAt
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 
   @@unique([organizationId, key])
   @@index([organizationId])
@@ -3207,20 +3207,20 @@ model AiAgent {
 }
 
 model AiEntitlement {
-  id                 String        @id @default(uuid())
+  id                 String       @id @default(uuid())
   organizationId     String
-  organization       Organization  @relation(fields: [organizationId], references: [id])
+  organization       Organization @relation(fields: [organizationId], references: [id])
   clientId           String?
   planId             String?
   agentId            String?
-  agent              AiAgent?      @relation(fields: [agentId], references: [id])
+  agent              AiAgent?     @relation(fields: [agentId], references: [id])
   modelId            String?
-  model              AiModel?      @relation(fields: [modelId], references: [id])
-  scope              String        @default("organization") // organization, client, plan, agent, model
-  enabled            Boolean       @default(true)
-  rebillingEnabled   Boolean       @default(false)
-  markupMultiplier   Float         @default(1)
-  monthlyPrice       Float?
+  model              AiModel?     @relation(fields: [modelId], references: [id])
+  scope              String       @default("organization") // organization, client, plan, agent, model
+  enabled            Boolean      @default(true)
+  rebillingEnabled   Boolean      @default(false)
+  markupMultiplier   Decimal      @default(1) @db.Decimal(18, 6)
+  monthlyPrice       Decimal?     @db.Decimal(18, 2)
   maxRequestsDaily   Int?
   maxRequestsMonthly Int?
   maxTokensDaily     Int?
@@ -3229,8 +3229,8 @@ model AiEntitlement {
   maxCreditsMonthly  Int?
   settings           Json?
 
-  createdAt          DateTime      @default(now())
-  updatedAt          DateTime      @updatedAt
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 
   @@index([organizationId])
   @@index([clientId])
@@ -3239,31 +3239,31 @@ model AiEntitlement {
 }
 
 model AiUsageLedger {
-  id              String        @id @default(uuid())
-  requestId       String        @unique
-  organizationId  String
-  organization    Organization  @relation(fields: [organizationId], references: [id])
-  userId          String?
-  clientId        String?
-  agentId         String?
-  agent           AiAgent?      @relation(fields: [agentId], references: [id])
-  agentKey        String
-  modelId         String?
-  model           AiModel?      @relation(fields: [modelId], references: [id])
-  modelName       String
-  provider        String        @default("ai-core")
-  channel         String        @default("nexus")
-  tokensIn        Int           @default(0)
-  tokensOut       Int           @default(0)
-  totalTokens     Int           @default(0)
-  credits         Int           @default(0)
-  estimatedCost   Float         @default(0)
-  durationMs      Int           @default(0)
-  status          String        @default("success")
-  errorMessage    String?
-  metadata        Json?
+  id             String       @id @default(uuid())
+  requestId      String       @unique
+  organizationId String
+  organization   Organization @relation(fields: [organizationId], references: [id])
+  userId         String?
+  clientId       String?
+  agentId        String?
+  agent          AiAgent?     @relation(fields: [agentId], references: [id])
+  agentKey       String
+  modelId        String?
+  model          AiModel?     @relation(fields: [modelId], references: [id])
+  modelName      String
+  provider       String       @default("ai-core")
+  channel        String       @default("nexus")
+  tokensIn       Int          @default(0)
+  tokensOut      Int          @default(0)
+  totalTokens    Int          @default(0)
+  credits        Int          @default(0)
+  estimatedCost  Decimal      @default(0) @db.Decimal(18, 6)
+  durationMs     Int          @default(0)
+  status         String       @default("success")
+  errorMessage   String?
+  metadata       Json?
 
-  createdAt       DateTime      @default(now())
+  createdAt DateTime @default(now())
 
   @@index([organizationId])
   @@index([clientId])
@@ -3279,14 +3279,14 @@ model AiQuotaWindow {
   clientId       String?
   agentKey       String?
   modelName      String?
-  windowType     String       // daily, monthly
+  windowType     String // daily, monthly
   windowStart    DateTime
   requests       Int          @default(0)
   tokens         Int          @default(0)
   credits        Int          @default(0)
 
-  createdAt      DateTime     @default(now())
-  updatedAt      DateTime     @updatedAt
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 
   @@unique([organizationId, clientId, agentKey, modelName, windowType, windowStart])
   @@index([organizationId])
@@ -3294,93 +3294,93 @@ model AiQuotaWindow {
 }
 
 model ProspectValidation {
-  id                  String    @id @default(uuid())
-  leadId              String    @unique
-  lead                ProspectLead @relation(fields: [leadId], references: [id], onDelete: Cascade)
-  phoneValid          Boolean   @default(false)
-  whatsappValid       Boolean   @default(false)
-  websiteActive       Boolean   @default(false)
-  instagramFound      Boolean   @default(false)
-  companyActive       Boolean   @default(false)
-  duplicate           Boolean   @default(false)
-  accountantSuspect   Boolean   @default(false)
-  usesBot             Boolean   @default(false)
-  detectedBotType     String?
-  digitalMaturity     String?   // baixa, media, alta
-  validationNotes     String?   @db.Text
-  validatedAt         DateTime  @default(now())
+  id                String       @id @default(uuid())
+  leadId            String       @unique
+  lead              ProspectLead @relation(fields: [leadId], references: [id], onDelete: Cascade)
+  phoneValid        Boolean      @default(false)
+  whatsappValid     Boolean      @default(false)
+  websiteActive     Boolean      @default(false)
+  instagramFound    Boolean      @default(false)
+  companyActive     Boolean      @default(false)
+  duplicate         Boolean      @default(false)
+  accountantSuspect Boolean      @default(false)
+  usesBot           Boolean      @default(false)
+  detectedBotType   String?
+  digitalMaturity   String? // baixa, media, alta
+  validationNotes   String?      @db.Text
+  validatedAt       DateTime     @default(now())
 }
 
 model ProspectDossier {
-  id                        String    @id @default(uuid())
-  leadId                    String    @unique
-  lead                      ProspectLead @relation(fields: [leadId], references: [id], onDelete: Cascade)
-  companySummary            String?   @db.Text
-  digitalPresenceDiagnosis  String?   @db.Text
-  strengths                 Json?
-  weaknesses                Json?
-  opportunities             Json?
-  possiblePains             Json?
-  recommendedApproach       String?   @db.Text
-  personalizedArgument      String?   @db.Text
-  opportunityScore          Int       @default(0)
-  classification            String?   // frio, morno, quente, prioridade
-  classificationReason      String?   @db.Text
-  createdAt                 DateTime  @default(now())
+  id                       String       @id @default(uuid())
+  leadId                   String       @unique
+  lead                     ProspectLead @relation(fields: [leadId], references: [id], onDelete: Cascade)
+  companySummary           String?      @db.Text
+  digitalPresenceDiagnosis String?      @db.Text
+  strengths                Json?
+  weaknesses               Json?
+  opportunities            Json?
+  possiblePains            Json?
+  recommendedApproach      String?      @db.Text
+  personalizedArgument     String?      @db.Text
+  opportunityScore         Int          @default(0)
+  classification           String? // frio, morno, quente, prioridade
+  classificationReason     String?      @db.Text
+  createdAt                DateTime     @default(now())
 }
 
 model ProspectOutreachMessage {
-  id                  String    @id @default(uuid())
-  leadId              String
-  lead                ProspectLead @relation(fields: [leadId], references: [id])
-  missionId           String
-  mission             ProspectMission @relation(fields: [missionId], references: [id])
-  channel             String    @default("whatsapp")
-  message             String    @db.Text
-  sendStatus          String    @default("pending") // pending, sent, failed
-  sentAt              DateTime?
-  responseReceived    Boolean   @default(false)
-  optOut              Boolean   @default(false)
-  createdAt           DateTime  @default(now())
+  id               String          @id @default(uuid())
+  leadId           String
+  lead             ProspectLead    @relation(fields: [leadId], references: [id])
+  missionId        String
+  mission          ProspectMission @relation(fields: [missionId], references: [id])
+  channel          String          @default("whatsapp")
+  message          String          @db.Text
+  sendStatus       String          @default("pending") // pending, sent, failed
+  sentAt           DateTime?
+  responseReceived Boolean         @default(false)
+  optOut           Boolean         @default(false)
+  createdAt        DateTime        @default(now())
 
   @@index([leadId])
   @@index([missionId])
 }
 
 model ProspectConversation {
-  id                      String    @id @default(uuid())
-  leadId                  String
-  lead                    ProspectLead @relation(fields: [leadId], references: [id])
-  missionId               String
-  mission                 ProspectMission @relation(fields: [missionId], references: [id])
-  externalConversationId  String?
-  lastMessage             String?   @db.Text
-  leadIntent              String?   // sem_interesse, interessado, curioso, pediu_mais_informacoes, quer_agendar, não_respondeu, opt_out
-  qualificationStatus     String?
-  summary                 String?   @db.Text
-  createdAt               DateTime  @default(now())
-  updatedAt               DateTime  @updatedAt
+  id                     String          @id @default(uuid())
+  leadId                 String
+  lead                   ProspectLead    @relation(fields: [leadId], references: [id])
+  missionId              String
+  mission                ProspectMission @relation(fields: [missionId], references: [id])
+  externalConversationId String?
+  lastMessage            String?         @db.Text
+  leadIntent             String? // sem_interesse, interessado, curioso, pediu_mais_informacoes, quer_agendar, não_respondeu, opt_out
+  qualificationStatus    String?
+  summary                String?         @db.Text
+  createdAt              DateTime        @default(now())
+  updatedAt              DateTime        @updatedAt
 
   @@index([leadId])
   @@index([missionId])
 }
 
 model ProspectAppointment {
-  id                      String    @id @default(uuid())
-  leadId                  String    @unique
-  lead                    ProspectLead @relation(fields: [leadId], references: [id])
-  missionId               String
-  mission                 ProspectMission @relation(fields: [missionId], references: [id])
-  salesOwnerId            String?
-  calendarEventId         String?
-  appointmentDate         DateTime
-  appointmentTime         String
-  durationMinutes         Int       @default(30)
-  meetingLink             String?
-  status                  String    @default("scheduled")
-  qualificationSummary    String?   @db.Text
-  createdAt               DateTime  @default(now())
-  updatedAt               DateTime  @updatedAt
+  id                   String          @id @default(uuid())
+  leadId               String          @unique
+  lead                 ProspectLead    @relation(fields: [leadId], references: [id])
+  missionId            String
+  mission              ProspectMission @relation(fields: [missionId], references: [id])
+  salesOwnerId         String?
+  calendarEventId      String?
+  appointmentDate      DateTime
+  appointmentTime      String
+  durationMinutes      Int             @default(30)
+  meetingLink          String?
+  status               String          @default("scheduled")
+  qualificationSummary String?         @db.Text
+  createdAt            DateTime        @default(now())
+  updatedAt            DateTime        @updatedAt
 
   @@index([missionId])
 }
@@ -3394,8 +3394,8 @@ model ProposalTemplate {
 
   name        String
   description String?
-  content     Json          // Estrutura do template
-  isActive    Boolean       @default(true)
+  content     Json // Estrutura do template
+  isActive    Boolean @default(true)
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -3408,14 +3408,14 @@ model OnboardingGeneratedItem {
   organizationId String
   organization   Organization @relation(fields: [organizationId], references: [id])
 
-  type    String   // SCRIPT, PLAYBOOK, AUTOMATION, MESSAGE
-  name    String
-  content String   @db.Text
-  stage   String?  // Etapa do pipeline relacionada
+  type     String // SCRIPT, PLAYBOOK, AUTOMATION, MESSAGE
+  name     String
+  content  String  @db.Text
+  stage    String? // Etapa do pipeline relacionada
   isActive Boolean @default(true)
 
-  contactId String?  // Lead/Client ID opcional
-  userId    String?  // Quem gerou
+  contactId String? // Lead/Client ID opcional
+  userId    String? // Quem gerou
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -3429,13 +3429,13 @@ model AutomationLog {
   organizationId String
   organization   Organization @relation(fields: [organizationId], references: [id])
   automationId   String?
-  event          String   // trigger type
-  resourceType   String   // Lead, Opportunity, etc
+  event          String // trigger type
+  resourceType   String // Lead, Opportunity, etc
   resourceId     String?
   action         String
   result         Json?
-  status         String   @default("success") // success, error, skipped
-  errorMessage   String?  @db.Text
+  status         String       @default("success") // success, error, skipped
+  errorMessage   String?      @db.Text
 
   createdAt DateTime @default(now())
 
@@ -3450,10 +3450,10 @@ model QuickReply {
   organization   Organization @relation(fields: [organizationId], references: [id])
 
   title    String
-  content  String   @db.Text
+  content  String  @db.Text
   category String?
   shortcut String?
-  isActive Boolean  @default(true)
+  isActive Boolean @default(true)
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -3463,15 +3463,15 @@ model QuickReply {
 }
 
 model InboxSla {
-  id             String  @id @default(uuid())
-  inboxId        String
-  inbox          Inbox   @relation(fields: [inboxId], references: [id], onDelete: Cascade)
+  id      String @id @default(uuid())
+  inboxId String
+  inbox   Inbox  @relation(fields: [inboxId], references: [id], onDelete: Cascade)
 
-  firstResponseTime   Int     // Minutos para primeira resposta
-  resolutionTime      Int     // Minutos para resolução
-  businessHoursOnly   Boolean @default(true)
-  workingDays         Json?   // [1,2,3,4,5]
-  workingHours        Json?   // {start: "08:00", end: "18:00"}
+  firstResponseTime Int // Minutos para primeira resposta
+  resolutionTime    Int // Minutos para resolução
+  businessHoursOnly Boolean @default(true)
+  workingDays       Json? // [1,2,3,4,5]
+  workingHours      Json? // {start: "08:00", end: "18:00"}
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
@@ -3480,14 +3480,14 @@ model InboxSla {
 }
 
 model ProposalStatusHistory {
-  id             String       @id @default(uuid())
-  proposalId     String
-  proposal       Proposal     @relation(fields: [proposalId], references: [id], onDelete: Cascade)
+  id         String   @id @default(uuid())
+  proposalId String
+  proposal   Proposal @relation(fields: [proposalId], references: [id], onDelete: Cascade)
 
-  fromStatus   String?
-  toStatus     String
-  changedById  String?
-  metadata     Json?
+  fromStatus  String?
+  toStatus    String
+  changedById String?
+  metadata    Json?
 
   createdAt DateTime @default(now())
 
@@ -3495,17 +3495,17 @@ model ProposalStatusHistory {
 }
 
 model ProspectAgentLog {
-  id                  String    @id @default(uuid())
-  missionId           String?
-  mission             ProspectMission? @relation(fields: [missionId], references: [id])
-  leadId              String?
-  lead                ProspectLead? @relation(fields: [leadId], references: [id])
-  agentName           String
-  action              String
-  status              String
-  message             String?   @db.Text
-  metadata            Json?
-  createdAt           DateTime  @default(now())
+  id        String           @id @default(uuid())
+  missionId String?
+  mission   ProspectMission? @relation(fields: [missionId], references: [id])
+  leadId    String?
+  lead      ProspectLead?    @relation(fields: [leadId], references: [id])
+  agentName String
+  action    String
+  status    String
+  message   String?          @db.Text
+  metadata  Json?
+  createdAt DateTime         @default(now())
 
   @@index([missionId])
   @@index([leadId])
@@ -3517,9 +3517,9 @@ model AcpAccess {
   id             String       @id @default(uuid())
   organizationId String
   organization   Organization @relation(fields: [organizationId], references: [id], onDelete: Cascade)
-  userId         String?      // null = liberado para toda a organização
+  userId         String? // null = liberado para toda a organização
   acpEnabled     Boolean      @default(false)
-  grantedBy      String?      // SUPER_ADMIN que liberou
+  grantedBy      String? // SUPER_ADMIN que liberou
   grantedAt      DateTime?
   createdAt      DateTime     @default(now())
   updatedAt      DateTime     @updatedAt
@@ -3551,9 +3551,9 @@ model GoogleLocalAccess {
 }
 
 model GoogleLocalProfile {
-  id             String       @id @default(uuid())
+  id             String            @id @default(uuid())
   organizationId String
-  organization   Organization @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+  organization   Organization      @relation(fields: [organizationId], references: [id], onDelete: Cascade)
   name           String
   placeId        String?
   cid            String?
@@ -3571,39 +3571,39 @@ model GoogleLocalProfile {
   auditData      Json?
   lastAuditedAt  DateTime?
   createdById    String
-  createdBy      User         @relation("GoogleLocalProfileCreatedBy", fields: [createdById], references: [id])
+  createdBy      User              @relation("GoogleLocalProfileCreatedBy", fields: [createdById], references: [id])
   scans          GoogleLocalScan[]
-  createdAt      DateTime     @default(now())
-  updatedAt      DateTime     @updatedAt
+  createdAt      DateTime          @default(now())
+  updatedAt      DateTime          @updatedAt
 
   @@index([organizationId])
 }
 
 model GoogleLocalScan {
-  id              String       @id @default(uuid())
+  id              String                 @id @default(uuid())
   organizationId  String
-  organization    Organization @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+  organization    Organization           @relation(fields: [organizationId], references: [id], onDelete: Cascade)
   profileId       String
-  profile         GoogleLocalProfile @relation(fields: [profileId], references: [id], onDelete: Cascade)
+  profile         GoogleLocalProfile     @relation(fields: [profileId], references: [id], onDelete: Cascade)
   keyword         String
   gridSize        Int
-  radiusKm        Float
-  zoom            Int          @default(15)
-  status          String       @default("PENDING")
+  radiusKm        Decimal
+  zoom            Int                    @default(15)
+  status          String                 @default("PENDING")
   totalPoints     Int
-  processedPoints Int          @default(0)
-  averageRank     Float?
-  top3Percent     Float?
-  top10Percent    Float?
-  foundPercent    Float?
-  error           String?      @db.Text
+  processedPoints Int                    @default(0)
+  averageRank     Decimal?               @db.Decimal(18, 6)
+  top3Percent     Decimal?               @db.Decimal(18, 6)
+  top10Percent    Decimal?               @db.Decimal(18, 6)
+  foundPercent    Decimal?               @db.Decimal(18, 6)
+  error           String?                @db.Text
   startedAt       DateTime?
   completedAt     DateTime?
   createdById     String
-  createdBy       User         @relation("GoogleLocalScanCreatedBy", fields: [createdById], references: [id])
+  createdBy       User                   @relation("GoogleLocalScanCreatedBy", fields: [createdById], references: [id])
   points          GoogleLocalGridPoint[]
-  createdAt       DateTime     @default(now())
-  updatedAt       DateTime     @updatedAt
+  createdAt       DateTime               @default(now())
+  updatedAt       DateTime               @updatedAt
 
   @@index([organizationId, createdAt])
   @@index([profileId])
@@ -3639,16 +3639,16 @@ model AcpDiagnosis {
   organization    Organization @relation(fields: [organizationId], references: [id], onDelete: Cascade)
   clientName      String
   segment         String?
-  ticketMedio     Float?
+  ticketMedio     Decimal?     @db.Decimal(18, 2)
   leadsMes        Int?
   vendasMes       Int?
-  cacEstimado     Float?
-  ltvEstimado     Float?
+  cacEstimado     Decimal?     @db.Decimal(18, 2)
+  ltvEstimado     Decimal?     @db.Decimal(18, 2)
   canalPrincipal  String?
   ferramentas     String?
   timeComercial   Int?
   queixas         String?
-  scoreMaturidade Float?
+  scoreMaturidade Decimal?     @db.Decimal(18, 6)
   gargalos        Json?
   topPrioridades  Json?
   plano30_60_90   Json?
@@ -3656,127 +3656,127 @@ model AcpDiagnosis {
   createdAt       DateTime     @default(now())
   updatedAt       DateTime     @updatedAt
 
-  icps            AcpIcp[]
-  offers          AcpOffer[]
+  icps   AcpIcp[]
+  offers AcpOffer[]
 
   @@index([organizationId])
 }
 
 model AcpIcp {
-  id              String        @id @default(uuid())
-  organizationId  String
-  organization    Organization  @relation(fields: [organizationId], references: [id], onDelete: Cascade)
-  diagnosisId     String?
-  diagnosis       AcpDiagnosis? @relation(fields: [diagnosisId], references: [id])
-  nome            String
-  criterios       Json
-  mensagem        String?
-  createdAt       DateTime      @default(now())
-  updatedAt       DateTime      @updatedAt
+  id             String        @id @default(uuid())
+  organizationId String
+  organization   Organization  @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+  diagnosisId    String?
+  diagnosis      AcpDiagnosis? @relation(fields: [diagnosisId], references: [id])
+  nome           String
+  criterios      Json
+  mensagem       String?
+  createdAt      DateTime      @default(now())
+  updatedAt      DateTime      @updatedAt
 
-  offers          AcpOffer[]
+  offers AcpOffer[]
 
   @@index([organizationId])
 }
 
 model AcpOffer {
-  id              String      @id @default(uuid())
-  organizationId  String
-  organization    Organization @relation(fields: [organizationId], references: [id], onDelete: Cascade)
-  diagnosisId     String?
-  diagnosis       AcpDiagnosis? @relation(fields: [diagnosisId], references: [id])
-  icpId           String?
-  icp             AcpIcp?      @relation(fields: [icpId], references: [id])
-  titulo          String
-  elementos       Json
-  valueStack      Json?
-  ancoragem       String?
-  createdAt       DateTime     @default(now())
-  updatedAt       DateTime     @updatedAt
+  id             String        @id @default(uuid())
+  organizationId String
+  organization   Organization  @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+  diagnosisId    String?
+  diagnosis      AcpDiagnosis? @relation(fields: [diagnosisId], references: [id])
+  icpId          String?
+  icp            AcpIcp?       @relation(fields: [icpId], references: [id])
+  titulo         String
+  elementos      Json
+  valueStack     Json?
+  ancoragem      String?
+  createdAt      DateTime      @default(now())
+  updatedAt      DateTime      @updatedAt
 
   @@index([organizationId])
 }
 
 model AcpAgentExecution {
-  id              String       @id @default(uuid())
-  organizationId  String
-  organization    Organization @relation(fields: [organizationId], references: [id], onDelete: Cascade)
-  agentId         String
-  agentName       String
-  input           String       @db.Text
-  output          String       @db.Text
-  metadata        Json?
-  createdById     String?
-  createdAt       DateTime     @default(now())
+  id             String       @id @default(uuid())
+  organizationId String
+  organization   Organization @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+  agentId        String
+  agentName      String
+  input          String       @db.Text
+  output         String       @db.Text
+  metadata       Json?
+  createdById    String?
+  createdAt      DateTime     @default(now())
 
   @@index([organizationId])
   @@index([agentId])
 }
 
 model AcpObjection {
-  id              String       @id @default(uuid())
-  organizationId  String
-  organization    Organization @relation(fields: [organizationId], references: [id], onDelete: Cascade)
-  titulo          String
-  tratamento      String       @db.Text
-  categoria       String
-  icp             String?
-  origem          String?
-  createdById     String?
-  createdAt       DateTime     @default(now())
-  updatedAt       DateTime     @updatedAt
+  id             String       @id @default(uuid())
+  organizationId String
+  organization   Organization @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+  titulo         String
+  tratamento     String       @db.Text
+  categoria      String
+  icp            String?
+  origem         String?
+  createdById    String?
+  createdAt      DateTime     @default(now())
+  updatedAt      DateTime     @updatedAt
 
   @@index([organizationId])
 }
 
 model AcpCompetitor {
-  id              String       @id @default(uuid())
-  organizationId  String
-  organization    Organization @relation(fields: [organizationId], references: [id], onDelete: Cascade)
-  nome            String
-  icpAtendido     String?
-  oferta          String?
-  faixaPreco      String?
+  id             String       @id @default(uuid())
+  organizationId String
+  organization   Organization @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+  nome           String
+  icpAtendido    String?
+  oferta         String?
+  faixaPreco     String?
   diferenciais   Json?
-  pontosFracos    Json?
-  tendencia       String?
-  swot            Json?
-  createdAt       DateTime     @default(now())
-  updatedAt       DateTime     @updatedAt
+  pontosFracos   Json?
+  tendencia      String?
+  swot           Json?
+  createdAt      DateTime     @default(now())
+  updatedAt      DateTime     @updatedAt
 
   @@index([organizationId])
 }
 
 model AcpQuarterlyPlan {
-  id              String       @id @default(uuid())
-  organizationId  String
-  organization    Organization @relation(fields: [organizationId], references: [id], onDelete: Cascade)
-  trimestre       String       // "2026-Q2"
-  metas           Json?
-  top5            Json?
-  checkpoints     Json?
-  revisao         Json?
-  status          String       @default("draft") // draft, active, completed
-  createdById     String?
-  createdAt       DateTime     @default(now())
-  updatedAt       DateTime     @updatedAt
+  id             String       @id @default(uuid())
+  organizationId String
+  organization   Organization @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+  trimestre      String // "2026-Q2"
+  metas          Json?
+  top5           Json?
+  checkpoints    Json?
+  revisao        Json?
+  status         String       @default("draft") // draft, active, completed
+  createdById    String?
+  createdAt      DateTime     @default(now())
+  updatedAt      DateTime     @updatedAt
 
   @@index([organizationId])
 }
 
 model AcpChurnSignal {
-  id              String       @id @default(uuid())
-  organizationId  String
-  organization    Organization @relation(fields: [organizationId], references: [id], onDelete: Cascade)
-  clientId        String?
-  signalType      String
-  description     String       @db.Text
-  severity        String       // LOW, MEDIUM, HIGH, CRITICAL
-  status          String       @default("open") // open, resolved, ignored
-  resolvedAt      DateTime?
-  createdById     String?
-  createdAt       DateTime     @default(now())
-  updatedAt       DateTime     @updatedAt
+  id             String       @id @default(uuid())
+  organizationId String
+  organization   Organization @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+  clientId       String?
+  signalType     String
+  description    String       @db.Text
+  severity       String // LOW, MEDIUM, HIGH, CRITICAL
+  status         String       @default("open") // open, resolved, ignored
+  resolvedAt     DateTime?
+  createdById    String?
+  createdAt      DateTime     @default(now())
+  updatedAt      DateTime     @updatedAt
 
   @@index([organizationId])
   @@index([clientId])
@@ -3788,36 +3788,36 @@ model AcpChurnSignal {
 // ==================== WHITELABEL SYNC (FASE 3) ====================
 
 model WhitelabelSyncTemplate {
-  id          String   @id @default(uuid())
+  id          String  @id @default(uuid())
   name        String
   description String?
 
-  config      Json     @default("{}")   // merged into Organization.whiteLabelConfig
-  settings    Json?                      // merged into Organization.settings
-  orgFields   Json?                      // direct org field updates (plan, domain, etc.)
-  tags        String?
+  config    Json    @default("{}") // merged into Organization.whiteLabelConfig
+  settings  Json? // merged into Organization.settings
+  orgFields Json? // direct org field updates (plan, domain, etc.)
+  tags      String?
 
-  isActive    Boolean  @default(true)
+  isActive Boolean @default(true)
 
-  syncLogs    WhitelabelSyncLog[]
+  syncLogs WhitelabelSyncLog[]
 
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 }
 
 model WhitelabelSyncLog {
-  id              String       @id @default(uuid())
-  templateId      String
-  template        WhitelabelSyncTemplate @relation(fields: [templateId], references: [id])
-  organizationId  String
-  organization    Organization @relation(fields: [organizationId], references: [id])
+  id             String                 @id @default(uuid())
+  templateId     String
+  template       WhitelabelSyncTemplate @relation(fields: [templateId], references: [id])
+  organizationId String
+  organization   Organization           @relation(fields: [organizationId], references: [id])
 
-  status          String       @default("pending")
-  error           String?      @db.Text
-  appliedConfig   Json?
+  status        String  @default("pending")
+  error         String? @db.Text
+  appliedConfig Json?
 
-  createdBy       String?
-  createdAt       DateTime     @default(now())
+  createdBy String?
+  createdAt DateTime @default(now())
 
   @@index([templateId])
   @@index([organizationId])
@@ -3831,17 +3831,17 @@ model ProfessionalExperience {
   userId         String?
   user           User?        @relation(fields: [userId], references: [id])
 
-  companyName    String
-  role           String
-  description    String?      @db.Text
-  location       String?
-  startDate      DateTime
-  endDate        DateTime?
-  isCurrent      Boolean      @default(false)
-  order          Int          @default(0)
+  companyName String
+  role        String
+  description String?   @db.Text
+  location    String?
+  startDate   DateTime
+  endDate     DateTime?
+  isCurrent   Boolean   @default(false)
+  order       Int       @default(0)
 
-  createdAt      DateTime     @default(now())
-  updatedAt      DateTime     @updatedAt
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 
   @@index([organizationId])
   @@index([userId])
@@ -3850,79 +3850,79 @@ model ProfessionalExperience {
 // ==================== QUALIFICAÇÃO DE LEADS (ICP + SDR/BDR/CLOSER) ====================
 
 model QualificationForm {
-  id              String       @id @default(uuid())
-  organizationId  String
-  organization    Organization @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+  id             String       @id @default(uuid())
+  organizationId String
+  organization   Organization @relation(fields: [organizationId], references: [id], onDelete: Cascade)
 
-  name            String
-  description     String?
-  isActive        Boolean      @default(true)
+  name        String
+  description String?
+  isActive    Boolean @default(true)
 
   // Campos do formulário baseados em ICP
-  icpFields       Json         // [{ key, label, type, required, options, order }]
+  icpFields Json // [{ key, label, type, required, options, order }]
 
   // Regras de roteamento: condições → SDR | BDR | CLOSER
-  routingRules    Json?        // [{ condition, target: "SDR"|"BDR"|"CLOSER", scoreMin, scoreMax }]
+  routingRules Json? // [{ condition, target: "SDR"|"BDR"|"CLOSER", scoreMin, scoreMax }]
 
   // Configuração de agendamento pós-qualificação
-  allowScheduling Boolean      @default(true)
-  schedulingMessage String?    // Mensagem exibida após qualificação
-  schedulingLeadTime Int       @default(60) // Minutos mínimos para agendar
+  allowScheduling    Boolean @default(true)
+  schedulingMessage  String? // Mensagem exibida após qualificação
+  schedulingLeadTime Int     @default(60) // Minutos mínimos para agendar
 
   // Lead capture config
-  createLead      Boolean      @default(true)
-  leadPipelineId  String?
-  leadStageId     String?
+  createLead     Boolean @default(true)
+  leadPipelineId String?
+  leadStageId    String?
 
   // Funnel auto-enroll config
-  createFunnelLead Boolean     @default(false)
+  createFunnelLead Boolean @default(false)
   funnelId         String?
 
-  submissions     QualificationSubmission[]
+  submissions QualificationSubmission[]
 
-  createdAt       DateTime     @default(now())
-  updatedAt       DateTime     @updatedAt
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 
   @@index([organizationId])
   @@index([isActive])
 }
 
 model QualificationSubmission {
-  id              String             @id @default(uuid())
-  formId          String
-  form            QualificationForm  @relation(fields: [formId], references: [id], onDelete: Cascade)
-  organizationId  String
-  organization    Organization       @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+  id             String            @id @default(uuid())
+  formId         String
+  form           QualificationForm @relation(fields: [formId], references: [id], onDelete: Cascade)
+  organizationId String
+  organization   Organization      @relation(fields: [organizationId], references: [id], onDelete: Cascade)
 
   // Lead vinculado
-  leadId          String?
-  leadName        String
-  leadEmail       String
-  leadPhone       String?
-  leadNotes       String?            @db.Text
+  leadId    String?
+  leadName  String
+  leadEmail String
+  leadPhone String?
+  leadNotes String? @db.Text
 
   // Respostas e pontuação
-  answers         Json
-  score           Int                @default(0)
-  maxScore        Int                @default(0)
-  scorePercent    Float              @default(0)
+  answers      Json
+  score        Int     @default(0)
+  maxScore     Int     @default(0)
+  scorePercent Decimal @default(0) @db.Decimal(18, 6)
 
   // Status da qualificação
-  status          String             @default("pending") // pending, approved, rejected, scheduled, converted
+  status String @default("pending") // pending, approved, rejected, scheduled, converted
 
   // Roteamento
-  routedTo        String?            // SDR, BDR, CLOSER
-  routedToUserId  String?
-  routedAt        DateTime?
-  routeReason     String?            @db.Text
+  routedTo       String? // SDR, BDR, CLOSER
+  routedToUserId String?
+  routedAt       DateTime?
+  routeReason    String?   @db.Text
 
   // Agendamento
   scheduledTo     DateTime?
   calendarEventId String?
-  schedulingNotes String?            @db.Text
+  schedulingNotes String?   @db.Text
 
-  createdAt       DateTime           @default(now())
-  updatedAt       DateTime           @updatedAt
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 
   @@index([organizationId])
   @@index([formId])
@@ -3946,34 +3946,34 @@ model ContractSignature {
   ip            String?
   userAgent     String?
 
-  createdAt     DateTime @default(now())
+  createdAt DateTime @default(now())
 
   @@index([contractId])
   @@index([organizationId])
 }
 
 model PaymentTransaction {
-  id             String   @id @default(uuid())
+  id             String    @id @default(uuid())
   clientId       String
-  client         Client   @relation(fields: [clientId], references: [id])
+  client         Client    @relation(fields: [clientId], references: [id])
   contractId     String?
   contract       Contract? @relation(fields: [contractId], references: [id])
   organizationId String
 
-  provider       String   // ASAAS, MERCADO_PAGO, INTER
-  method         String   @default("PIX")
-  amount         Decimal @db.Decimal(18, 2)
-  status         String   @default("pending")
-  externalId     String?
-  qrCode         String?  @db.Text
-  qrCodeBase64   String?  @db.Text
-  pixCopiaECola  String?  @db.Text
-  paidAt         DateTime?
-  expiresAt      DateTime?
-  metadata       Json?
+  provider      String // ASAAS, MERCADO_PAGO, INTER
+  method        String    @default("PIX")
+  amount        Decimal   @db.Decimal(18, 2)
+  status        String    @default("pending")
+  externalId    String?
+  qrCode        String?   @db.Text
+  qrCodeBase64  String?   @db.Text
+  pixCopiaECola String?   @db.Text
+  paidAt        DateTime?
+  expiresAt     DateTime?
+  metadata      Json?
 
-  createdAt      DateTime @default(now())
-  updatedAt      DateTime @updatedAt
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 
   @@index([clientId])
   @@index([contractId])
@@ -3983,19 +3983,19 @@ model PaymentTransaction {
 }
 
 model CloserChecklistItem {
-  id             String   @id @default(uuid())
+  id             String @id @default(uuid())
   clientId       String
-  client         Client   @relation(fields: [clientId], references: [id], onDelete: Cascade)
+  client         Client @relation(fields: [clientId], references: [id], onDelete: Cascade)
   organizationId String
 
-  item        String
-  checked     Boolean  @default(false)
-  checkedBy   String?
-  checkedAt   DateTime?
-  notes       String?
+  item      String
+  checked   Boolean   @default(false)
+  checkedBy String?
+  checkedAt DateTime?
+  notes     String?
 
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
 
   @@index([clientId])
   @@index([organizationId])

@@ -138,6 +138,16 @@ class RedisCache {
     }
   }
 
+  async ping(): Promise<boolean> {
+    if (!this.connected) return true;
+    try {
+      const result = await this.client.ping();
+      return result === "PONG";
+    } catch {
+      return false;
+    }
+  }
+
   get isConnected(): boolean { return this.connected; }
 }
 

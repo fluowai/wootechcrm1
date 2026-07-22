@@ -1,6 +1,7 @@
 import { PrismaClient } from "@prisma/client";
 import { runGovernedAiText } from "./aiExecution.js";
 import { getOrgAIKeys } from "../utils/aiKeys.js";
+import { safeExternalFetch } from "../utils/externalUrl.js";
 
 type ClassificationInput = {
   organizationId: string;
@@ -59,7 +60,7 @@ async function transcribeAudio(groqKey: string | undefined, fileUrl?: string | n
   if (!groqKey || !fileUrl) return null;
 
   try {
-    const media = await fetch(fileUrl);
+    const media = await safeExternalFetch(fileUrl);
     if (!media.ok) return null;
     const buffer = await media.arrayBuffer();
     const blob = new Blob([buffer], { type: mimeType || "audio/ogg" });

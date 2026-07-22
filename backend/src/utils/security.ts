@@ -82,3 +82,42 @@ export function verifyHmacSignature(payload: string, signature: string | undefin
     return false;
   }
 }
+
+function getMediaSignSecret(): string {
+  return process.env.MEDIA_SIGN_SECRET || process.env.JWT_SECRET || "";
+}
+
+export function signMediaUrl(url: string, expiresInSeconds = 3600): string {
+  const secret = getMediaSignSecret();
+  if (!secret) throw new Error("MEDIA_SIGN_SECRET or JWT_SECRET must be set");
+  const expires = Math.floor(Date.now() / 1000) + expiresInSeconds;
+  const payload = `${url}|${expires}`;
+  const sig = crypto.createHmac("sha256", secret).update(payload).digest("hex");
+  const encoded = Buffer.from(url).toString("base64url");
+  return `${encoded}?sig=${sig}&exp=${expires}`;
+}
+
+export function verifyMediaUrl(signed: string): { url: string; valid: boolean; reason?: string } {
+  const secret = getMediaSignSecret();
+  if (!secret) return { url: "", valid: false, reason: "NO_SECRET" };
+
+  const sigMatch = signed.match(/[?&]sig=([a-f0-9]+)/);
+  const expMatch = signed.match(/[?&]exp=(\d+)/);
+  if (!sigMatch || !expMatch) return { url: "", valid: false, reason: "MISSING_PARAMS" };
+
+  const encoded = signed.split("?")[0].split("&")[0];
+  const url = Buffer.from(encoded, "base64url").toString("utf8");
+  const expires = parseInt(expMatch[1], 10);
+  const sig = sigMatch[1];
+
+  if (Math.floor(Date.now() / 1000) > expires) return { url, valid: false, reason: "EXPIRED" };
+
+  const payload = `${url}|${expires}`;
+  const expected = crypto.createHmac("sha256", secret).update(payload).digest("hex");
+  try {
+    const valid = crypto.timingSafeEqual(Buffer.from(sig), Buffer.from(expected));
+    return { url, valid, reason: valid ? undefined : "INVALID_SIG" };
+  } catch {
+    return { url, valid: false, reason: "INVALID_SIG" };
+  }
+}

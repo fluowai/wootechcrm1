@@ -17,6 +17,8 @@ import { emitAutomationEvent } from "./workers/automationWorker.js";
 import { startBackgroundWorkers } from "./workers/backgroundWorkers.js";
 import { logger } from "./utils/logger.js";
 import { cache } from "./utils/cache.js";
+import { requestIdMiddleware, requestLogger } from "./middleware/requestLogging.js";
+import { tenantRateLimit, aiRateLimit, whatsappRateLimit } from "./middleware/tenantRateLimit.js";
 
 process.on("uncaughtException", (err) => {
   logger.error("Process", "UNCAUGHT_EXCEPTION", { error: err.message, stack: err.stack });
@@ -90,6 +92,7 @@ import { experienceRoutes } from "./routes/experience.js";
 import { qualificationRoutes, qualificationPublicRoutes, qualificationPublicPageRoutes } from "./routes/qualification.js";
 import { closingRoutes } from "./routes/closing.js";
 import { quizRoutes, quizPublicRoutes } from "./routes/quizzes.js";
+import { mediaRoutes } from "./routes/media.js";
 
 const app = express();
 const __filename = fileURLToPath(import.meta.url);
@@ -227,7 +230,46 @@ app.use(helmet({
   crossOriginEmbedderPolicy: false,
 }));
 
+app.use(requestIdMiddleware);
+app.use(requestLogger);
+
 // ==================== ROTAS PÚBLICAS ====================
+
+app.get("/api/health/live", (_req, res) => {
+  res.json({ status: "ok", timestamp: new Date().toISOString() });
+});
+
+app.get("/api/health/ready", async (req, res, next) => {
+  try {
+    const checks: Record<string, string> = {};
+    let healthy = true;
+
+    try {
+      await prisma.$queryRaw`SELECT 1`;
+      checks.postgres = "ok";
+    } catch {
+      checks.postgres = "error";
+      healthy = false;
+    }
+
+    try {
+      const pingResult = await cache.ping();
+      checks.redis = pingResult ? "ok" : "error";
+      if (!pingResult) healthy = false;
+    } catch {
+      checks.redis = "error";
+      healthy = false;
+    }
+
+    res.status(healthy ? 200 : 503).json({
+      status: healthy ? "ok" : "degraded",
+      checks,
+      timestamp: new Date().toISOString(),
+    });
+  } catch (error) {
+    next(error);
+  }
+});
 
 app.get("/api/health", async (req, res, next) => {
   try {
@@ -470,6 +512,7 @@ const protectedRoutes = [
   { path: "/api/qualification", router: qualificationRoutes },
   { path: "/api/whatsapp/calls", router: whatsappCallRoutes },
   { path: "/api/closing", router: closingRoutes },
+  { path: "/api/media", router: mediaRoutes },
   { path: "/api", router: quizRoutes },
 ];
 
@@ -485,7 +528,10 @@ app.use("/api/admin/storage", authenticateToken, enforceTenantDomain, resolveTen
 app.use("/api/admin", authenticateToken, enforceTenantDomain, resolveTenant, enforceAccountState(prisma), requireRole("SUPER_ADMIN"), adminRoutes(prisma));
 
 protectedRoutes.forEach(route => {
-  app.use(route.path, authenticateToken, enforceTenantDomain, resolveTenant, enforceAccountState(prisma), route.router(prisma));
+  const middlewares = [authenticateToken, enforceTenantDomain, resolveTenant, enforceAccountState(prisma), tenantRateLimit()];
+  if (route.path === "/api/ai") middlewares.push(aiRateLimit);
+  if (route.path === "/api/whatsapp") middlewares.push(whatsappRateLimit);
+  app.use(route.path, ...middlewares, route.router(prisma));
 });
 
 // Rotas Externas / Portais
