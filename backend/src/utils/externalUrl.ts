@@ -19,14 +19,16 @@ function isBlockedIpv4(address: string): boolean {
 }
 
 function isBlockedIp(address: string): boolean {
-  const normalized = address.toLowerCase().split("%")[0];
+  let normalized = address.toLowerCase().split("%")[0];
+  if (normalized.startsWith("::ffff:")) {
+    normalized = normalized.replace("::ffff:", "");
+  }
   const family = isIP(normalized);
   if (family === 4) return isBlockedIpv4(normalized);
   if (family !== 6) return true;
   if (normalized === "::" || normalized === "::1") return true;
   if (normalized.startsWith("fc") || normalized.startsWith("fd") || /^fe[89ab]/.test(normalized)) return true;
-  const mapped = normalized.match(/::ffff:(\d+\.\d+\.\d+\.\d+)$/)?.[1];
-  return mapped ? isBlockedIpv4(mapped) : false;
+  return false;
 }
 
 export async function assertSafeExternalUrl(rawUrl: string, resolver: Resolver = defaultResolver): Promise<URL> {
@@ -35,7 +37,17 @@ export async function assertSafeExternalUrl(rawUrl: string, resolver: Resolver =
   if (url.protocol !== "http:" && url.protocol !== "https:") throw new Error("URL_PROTOCOL_NOT_ALLOWED");
   if (url.username || url.password) throw new Error("URL_CREDENTIALS_NOT_ALLOWED");
 
-  const hostname = url.hostname.toLowerCase().replace(/\.$/, "");
+  let hostname = url.hostname.toLowerCase().replace(/\.$/, "");
+  if (hostname.startsWith("[") && hostname.endsWith("]")) {
+    hostname = hostname.slice(1, -1);
+  }
+  const mappedMatch = rawUrl.match(/:\/\/\[::ffff:([^\]]+)\]/i);
+  if (mappedMatch) {
+    hostname = mappedMatch[1];
+  } else if (hostname.startsWith("::ffff:")) {
+    hostname = hostname.replace("::ffff:", "");
+  }
+
   if (!hostname || hostname === "localhost" || hostname.endsWith(".localhost") || hostname.endsWith(".local")) {
     throw new Error("URL_HOST_NOT_ALLOWED");
   }

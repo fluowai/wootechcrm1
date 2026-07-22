@@ -64,7 +64,7 @@ export const errorHandler = (err: AppError, req: Request, res: Response, _next: 
       return res.status(404).json({
         success: false,
         error: 'Registro não encontrado.',
-        code: 'DB_RECORD_NOT_FOUND'
+        code: 'DB_NOT_FOUND'
       });
     }
   }
