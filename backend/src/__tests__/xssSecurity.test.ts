@@ -1,4 +1,5 @@
 import { describe, it, expect } from "vitest";
+import crypto from "crypto";
 import { escapeHtml, sanitizeStoredHtml, assertStrongPassword, verifyHmacSignature } from "../utils/security.js";
 
 describe("XSS Protection", () => {
@@ -102,7 +103,6 @@ describe("HMAC Signature Verification", () => {
   it("verifies valid signature", () => {
     const payload = '{"event":"test"}';
     const secret = "webhook-secret-123";
-    const crypto = require("crypto");
     const signature = crypto.createHmac("sha256", secret).update(payload).digest("hex");
 
     expect(verifyHmacSignature(payload, `sha256=${signature}`, secret)).toBe(true);
