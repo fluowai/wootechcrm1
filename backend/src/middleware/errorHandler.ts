@@ -63,6 +63,11 @@ export const errorHandler = (err: AppError, req: Request, res: Response, _next: 
     if (err.code === 'P2025') {
       return res.status(404).json({
         success: false,
+        error: 'Registro não encontrado.',
+        code: 'DB_RECORD_NOT_FOUND'
+      });
+    }
+  }
 
   if (err.name === 'ValidationError') {
     return res.status(400).json({
