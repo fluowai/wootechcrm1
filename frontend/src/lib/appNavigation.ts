@@ -160,27 +160,17 @@ export const menuGroups: MenuGroup[] = [
     ],
   },
   {
-    label: 'Prospeccao',
+    label: 'Vendas & Prospecção',
     icon: Target,
-    modules: ['prospecting', 'qualification', 'whatsapp_funnels', 'sales', 'google_local'],
-    items: [
-      { module: 'prospecting', icon: Target, label: 'Captacao de Leads', path: '/prospecting/capture' },
-      { module: 'google_local', icon: MapPinned, label: 'Google Local', path: '/google-local' },
-      { module: 'qualification', icon: CheckCircle, label: 'Qualificacao de Leads', path: '/qualification/forms' },
-      { module: 'sales', icon: Zap, label: 'Sales Machine', path: '/sales-machine' },
-      { module: 'whatsapp_funnels', icon: BarChart3, label: 'Funis IA WhatsApp', path: '/prospecting/funnels' },
-    ],
-  },
-  {
-    label: 'CRM',
-    icon: UsersRound,
-    modules: ['crm', 'clients', 'whatsapp'],
+    modules: ['crm', 'clients', 'prospecting', 'qualification', 'whatsapp_funnels', 'sales', 'google_local'],
     items: [
       { module: 'crm', icon: Users, label: 'CRM & Pipelines', path: '/crm', startsWith: true },
       { module: 'clients', icon: Building2, label: 'Clientes', path: '/clients', startsWith: true },
-      { module: 'whatsapp', icon: MessageCircle, label: 'Mensagens', path: '/whatsapp?tab=messages' },
-      { module: 'whatsapp', icon: PlugZap, label: 'Conexoes WhatsApp', path: '/whatsapp?tab=instances' },
-      { module: 'whatsapp', icon: KanbanSquare, label: 'Kanban', path: '/crm?tab=funil' },
+      { module: 'prospecting', icon: Target, label: 'Captação de Leads', path: '/prospecting/capture' },
+      { module: 'whatsapp_funnels', icon: BarChart3, label: 'Funis IA WhatsApp', path: '/prospecting/funnels' },
+      { module: 'google_local', icon: MapPinned, label: 'Google Local', path: '/google-local' },
+      { module: 'qualification', icon: CheckCircle, label: 'Qualificação de Leads', path: '/qualification/forms' },
+      { module: 'sales', icon: Zap, label: 'Sales Machine', path: '/sales-machine' },
     ],
   },
   {
@@ -188,63 +178,54 @@ export const menuGroups: MenuGroup[] = [
     icon: Megaphone,
     modules: ['ads', 'landing_pages', 'assets', 'proposals'],
     items: [
-      { module: 'ads', icon: Megaphone, label: 'Trafego Pago', path: '/ad-accounts' },
-      { module: 'assets', icon: Palette, label: 'Criativos & Assets', path: '/assets' },
+      { module: 'ads', icon: Megaphone, label: 'Tráfego Pago', path: '/ad-accounts' },
       { module: 'landing_pages', icon: Globe, label: 'Landing Pages', path: '/landing-pages' },
+      { module: 'assets', icon: Palette, label: 'Criativos & Assets', path: '/assets' },
       { module: 'proposals', icon: FileText, label: 'Propostas', path: '/proposals' },
     ],
   },
   {
-    label: 'Operacao',
+    label: 'Operação',
     icon: FolderKanban,
     modules: ['projects', 'delivery', 'time_tracking', 'service_catalog'],
     items: [
       { module: 'projects', icon: FolderKanban, label: 'Projetos', path: '/projects', startsWith: true },
       { module: 'delivery', icon: Truck, label: 'Entregas', path: '/delivery' },
       { module: 'time_tracking', icon: Clock, label: 'Apontamento de Horas', path: '/time-tracking' },
-      { module: 'service_catalog', icon: Package, label: 'Catalogo de Servicos', path: '/service-catalog' },
+      { module: 'service_catalog', icon: Package, label: 'Catálogo de Serviços', path: '/service-catalog' },
     ],
   },
   {
-    label: 'IA ACP',
+    label: 'Inteligência Artificial',
     icon: Bot,
     modules: ['ai', 'prompt_architect', 'knowledge_base'],
     items: [
       { module: 'ai', icon: Bot, label: 'Agentes de IA', path: '/agents-hub', isAi: true },
       { module: 'ai', icon: Rocket, label: 'Autopilot', path: '/autopilot', isAi: true, badge: 'novo' },
-      { module: 'prompt_architect', icon: Brain, label: 'Arquiteto de Prompts', path: '/prompt-architect', isAi: true },
       { module: 'ai', icon: Zap, label: 'Orquestrador ACP', path: '/acp', isAi: true, badge: 'v2' },
+      { module: 'prompt_architect', icon: Brain, label: 'Arquiteto de Prompts', path: '/prompt-architect', isAi: true },
       { module: 'knowledge_base', icon: BookOpen, label: 'Base de Conhecimento', path: '/knowledge-base' },
     ],
   },
   {
-    label: 'Gestao',
-    icon: BarChart3,
-    modules: ['reports', 'finance', 'health_score', 'agenda', 'notifications'],
+    label: 'Gestão & Config',
+    icon: Settings,
+    modules: ['reports', 'finance', 'health_score', 'agenda', 'notifications', 'settings', 'team', 'integrations'],
     items: [
-      { module: 'reports', icon: BarChart3, label: 'Relatorios', path: '/reports' },
+      { module: 'reports', icon: BarChart3, label: 'Relatórios', path: '/reports' },
       { module: 'finance', icon: Wallet, label: 'Financeiro', path: '/finance' },
       { module: 'health_score', icon: Activity, label: 'Health Score', path: '/client-health' },
       { module: 'agenda', icon: CalendarDays, label: 'Agenda', path: '/calendar' },
-      { module: 'notifications', icon: Bell, label: 'Notificacoes', path: '/notifications' },
-    ],
-  },
-  {
-    label: 'Configuracoes',
-    icon: Settings,
-    modules: ['settings', 'team', 'integrations'],
-    items: [
-      { module: 'settings', icon: Settings, label: 'Administracao', path: '/settings' },
-      { module: 'team', icon: UsersRound, label: 'Usuarios', path: '/team' },
-      { module: 'team', icon: LockKeyhole, label: 'Permissoes', path: '/team?tab=permissions' },
-      { module: 'settings', icon: KeyRound, label: 'Integracoes', path: '/settings?tab=integrations' },
+      { module: 'settings', icon: Settings, label: 'Configurações', path: '/settings' },
+      { module: 'team', icon: UsersRound, label: 'Usuários', path: '/team' },
+      { module: 'settings', icon: KeyRound, label: 'Integrações', path: '/settings?tab=integrations' },
     ],
   },
 ];
 
 export const adminClusters: AdminMenuCluster[] = [
   {
-    label: 'Visao Geral',
+    label: 'Visão Geral',
     icon: LayoutDashboard,
     items: [
       { icon: LayoutDashboard, label: 'Dashboard', path: '/admin' },
@@ -252,46 +233,33 @@ export const adminClusters: AdminMenuCluster[] = [
     ],
   },
   {
-    label: 'SaaS & Suporte',
-    icon: CreditCard,
+    label: 'Gestão de Clientes',
+    icon: Building2,
     items: [
       { icon: Building2, label: 'Clientes', path: '/admin/agencies' },
+      { icon: Palette, label: 'White-label', path: '/admin/whitelabel' },
+      { icon: Globe, label: 'Domínios', path: '/admin/domains' },
+      { icon: MapPinned, label: 'Google Local', path: '/admin/google-local' },
+    ],
+  },
+  {
+    label: 'Faturamento SaaS',
+    icon: CreditCard,
+    items: [
       { icon: Ticket, label: 'Planos SaaS', path: '/admin/plans' },
       { icon: CreditCard, label: 'Faturas SaaS', path: '/admin/billing' },
-      { icon: Ticket, label: 'Chamados Globais', path: '/admin/tickets' },
     ],
   },
   {
-    label: 'Marca & Infra',
-    icon: Palette,
-    items: [
-      { icon: Palette, label: 'White-label', path: '/admin/whitelabel' },
-      { icon: Globe, label: 'Dominios', path: '/admin/domains' },
-    ],
-  },
-  {
-    label: 'Governanca',
-    icon: Shield,
-    items: [
-      { icon: Users, label: 'Equipe Sistema', path: '/admin/team' },
-      { icon: FileText, label: 'Log de Auditoria', path: '/admin/audit' },
-      { icon: Rocket, label: 'Controle de Lancamento', path: '/admin/releases' },
-    ],
-  },
-  {
-    label: 'IA & ACP',
+    label: 'Sistema & IA',
     icon: Brain,
     items: [
+      { icon: Users, label: 'Equipe Sistema', path: '/admin/team' },
       { icon: Brain, label: 'Orquestrador ACP', path: '/acp', badge: 'v2', isAi: true },
       { icon: Cpu, label: 'AI Core', path: '/admin/ai', isAi: true },
-      { icon: Brain, label: 'ACP - Liberacao', path: '/admin/acp', isAi: true },
-    ],
-  },
-  {
-    label: 'Prospeccao',
-    icon: Target,
-    items: [
-      { icon: MapPinned, label: 'Google Local', path: '/admin/google-local' },
+      { icon: Rocket, label: 'Controle de Lançamento', path: '/admin/releases' },
+      { icon: FileText, label: 'Log de Auditoria', path: '/admin/audit' },
+      { icon: Ticket, label: 'Chamados Globais', path: '/admin/tickets' },
     ],
   },
 ];

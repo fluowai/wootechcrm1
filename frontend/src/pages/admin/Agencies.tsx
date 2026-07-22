@@ -301,54 +301,57 @@ export default function AdminAgencies() {
                   </td>
                   <td className="px-4 py-5 text-emerald-500 font-medium">Ativo</td>
                   <td className="px-8 py-5 text-right">
-                    <div className="flex justify-end gap-2 opacity-0 group-hover:opacity-100 transition-opacity">
+                    <div className="flex justify-end gap-3 items-center">
                       <button 
                         onClick={() => {
                           localStorage.setItem('nexus_selected_client', org.id);
-                          navigate('/dashboard');
+                          window.location.href = '/dashboard';
                         }}
-                        className="p-2 hover:bg-emerald-50 rounded-lg text-gray-400 hover:text-emerald-600 transition-all"
-                        title="Acessar como Suporte (Impersonate)"
+                        className="px-3 py-1.5 bg-blue-50 text-blue-600 font-bold text-[11px] rounded-lg hover:bg-blue-100 transition-all flex items-center gap-1.5 uppercase tracking-wider"
+                        title="Acessar painel deste cliente"
                       >
-                        <ExternalLink size={16} />
+                        Acessar
+                        <ArrowRight size={14} />
                       </button>
-                      <button 
-                        onClick={() => {
-                          setSelectedOrg(org);
-                          setShowDomainModal(true);
-                        }}
-                        className="p-2 hover:bg-blue-50 rounded-lg text-gray-400 hover:text-blue-600 transition-all"
-                        title="Configurar Domínio Personalizado"
-                      >
-                        <Globe size={16} />
-                      </button>
-                      <button 
-                        onClick={() => {
-                          setEditData({
-                            id: org.id,
-                            name: org.name || '',
-                            slug: org.slug || '',
-                            domain: org.domain || '',
-                            plan: org.planObj?.name || org.plan || '',
-                            planId: org.planId || '',
-                            adminEmail: '',
-                            adminPhone: '',
-                            password: ''
-                          });
-                          setIsEditing(true);
-                        }}
-                        className="p-2 hover:bg-gray-100 rounded-lg text-gray-400 hover:text-gray-900 transition-all"
-                        title="Editar Agência"
-                      >
-                        <Edit3 size={16} />
-                      </button>
-                      <button 
-                        onClick={() => handleDelete(org.id)}
-                        className="p-2 hover:bg-red-50 rounded-lg text-gray-400 hover:text-red-500 transition-all"
-                        title="Remover Agência"
-                      >
-                        <Trash2 size={16} />
-                      </button>
+                      <div className="flex justify-end gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
+                        <button 
+                          onClick={() => {
+                            setSelectedOrg(org);
+                            setShowDomainModal(true);
+                          }}
+                          className="p-2 hover:bg-blue-50 rounded-lg text-gray-400 hover:text-blue-600 transition-all"
+                          title="Configurar Domínio Personalizado"
+                        >
+                          <Globe size={16} />
+                        </button>
+                        <button 
+                          onClick={() => {
+                            setEditData({
+                              id: org.id,
+                              name: org.name || '',
+                              slug: org.slug || '',
+                              domain: org.domain || '',
+                              plan: org.planObj?.name || org.plan || '',
+                              planId: org.planId || '',
+                              adminEmail: '',
+                              adminPhone: '',
+                              password: ''
+                            });
+                            setIsEditing(true);
+                          }}
+                          className="p-2 hover:bg-gray-100 rounded-lg text-gray-400 hover:text-gray-900 transition-all"
+                          title="Editar Agência"
+                        >
+                          <Edit3 size={16} />
+                        </button>
+                        <button 
+                          onClick={() => handleDelete(org.id)}
+                          className="p-2 hover:bg-red-50 rounded-lg text-gray-400 hover:text-red-500 transition-all"
+                          title="Remover Agência"
+                        >
+                          <Trash2 size={16} />
+                        </button>
+                      </div>
                     </div>
                   </td>
                 </tr>

@@ -9,7 +9,6 @@ import {
   ChevronRight,
   Monitor
 } from 'lucide-react';
-import { ClientSelector } from './ClientSelector';
 import type {
   AdminMenuCluster,
   AdminMenuItem,
@@ -243,30 +242,7 @@ export const Sidebar: React.FC<{
           </button>
         </div>
 
-        <div className="sidebar-scroll custom-scrollbar">
-          <ClientSelector
-            user={user}
-            selectedClientId={selectedClientId}
-            onSelectClient={onSelectClient}
-            collapsed={collapsed}
-          />
-
-          {user?.role === 'SUPER_ADMIN' && selectedClientId && (
-            <div className={collapsed ? "mb-4 flex justify-center" : "px-4 mb-4"}>
-              <button
-                onClick={() => onSelectClient(null)}
-                title={collapsed ? "Voltar ao Modo Admin" : undefined}
-                className={collapsed
-                  ? "flex h-12 w-12 items-center justify-center rounded-xl border border-amber-100 bg-amber-50 text-amber-700 shadow-sm transition-all hover:bg-amber-100"
-                  : "w-full flex items-center justify-center gap-2.5 p-3.5 bg-amber-50 text-amber-700 rounded-2xl text-[13px] font-bold border border-amber-100 hover:bg-amber-100 transition-all shadow-sm"
-                }
-              >
-                <Shield size={collapsed ? 20 : 17} />
-                {!collapsed && 'Voltar ao Modo Admin'}
-              </button>
-            </div>
-          )}
-
+        <div className="sidebar-scroll custom-scrollbar pt-4">
           {user?.role === 'SUPER_ADMIN' && !selectedClientId ? (
             <SidebarGroup label="Menu Super Admin" collapsed={collapsed}>
               {navigation.adminClusters.map(renderAdminCluster)}
